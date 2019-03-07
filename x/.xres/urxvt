@@ -1,0 +1,10 @@
+URxvt*termName:		rxvt-unicode
+URxvt.scrollBar:	false
+URxvt.internalBorder:	10
+
+URxvt*letterSpace:	0
+URxvt.font:		xft:iosevka:size=15
+
+URxvt*transparent:	false
+
+URxvt.perl-ext-common:	resize-font

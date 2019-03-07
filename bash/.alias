@@ -1,0 +1,8 @@
+#!/bin/sh
+alias ka="killall" \
+	p="sudo pacman" \
+	SS="sudo systemctl" \
+	ls="ls -hN --color=auto --group-directories-first" \
+	grep="grep --color=auto" \
+	diff="diff --color=auto" \
+	ccat="highlight --out-format=ansi" \

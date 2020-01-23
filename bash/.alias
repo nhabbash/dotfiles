@@ -1,8 +1,7 @@
 #!/bin/sh
-alias ka="killall" \
-	p="sudo pacman" \
-	SS="sudo systemctl" \
-	ls="ls -hN --color=auto --group-directories-first" \
-	grep="grep --color=auto" \
-	diff="diff --color=auto" \
-	ccat="highlight --out-format=ansi" \
+alias ka="killall" 
+alias ls="ls -hN --color=auto --group-directories-first"
+alias grep="grep --color=auto"
+alias R="R --quiet" 
+alias anaconda="source /opt/anaconda/bin/activate root"
+alias venv="source .venv/bin/activate"

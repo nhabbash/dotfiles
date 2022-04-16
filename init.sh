@@ -3,8 +3,10 @@
 ### ZSH
 # init plugins
 mkdir -p ~/.zsh/plugins 
-cd  ~/.zsh/plugins
-git clone git@github.com:zdharma-zmirror/fast-syntax-highlighting.git 
-git clone git@github.com:zsh-users/zsh-autosuggestions.git
-git clone git@github.com:zsh-users/zsh-completions.git
-git clone git@github.com:unixorn/fzf-zsh-plugin.git
+git clone git@github.com:zdharma-zmirror/fast-syntax-highlighting.git ~/.zsh/plugins/fast-syntax-highlighting
+git clone git@github.com:zsh-users/zsh-autosuggestions.git ~/.zsh/plugins/zsh-autosuggestions
+git clone git@github.com:zsh-users/zsh-completions.git ~/.zsh/plugins//zsh-completions
+git clone git@github.com:unixorn/fzf-zsh-plugin.git ~/.zsh/plugins/fzf-zsh-plugin
+
+### TMUX
+git clone git@github.com:tmux-plugins/tpm.git ~/.tmux/plugins/tpm

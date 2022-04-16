@@ -21,7 +21,6 @@ autoload -U colors && colors
 
 # Left Prompt
 PROMPT='$(common_host)$(common_current_dir)$(common_bg_jobs)$(common_return_status)'
-
 # Right Prompt
 RPROMPT='$(common_git_status)'
 
@@ -50,12 +49,13 @@ short_pwd() {
     echo -n $cwd
 }
 common_current_dir() {
-  echo -n "%{$fg[$COMMON_COLORS_CURRENT_DIR]%}%(5~|%-1~/…/%3~|%4~) "
+  echo -n "%{$fg[$COMMON_COLORS_CURRENT_DIR]%}%(5~|%-1~/…/%3~|%4~)%{$reset_color%} "
 }
 
 # Prompt symbol
 common_return_status() {
-  echo -n "%(?.%F{$COMMON_COLORS_RETURN_STATUS_TRUE}.%F{$COMMON_COLORS_RETURN_STATUS_FALSE})\e[1m$COMMON_PROMPT_SYMBOL%f "
+  #echo -n "%(?.%F{$COMMON_COLORS_RETURN_STATUS_TRUE}.%F{$COMMON_COLORS_RETURN_STATUS_FALSE})\e[0m$COMMON_PROMPT_SYMBOL%f%{$reset_color%} "
+  echo -n "%(?.%F{$COMMON_COLORS_RETURN_STATUS_TRUE}.%F{$COMMON_COLORS_RETURN_STATUS_FALSE})$COMMON_PROMPT_SYMBOL%f%{$reset_color%} "
 }
 
 # Git status

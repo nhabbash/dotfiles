@@ -6,7 +6,7 @@ export ZSH=$HOME/.zsh
 
 ### ---- ADDITIONS ----
 source $ZSH/.alias
-source $ZSH/.vectorrc
+source $ZSH/.devrc
 
 ### ---- HISTORY ----
 export HISTFILE=$ZSH/.zsh_history

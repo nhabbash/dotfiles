@@ -1,0 +1,8 @@
+#!/bin/sh
+alias ka="killall" 
+alias ls="ls -hN --color=auto --group-directories-first"
+alias ll='ls -lah'
+alias l.='ls -d .* --color=auto'
+alias grep="grep --color=auto"
+
+alias clean-branches=git branch -vv | grep ': gone]' | grep -v '\*' | awk '{ print $1; }' | xargs -r git branch -D

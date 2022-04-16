@@ -1,0 +1,35 @@
+### KUBERNETES
+
+# Kubernetes autocompletion
+[[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
+
+
+# Show logs of all pods in tmux, e.g. kubelogs vector-backend
+function kubelogs() {
+  init=true
+  command=""
+  kubectl get pods | grep -e "^${1}-\S*" -o | ( while read -r line;
+    do
+    if [ $init = true ]
+    then
+      command="${command} tmux new-session -s ${1}-logs \; send-keys 'kubectl logs -f ${line}' C-m \; "
+      init=false
+    else
+      command="${command} split-window -h \; send-keys 'kubectl logs -f ${line}' C-m \; "
+    fi
+  done
+  command="${command}select-layout even-vertical \; "
+  echo $command > ~/.tmp_kubelogs_command )
+  sh ~/.tmp_kubelogs_command
+  rm ~/.tmp_kubelogs_command
+}
+
+
+# open bash in pod, e.g. kubexec vector-backend-747fcc44c8-mk9nd
+function kubexec() {
+  kubectl exec -it ${1} -- bash
+}
+
+### DOCKER
+
+function dcp { docker cp "$1" "$2"; }

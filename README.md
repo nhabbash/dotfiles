@@ -1,5 +1,5 @@
 # Dotfiles
-> Dotfiles on my Archlinux installation
+> Nice dotfiles
 
 <!--![](header.png) -->
 
@@ -7,17 +7,14 @@
 * GNU Stow
 
 ## Configs included
-* bash
-* fish
+* zsh
+* tmux
 * local user-dirs.dirs
-* x
-    * xresources
-    * xinitrc
 
 ## Installation
 
 ```sh
-$ git clone https://github.com/Dodicin/dotfiles
+$ git clone https://github.com/nhabbash/dotfiles
 ```
 
 ## Usage
@@ -26,8 +23,3 @@ $ git clone https://github.com/Dodicin/dotfiles
 $ cd .dotfiles
 $ stow [config folder]
 ```
-
-# 
-## Author
-
-- **Nassim Habbash** - [dodicin](https://github.com/dodicin)

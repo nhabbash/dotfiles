@@ -10,3 +10,10 @@ git clone git@github.com:unixorn/fzf-zsh-plugin.git ~/.zsh/plugins/fzf-zsh-plugi
 
 ### TMUX
 git clone git@github.com:tmux-plugins/tpm.git ~/.tmux/plugins/tpm
+
+### Stow
+cd ~/dotfiles
+stow zsh
+stow xdg
+stow tmux
+stow starship

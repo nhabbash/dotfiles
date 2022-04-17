@@ -1,5 +1,5 @@
 ### PATH
-export PATH=$HOME/.local/bin:${KREW_ROOT:-$HOME/.krew}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:$PATH
+export PATH=$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:$PATH
 
 ### ZSH HOME
 export ZSH=$HOME/.zsh
@@ -23,12 +23,17 @@ setopt HIST_IGNORE_ALL_DUPS
 # History won't show duplicates on search.
 setopt HIST_FIND_NO_DUPS
 
-### ---- PLUGINS & THEMES -----
+### ---- PLUGINS -----
 source $ZSH/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 source $ZSH/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $ZSH/plugins/fzf-zsh-plugin/fzf-zsh-plugin.plugin.zsh
 fpath=($ZSH/plugins/zsh-completions/src $fpath)
+
+# ---- THEMES ----
 source $ZSH/themes/common/common.zsh-theme
+
+#export STARSHIP_CONFIG=~/.config/pure_prompt.toml
+#eval "$(starship init zsh)"
 
 # ### START TMUX 
 # if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then

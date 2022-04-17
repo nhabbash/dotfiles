@@ -32,7 +32,7 @@ fpath=($ZSH/plugins/zsh-completions/src $fpath)
 # ---- THEMES ----
 source $ZSH/themes/common/common.zsh-theme
 
-#export STARSHIP_CONFIG=~/.config/pure_prompt.toml
+#export STARSHIP_CONFIG=~/.config/starship/pure_prompt.toml
 #eval "$(starship init zsh)"
 
 # ### START TMUX 

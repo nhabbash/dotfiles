@@ -12,8 +12,12 @@ git clone git@github.com:unixorn/fzf-zsh-plugin.git ~/.zsh/plugins/fzf-zsh-plugi
 git clone git@github.com:tmux-plugins/tpm.git ~/.tmux/plugins/tpm
 
 ### Stow
-cd ~/dotfiles
-stow zsh
-stow xdg
-stow tmux
-stow starship
+cd $(pwd)
+
+for dir in */; do
+  stow -D $dir
+done
+
+for dir in */; do
+  stow $dir
+done

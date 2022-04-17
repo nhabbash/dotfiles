@@ -1,5 +1,7 @@
 # https://github.com/jackharrisonsherlock/common
 
+ZLE_RPROMPT_INDENT=0
+
 # Prompt symbol  #"❯"
 COMMON_PROMPT_SYMBOL="#"
 
@@ -77,7 +79,6 @@ common_git_status() {
     if [[ -n ${branch} ]]; then
         message+="${message_color}${branch}%f"
     fi
-    
     echo -n "%20>…>${message}%>"
 }
 

@@ -4,7 +4,7 @@
 [[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
 
 
-# Show logs of all pods in tmux, e.g. kubelogs vector-backend
+# Show logs of all pods in tmux
 function kubelogs() {
   init=true
   command=""
@@ -12,20 +12,26 @@ function kubelogs() {
     do
     if [ $init = true ]
     then
-      command="${command} tmux new-session -s ${1}-logs \; send-keys 'kubectl logs -f ${line}' C-m \; "
+      command="${command} tmux new-session -s ${1}-logs -d \; send-keys -t ${1}-logs 'kubectl logs -f ${line}' C-m \; "
       init=false
     else
-      command="${command} split-window -h \; send-keys 'kubectl logs -f ${line}' C-m \; "
+      command="${command} split-window -h -t ${1}-logs\;  select-layout tiled  \;  send-keys  -t ${1}-logs 'kubectl logs -f ${line}' C-m \; "
     fi
   done
-  command="${command}select-layout even-vertical \; "
-  echo $command > ~/.tmp_kubelogs_command )
-  sh ~/.tmp_kubelogs_command
-  rm ~/.tmp_kubelogs_command
+
+  if tmux ls | grep attached; then
+    command="${command} switch -t ${1}-logs \;" 
+  else
+    command="${command} attach -t ${1}-logs \;"
+  fi
+  echo $command > /tmp/.tmp_kubelogs_command )
+
+sh /tmp/.tmp_kubelogs_command
+rm /tmp/.tmp_kubelogs_command
 }
 
 
-# open bash in pod, e.g. kubexec vector-backend-747fcc44c8-mk9nd
+# Open bash in pod
 function kubexec() {
   kubectl exec -it ${1} -- bash
 }

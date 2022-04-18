@@ -1,44 +1,56 @@
 # Don't print a new line at the start of the prompt
 add_newline = false
 
-[line_break]
-disabled = true
 
 format = """
 $username\
 $hostname\
 $directory\
-$git_branch\
-$git_state\
-$git_status\
 $cmd_duration\
-$line_break\
+$gcloud\
+$docker_context\
+$kubernetes\
 $python\
 $character"""
 
+right_format = """
+$git_branch\
+$git_status\
+$git_state"""
+
+[username]
+style_user = "bold red"
+style_root = "black bold"
+format = "[$user]($style)"
+disabled = true
+
+[hostname]
+ssh_only = false
+format = "[@$hostname](bold red) "
+disabled = true
+
 [directory]
+format="[ $path]($style)[$read_only]($read_only_style) "
+truncation_length = 8
+truncation_symbol="…"
+fish_style_pwd_dir_length=1
 style = "blue"
+read_only=" "
+read_only_style="red"
 
 [character]
 success_symbol = "[❯](purple)"
 error_symbol = "[❯](red)"
 vicmd_symbol = "[❮](green)"
 
-
 [git_branch]
 format = "[$branch]($style)"
 style = "bright-black"
+truncation_length=20
 
 [git_status]
-format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](218) ($ahead_behind$stashed)]($style)"
+format = "[[(*$all_status)](218) ($ahead_behind$stashed)]($style)"
 style = "cyan"
-conflicted = "​"
-untracked = "​"
-modified = "​"
-staged = "​"
-renamed = "​"
-deleted = "​"
-stashed = "≡"
 
 [git_state]
 format = '\([$state( $progress_current/$progress_total)]($style)\) '
@@ -47,7 +59,33 @@ style = "bright-black"
 [cmd_duration]
 format = "[$duration]($style) "
 style = "yellow"
+min_time = 5000
 
 [python]
-format = "[$virtualenv]($style) "
+symbol=""
+version_format="v$major.$minor"
+format = '[${symbol} (${version} )(\($virtualenv\) )]($style)'
 style = "bright-black"
+detect_extensions = []
+detect_files = []
+
+[kubernetes]
+symbol="☸"
+format = '[\[$symbol $context \($namespace\)\]]($style) '
+style = "dimmed blue"
+disabled = true
+[kubernetes.context_aliases]
+"dev.local.cluster.k8s" = "dev"
+".*/openshift-cluster/.*" = "openshift"
+"gke_.*_(?P<var_cluster>[\\w-]+)" = "gke-$var_cluster"
+
+[gcloud]
+symbol=""
+format = '[\[$symbol $account(@$domain)(\($project\))\]]($style) '
+style = "dimmed white"
+disabled = true
+
+[gcloud.project_aliases]
+staging-266717 = "staging"
+full-stack-259515 = "prod"
+machine-learning-259515 = "ml"

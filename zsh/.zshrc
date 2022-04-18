@@ -28,12 +28,13 @@ source $ZSH/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 source $ZSH/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $ZSH/plugins/fzf-zsh-plugin/fzf-zsh-plugin.plugin.zsh
 fpath=($ZSH/plugins/zsh-completions/src $fpath)
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # ---- THEMES ----
-source $ZSH/themes/common/common.zsh-theme
+#source $ZSH/themes/common/common.zsh-theme
 
-#export STARSHIP_CONFIG=~/.config/starship/pure_prompt.toml
-#eval "$(starship init zsh)"
+export STARSHIP_CONFIG=~/.config/starship/pure_prompt.toml
+eval "$(starship init zsh)"
 
 # ### START TMUX 
 # if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then

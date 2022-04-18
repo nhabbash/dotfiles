@@ -1,10 +1,16 @@
 #!/bin/sh
-alias ka="killall" 
-alias ls="ls -hN --color=auto --group-directories-first"
-alias ll='ls -lah'
-alias l.='ls -d .* --color=auto'
-alias grep="grep --color=auto"
 
+# Utils
+alias ka='killall' 
+alias ls='exa --group-directories-first'
+alias ll='ls -lah --icons'
+alias tree='exa --tree --icons -a'
+alias grep='grep --color=auto'
+alias sourcez='source ~/.zshrc'
+alias gt='starship toggle gcloud disabled'
+alias kt='starship toggle kubernetes disabled'
+alias gk='gt && kt'
+
+# Git
 alias clean-branches=git branch -vv | grep ': gone]' | grep -v '\*' | awk '{ print $1; }' | xargs -r git branch -D
-
-alias szsh="source ~/.zshrc"
+alias gs="git status"

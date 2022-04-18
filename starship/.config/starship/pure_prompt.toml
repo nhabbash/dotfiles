@@ -44,13 +44,26 @@ error_symbol = "[❯](red)"
 vicmd_symbol = "[❮](green)"
 
 [git_branch]
-format = "[$branch]($style)"
+symbol=""
+format = "[$symbol $branch]($style)"
 style = "bright-black"
 truncation_length=20
 
 [git_status]
-format = "[[(*$all_status)](218) ($ahead_behind$stashed)]($style)"
+format = "|[[($all_status)](218) ($ahead_behind$stashed)]($style)"
 style = "cyan"
+conflicted = "✖$count"
+ahead = "↑$count"
+behind = "↓$count"
+diverged = "⇕"
+up_to_date = "✓"
+untracked = "…$count"
+stashed = "⚑$count"
+modified = "+$count"
+staged = '[●$count](green)'
+renamed = "»$count"
+deleted = "-$count"
+
 
 [git_state]
 format = '\([$state( $progress_current/$progress_total)]($style)\) '
@@ -71,7 +84,7 @@ detect_files = []
 
 [kubernetes]
 symbol="☸"
-format = '[\[$symbol $context \($namespace\)\]]($style) '
+format = '[\[$symbol $context\($namespace\)\]]($style) '
 style = "dimmed blue"
 disabled = true
 [kubernetes.context_aliases]

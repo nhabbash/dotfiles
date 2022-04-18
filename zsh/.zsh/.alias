@@ -12,5 +12,5 @@ alias kt='starship toggle kubernetes disabled'
 alias gk='gt && kt'
 
 # Git
-alias clean-branches=git branch -vv | grep ': gone]' | grep -v '\*' | awk '{ print $1; }' | xargs -r git branch -D
-alias gs="git status"
+alias gp='git branch -vv | grep ": gone]" | grep -v "\*" | awk "{ print $1; }" | xargs -r git branch -D'
+alias gs='git status'

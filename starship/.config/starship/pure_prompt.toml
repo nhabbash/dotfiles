@@ -77,7 +77,7 @@ min_time = 5000
 [python]
 symbol=""
 version_format="v$major.$minor"
-format = '[${symbol} (${version} )(\($virtualenv\) )]($style)'
+format = '[\[${symbol} (${version} )(\($virtualenv\) )\]]($style)'
 style = "bright-black"
 detect_extensions = []
 detect_files = []

@@ -14,3 +14,9 @@ alias gk='gt && kt'
 # Git
 alias gp='git branch -vv | grep ": gone]" | grep -v "\*" | awk "{ print $1; }" | xargs -r git branch -D'
 alias gs='git status'
+
+# Docker
+alias dc='docker-compose'
+
+# K8s
+alias k='kubectl'

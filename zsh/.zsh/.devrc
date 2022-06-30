@@ -32,10 +32,15 @@ rm /tmp/.tmp_kubelogs_command
 
 
 # Open bash in pod
-function kubexec() {
+function kbx() {
   kubectl exec -it ${1} -- bash
 }
 
 ### DOCKER
-
 function dcp { docker cp "$1" "$2"; }
+
+function dx() {
+  docker exec -it ${1} /bin/bash
+}
+
+alias dps='docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Ports}}\t{{.State}}\t{{.CreatedAt}}"'

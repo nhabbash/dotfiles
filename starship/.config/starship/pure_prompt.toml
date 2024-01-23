@@ -8,9 +8,8 @@ $hostname\
 $directory\
 $cmd_duration\
 $gcloud\
-$docker_context\
 $kubernetes\
-$python\
+$python
 $character"""
 
 right_format = """
@@ -84,19 +83,18 @@ detect_files = []
 
 [kubernetes]
 symbol="☸"
-format = '[\[$symbol $context\($namespace\)\]]($style) '
+format = '[\[$symbol$context\($namespace\)\]]($style) '
 style = "dimmed blue"
-disabled = true
-[kubernetes.context_aliases]
-"dev.local.cluster.k8s" = "dev"
-".*/openshift-cluster/.*" = "openshift"
-"gke_.*_(?P<var_cluster>[\\w-]+)" = "gke-$var_cluster"
+disabled = false
+contexts = [
+    { context_pattern = "gke_.*_(?P<var_cluster>[\\w-]+)", context_alias = "$var_cluster"}
+]
 
 [gcloud]
 symbol=""
-format = '[\[$symbol $account(@$domain)(\($project\))\]]($style) '
+format = '[\[$symbol $project\]]($style) '
 style = "dimmed white"
-disabled = true
+disabled = false
 
 [gcloud.project_aliases]
 staging-266717 = "staging"

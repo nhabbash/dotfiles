@@ -1,0 +1,86 @@
+format = """
+[░▒▓](#a3aed2)\
+[  ](bg:#a3aed2 fg:#090c0c)\
+[](bg:#769ff0 fg:#a3aed2)\
+$directory\
+[](fg:#769ff0 bg:#394260)\
+$git_branch\
+$git_status\
+[](fg:#394260 bg:#212736)\
+$kubernetes\
+$gcloud\
+[](fg:#212736 bg:#1d2230)\
+$time\
+[ ](fg:#1d2230)\
+\n$character"""
+
+[directory]
+style = "fg:#e3e5e5 bg:#769ff0"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+
+[git_branch]
+symbol = ""
+style = "bg:#394260"
+format = '[[ $symbol $branch ](fg:#769ff0 bg:#394260)]($style)'
+
+[git_status]
+style = "bg:#394260"
+format = '[[($all_status$ahead_behind )](fg:#769ff0 bg:#394260)]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[time]
+disabled = false
+time_format = "%R" # Hour:Minute Format
+style = "bg:#1d2230"
+format = '[[  $time ](fg:#a0a9cb bg:#1d2230)]($style)'
+
+[kubernetes]
+symbol="☸"
+style = "bg:#212736"
+format = '[[ $symbol ($context \($namespace\)) ](fg:#769ff0 bg:#212736)]($style)'
+disabled = false
+
+
+[[kubernetes.contexts]]
+context_pattern = "gke_staging-266717_europe-west2-a_staging"
+style = "bold green"
+context_alias = "stag"
+
+[[kubernetes.contexts]]
+context_pattern = "gke_full-stack-259515_europe-west2-a_production"
+style = "bold red"
+context_alias = "prod"
+
+# [[kubernetes.contexts]]
+# context_pattern = "gke_.*_(?P<var_cluster>[\\w-]+)"
+# user_pattern = "admin_user"
+# style = "bold red"
+# context_alias = "$var_cluster"
+
+[gcloud]
+symbol=""
+style = "bg:#212736"
+format = '[[ $symbol ($project) ](fg:#769ff0 bg:#212736)]($style)'
+disabled = false
+
+[gcloud.project_aliases]
+staging-266717 = "stag"
+full-stack-259515 = "prod"
+machine-learning-259515 = "ml"

@@ -153,3 +153,12 @@ symbol = " "
 [git_branch]
 format = '[$symbol $branch(:$remote_branch)]($style) '
 symbol = '󰊢 '
+
+
+[custom.nodejs]
+command = 'node --version | tr -d "\n"'
+when = true
+symbol = ""
+style = "bold green"
+format = '[[ $symbol$output ]]($style)'
+disabled = false

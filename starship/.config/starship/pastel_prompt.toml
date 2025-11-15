@@ -70,3 +70,12 @@ disabled = false
 time_format = "%R" # Hour:Minute Format
 style = "bg:#33658A"
 format = '[[ ♥ $time ](bg:#33658A)]($style)'
+
+
+[custom.nodejs]
+command = 'node --version | tr -d "\n"'
+when = true
+symbol = ""
+style = "bold green"
+format = '[[ $symbol$output ]]($style)'
+disabled = false

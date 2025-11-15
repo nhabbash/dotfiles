@@ -100,3 +100,12 @@ disabled = false
 staging-266717 = "staging"
 full-stack-259515 = "prod"
 machine-learning-259515 = "ml"
+
+
+[custom.nodejs]
+command = 'node --version | tr -d "\n"'
+when = true
+symbol = ""
+style = "bold green"
+format = '[[ $symbol$output ]]($style)'
+disabled = false

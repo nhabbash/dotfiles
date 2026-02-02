@@ -1,9 +1,30 @@
-zsh/.zsh/.zsh_history
-zsh/.zsh/plugins
-zsh/.zsh/.vectorrc
-
 # Nix
 result
 .direnv
+
+# Secrets (never commit)
+*.local
+secrets/
+.env
+.env.*
+*.secret
+*.credentials
+*.key
+*.pem
+
+# Machine-specific local configs
+.zshrc.local
+.zshrc.monday
+.gitconfig.local
+
+# macOS
+.DS_Store
+*.swp
+*.swo
+
+# Editor
+.idea/
+.vscode/
+*.code-workspace
 
 # Note: flake.lock SHOULD be committed for reproducibility

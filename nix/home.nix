@@ -50,6 +50,11 @@ in
     # Development
     neovim
 
+    # Fonts
+    nerd-fonts.inconsolata
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.fira-code
+
     # Node.js (via volta, managed separately - see notes)
     # volta       # Not in nixpkgs, install separately
 

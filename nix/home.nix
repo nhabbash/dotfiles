@@ -78,24 +78,26 @@ in
   # ---------------------------------------------------------------------------
   programs.git = {
     enable = true;
-    userName = "Nassim Habbash";
-    # Use personal email by default, override in work-specific config
-    userEmail = if isWork then "nassimha@monday.com" else "YOUR_PERSONAL_EMAIL";
 
-    extraConfig = {
+    settings = {
+      user = {
+        name = "Nassim Habbash";
+        # Use personal email by default, override in work-specific config
+        email = if isWork then "nassimha@monday.com" else "YOUR_PERSONAL_EMAIL";
+      };
       push.autoSetupRemote = true;
       init.defaultBranch = "main";
       pull.rebase = true;
       core.editor = "nvim";
-    };
 
-    # Useful aliases
-    aliases = {
-      st = "status";
-      co = "checkout";
-      br = "branch";
-      ci = "commit";
-      lg = "log --oneline --graph --decorate";
+      # Aliases
+      alias = {
+        st = "status";
+        co = "checkout";
+        br = "branch";
+        ci = "commit";
+        lg = "log --oneline --graph --decorate";
+      };
     };
   };
 
@@ -163,7 +165,7 @@ in
     };
 
     # Extra init (runs at the end of .zshrc)
-    initExtra = ''
+    initContent = ''
       # Performance: Cache completions aggressively
       DISABLE_AUTO_UPDATE="true"
       DISABLE_MAGIC_FUNCTIONS="true"
@@ -315,6 +317,7 @@ in
   # Zellij
   xdg.configFile."zellij/config.kdl".source = ./configs/zellij/config.kdl;
   xdg.configFile."zellij/themes/catppuccin-mocha.kdl".source = ./configs/zellij/catppuccin-mocha.kdl;
+  xdg.configFile."zellij/layouts/default.kdl".source = ./configs/zellij/layouts/default.kdl;
 
   # ===========================================================================
   # Environment Variables

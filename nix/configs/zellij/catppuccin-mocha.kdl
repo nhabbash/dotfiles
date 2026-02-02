@@ -1,16 +1,68 @@
-// Catppuccin Mocha theme for Zellij
+// Catppuccin Mocha Theme for zjstatus
+// https://github.com/catppuccin/catppuccin
+
+// Color Palette - Catppuccin Mocha
 themes {
     catppuccin-mocha {
+        // Base colors
         bg "#1e1e2e"
         fg "#cdd6f4"
+
+        // Surface colors
+        black "#181825"
         red "#f38ba8"
         green "#a6e3a1"
-        blue "#89b4fa"
         yellow "#f9e2af"
-        magenta "#cba6f7"
-        orange "#fab387"
+        blue "#89b4fa"
+        magenta "#f5c2e7"
         cyan "#94e2d5"
-        black "#181825"
-        white "#cdd6f4"
+        white "#bac2de"
+
+        orange "#fab387"
+
+        // Extended palette
+        rosewater "#f5e0dc"
+        flamingo "#f2cdcd"
+        pink "#f5c2e7"
+        mauve "#cba6f7"
+        maroon "#eba0ac"
+        peach "#fab387"
+        teal "#94e2d5"
+        sky "#89dceb"
+        sapphire "#74c7ec"
+        lavender "#b4befe"
+
+        // Surface variants
+        text "#cdd6f4"
+        subtext1 "#bac2de"
+        subtext0 "#a6adc8"
+        overlay2 "#9399b2"
+        overlay1 "#7f849c"
+        overlay0 "#6c7086"
+        surface2 "#585b70"
+        surface1 "#45475a"
+        surface0 "#313244"
+        base "#1e1e2e"
+        mantle "#181825"
+        crust "#11111b"
+
+        // UI component colors for keybinding hints
+        ribbon_unselected {
+            base "#cdd6f4"         // text color (Catppuccin text)
+            background "#313244"   // surface0
+            emphasis_0 "#89b4fa"   // blue
+            emphasis_1 "#fab387"   // peach
+            emphasis_2 "#a6e3a1"   // green
+            emphasis_3 "#f9e2af"   // yellow
+        }
+
+        text_unselected {
+            base "#cdd6f4"         // text color
+            background "#1e1e2e"   // base background
+            emphasis_0 "#89b4fa"   // blue
+            emphasis_1 "#fab387"   // peach
+            emphasis_2 "#a6e3a1"   // green
+            emphasis_3 "#f9e2af"   // yellow
+        }
     }
 }

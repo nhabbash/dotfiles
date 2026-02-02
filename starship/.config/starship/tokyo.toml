@@ -8,11 +8,9 @@ $git_branch\
 $git_status\
 [](fg:#394260 bg:#2d344b)\
 ${custom.nodejs}\
-[](fg:#2d344b bg:#212736)\
-$kubernetes\
-[](fg:#212736 bg:#1d2230)\
-$time\
-[ ](fg:#1d2230)\
+[](fg:#2d344b bg:#212736)\
+${custom.pyenv}\
+[](fg:#212736)\
 \n$character"""
 
 [directory]
@@ -65,7 +63,15 @@ contexts = [
 [custom.nodejs]
 command = "node --version | tr -d '\n'"
 when = true
-symbol = ""
+symbol = "󰎙"
 style = "bg:#2d344b"
 format = '[[ $symbol $output ](fg:#769ff0 bg:#2d344b)]($style)'
+disabled = false
+
+[custom.pyenv]
+command = "if command -v pyenv >/dev/null 2>&1; then version=$(pyenv version-name 2>/dev/null); if [ -n \"$version\" ]; then if [ -n \"$VIRTUAL_ENV\" ]; then venv=$(basename \"$VIRTUAL_ENV\"); echo \"$version ($venv)\"; else venv=$(pyenv virtualenv-name 2>/dev/null); if [ -n \"$venv\" ] && [ \"$venv\" != \"system\" ]; then echo \"$version ($venv)\"; else echo \"$version\"; fi; fi; fi; fi"
+when = "command -v pyenv >/dev/null 2>&1"
+symbol = "󰌠"
+style = "bg:#212736"
+format = '[[ $symbol $output ](fg:#769ff0 bg:#212736)]($style)'
 disabled = false

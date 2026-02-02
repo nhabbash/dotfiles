@@ -114,3 +114,6 @@ alias -g nln='nvm install-latest-npm'
 # volta
 alias -g vi='volta install'
 alias -g vl='volta list'
+
+# misc
+alias zz="zellij"

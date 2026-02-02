@@ -1,3 +1,9 @@
 zsh/.zsh/.zsh_history
 zsh/.zsh/plugins
 zsh/.zsh/.vectorrc
+
+# Nix
+result
+.direnv
+
+# Note: flake.lock SHOULD be committed for reproducibility

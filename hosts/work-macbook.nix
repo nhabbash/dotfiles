@@ -4,13 +4,13 @@
 {
   # Work-specific settings
   # Most configuration is in common.nix and modules/
-  # Company-specific configs load from ~/.zshrc.local and ~/.gitconfig.local
+  # Company-specific configs load from ~/.zshrc.work and ~/.gitconfig.local
 
   # Hostname
   networking.hostName = "nassim-work";
 
-  # Work-specific packages (if any)
+  # Work-specific packages
   environment.systemPackages = with pkgs; [
-    # Add work-only packages here
+    awscli2
   ];
 }

@@ -14,7 +14,7 @@ secrets/
 
 # Machine-specific local configs
 .zshrc.local
-.zshrc.monday
+.zshrc.work
 .gitconfig.local
 
 # macOS

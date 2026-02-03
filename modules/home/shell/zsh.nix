@@ -78,7 +78,7 @@
 
       # Source machine-specific configs (not tracked in git)
       [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
-      [[ -f ~/.zshrc.monday ]] && source ~/.zshrc.monday
+      [[ -f ~/.zshrc.work ]] && source ~/.zshrc.work
     '';
 
     # Profile extra (runs in .zprofile, for login shells)

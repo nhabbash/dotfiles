@@ -114,13 +114,13 @@ rm -f result
 
 # Create machine-specific local configs
 if [[ "$HOSTNAME" == "work-macbook" ]]; then
-    if [ ! -f "$HOME/.zshrc.monday" ]; then
-        echo "==> Creating ~/.zshrc.monday..."
-        cat > "$HOME/.zshrc.monday" << 'EOF'
-# Monday.com company dotfiles integration
+    if [ ! -f "$HOME/.zshrc.work" ]; then
+        echo "==> Creating ~/.zshrc.work..."
+        cat > "$HOME/.zshrc.work" << 'EOF'
+# Work dotfiles integration
 source ~/dotfiles/.bash_profile
 EOF
-        echo "    Created ~/.zshrc.monday"
+        echo "    Created ~/.zshrc.work"
     fi
 
     if [ ! -f "$HOME/.gitconfig.local" ]; then

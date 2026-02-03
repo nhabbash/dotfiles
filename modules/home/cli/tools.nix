@@ -21,9 +21,6 @@
     # Misc
     stow
     glow
-
-    # Cloud
-    awscli2
   ];
 
   # FZF

@@ -23,6 +23,12 @@ fi
 
 echo "==> Rebuilding configuration for: $HOSTNAME"
 
+# Ensure flake.lock exists and is valid
+if [ ! -s "${DOTFILES_DIR}/flake.lock" ]; then
+    echo "==> Generating flake.lock..."
+    nix --extra-experimental-features 'nix-command flakes' flake update "${DOTFILES_DIR}"
+fi
+
 # darwin-rebuild needs sudo for system activation
 sudo darwin-rebuild switch --flake "${DOTFILES_DIR}#${HOSTNAME}"
 

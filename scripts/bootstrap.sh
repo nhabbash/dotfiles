@@ -95,6 +95,12 @@ if [ ${#EXISTING_FILES[@]} -gt 0 ]; then
     esac
 fi
 
+# Ensure flake.lock exists and is valid
+if [ ! -s "${DOTFILES_DIR}/flake.lock" ]; then
+    echo "==> Generating flake.lock..."
+    nix --extra-experimental-features 'nix-command flakes' flake update "${DOTFILES_DIR}"
+fi
+
 # Build the configuration first (as user, to avoid permission issues)
 echo "==> Building configuration..."
 nix --extra-experimental-features 'nix-command flakes' build "${DOTFILES_DIR}#darwinConfigurations.${HOSTNAME}.system"

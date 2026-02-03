@@ -5,7 +5,9 @@
 set -e
 
 HOSTNAME="${1:-personal-macbook}"
-DOTFILES_DIR="${HOME}/.dotfiles"
+# Detect dotfiles directory from script location
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
 
 echo "==> Bootstrapping dotfiles for: $HOSTNAME"
 

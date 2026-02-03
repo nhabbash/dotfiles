@@ -1,21 +1,36 @@
 #!/bin/bash
-# Sync script: pull latest changes and rebuild
-# Usage: ./scripts/sync.sh [hostname]
+# Sync: pull + rebuild: ./scripts/sync.sh [hostname] [-v|--verbose]
 
 set -e
 
-# Detect dotfiles directory from script location
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
-HOSTNAME="${1:-}"
+source "$SCRIPT_DIR/lib.sh"
 
-echo "==> Syncing dotfiles..."
+HOSTNAME=""
+VERBOSE_FLAG=""
+for arg in "$@"; do
+    case $arg in
+        -v|--verbose)
+            VERBOSE=true
+            VERBOSE_FLAG="-v"
+            ;;
+        *) HOSTNAME="$arg" ;;
+    esac
+done
 
-# Pull latest changes
+header "Syncing dotfiles"
+
+init_progress 2
+
+step "Pulling latest changes"
 cd "$DOTFILES_DIR"
-git pull --rebase
+if $VERBOSE; then
+    git pull --rebase
+else
+    run_quiet git pull --rebase
+fi
 
-# Rebuild
-./scripts/switch.sh $HOSTNAME
-
-echo "==> Sync complete!"
+step "Rebuilding configuration"
+echo ""
+"$SCRIPT_DIR/switch.sh" $HOSTNAME $VERBOSE_FLAG

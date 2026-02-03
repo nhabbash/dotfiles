@@ -1,36 +1,19 @@
-# CLI tools configuration
+# CLI tools
 { config, pkgs, lib, ... }:
 
 {
   home.packages = with pkgs; [
-    # Shell & Terminal
-    zsh
-    starship
-    fzf
-    tmux
-
-    # Modern CLI tools
-    bat
-    eza
-    ripgrep
-    fd
-    jq
-    tree
-    htop
-
-    # Misc
-    stow
-    glow
+    zsh starship fzf tmux
+    bat eza ripgrep fd jq tree htop
+    stow glow
   ];
 
-  # FZF
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
     defaultOptions = [ "--height 40%" "--layout=reverse" "--border" ];
   };
 
-  # Bat (better cat)
   programs.bat = {
     enable = true;
     config = {
@@ -39,7 +22,6 @@
     };
   };
 
-  # Eza (better ls)
   programs.eza = {
     enable = true;
     icons = "auto";

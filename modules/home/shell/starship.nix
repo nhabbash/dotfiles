@@ -10,14 +10,14 @@
       format = lib.concatStrings [
         "[░▒▓](#a3aed2)"
         "[  ](bg:#a3aed2 fg:#090c0c)"
-        "[](bg:#769ff0 fg:#a3aed2)"
+        "[](bg:#769ff0 fg:#a3aed2)"
         "$directory"
-        "[](fg:#769ff0 bg:#394260)"
+        "[](fg:#769ff0 bg:#394260)"
         "$git_branch"
         "$git_status"
-        "[](fg:#394260 bg:#2d344b)"
+        "[](fg:#394260 bg:#2d344b)"
         "\${custom.nodejs}"
-        "[](fg:#2d344b)"
+        "[](fg:#2d344b)"
         "\n$character"
       ];
 

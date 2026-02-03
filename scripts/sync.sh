@@ -4,7 +4,9 @@
 
 set -e
 
-DOTFILES_DIR="${HOME}/.dotfiles"
+# Detect dotfiles directory from script location
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
 HOSTNAME="${1:-}"
 
 echo "==> Syncing dotfiles..."

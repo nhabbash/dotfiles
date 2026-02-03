@@ -31,11 +31,9 @@
 
     # Tools
     zz = "zellij";
-
-    # Tree
     tdl = "tree -a -I 'node_modules|.svelte-kit|.git' --dirsfirst";
 
-    # Nix/Darwin
+    # Nix
     rebuild = "darwin-rebuild switch --flake ~/.dotfiles";
     nfu = "nix flake update ~/.dotfiles";
   };

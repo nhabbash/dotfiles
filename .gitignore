@@ -1,8 +1,8 @@
-# Nix
+# Nix build output
 result
 .direnv
 
-# Secrets (never commit)
+# Secrets
 *.local
 secrets/
 .env
@@ -12,7 +12,7 @@ secrets/
 *.key
 *.pem
 
-# Machine-specific configs (not tracked)
+# Machine-specific (untracked)
 .zshrc.work
 .gitconfig.local
 
@@ -21,9 +21,7 @@ secrets/
 *.swp
 *.swo
 
-# Editor
+# Editors
 .idea/
 .vscode/
 *.code-workspace
-
-# Note: flake.lock SHOULD be committed for reproducibility

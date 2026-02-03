@@ -1,6 +1,6 @@
 # Dotfiles
 
-Nix-based dotfiles with nix-darwin (macOS) and home-manager (Linux).
+Nix-based dotfiles, configs and development environment
 
 ## Setup
 

@@ -2,9 +2,8 @@
 { pkgs, username, ... }:
 
 {
-  # Work-specific settings
-  # Most configuration is in common.nix and modules/
-  # Company-specific configs load from ~/.zshrc.work and ~/.gitconfig.local
+  # Platform (Apple Silicon)
+  nixpkgs.hostPlatform = "aarch64-darwin";
 
   # Hostname
   networking.hostName = "nassim-work";

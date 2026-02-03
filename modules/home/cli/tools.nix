@@ -1,5 +1,5 @@
 # CLI tools configuration
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   home.packages = with pkgs; [
@@ -34,7 +34,7 @@
   programs.bat = {
     enable = true;
     config = {
-      theme = "Catppuccin-mocha";
+      theme = "TwoDark";
       style = "numbers,changes";
     };
   };

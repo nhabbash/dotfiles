@@ -1,6 +1,6 @@
 # Dotfiles
 
-Nix-based dotfiles, configs and development environment
+Personal dev environment managed with Nix for both Mac and Linux
 
 ## Setup
 

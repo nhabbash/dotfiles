@@ -7,7 +7,7 @@ layout {
                 // Format configuration
                 format_left   " #[bg=#313244] {mode}#[bg=#313244] {tabs}"
                 format_center "{notifications}"
-                format_right  "#[bg=#313244,fg=#94e2d5]#[fg=#11111b,bg=#94e2d5]󱃾 #[bg=#45475a,fg=#94e2d5,bold] {command_kube}#[bg=#313244,fg=#45475a]#[bg=#313244,fg=#eba0ac]#[bg=#eba0ac,fg=#11111b]󰃭 #[bg=#45475a,fg=#eba0ac,bold] {datetime}#[bg=#313244,fg=#45475a]"
+                format_right  "#[bg=#313244,fg=#94e2d5]#[fg=#11111b,bg=#94e2d5] #[bg=#45475a,fg=#94e2d5,bold] {command_kube}#[bg=#313244,fg=#45475a]#[bg=#313244,fg=#eba0ac]#[bg=#eba0ac,fg=#11111b]󰃭 #[bg=#45475a,fg=#eba0ac,bold] {datetime}#[bg=#313244,fg=#45475a]"
                 format_space  "#[bg=#313244]"
                 format_hide_on_overlength "true"
                 format_precedence "lrc"
@@ -40,13 +40,9 @@ layout {
                 datetime_format   "%A, %d %b %Y %H:%M"
 
                 // Kubernetes context
-                command_kube {
-                    command "sh"
-                    args "-c" "kubectl config current-context 2>/dev/null || echo 'none'"
-                    format "{stdout}"
-                    interval 10
-                    rendermode "static"
-                }
+                command_kube_command   "bash -c \"kubectl config current-context || echo none\""
+                command_kube_format    "{stdout}"
+                command_kube_interval  "10"
             }
         }
 

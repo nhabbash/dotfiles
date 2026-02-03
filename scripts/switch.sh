@@ -43,9 +43,11 @@ if [ ! -s "${DOTFILES_DIR}/flake.lock" ]; then
     run_quiet nix --extra-experimental-features 'nix-command flakes' flake update "${DOTFILES_DIR}"
 fi
 
+NIX_BUILD_FLAGS="-j auto --cores 0"
+
 if [ "$OS" = "Darwin" ]; then
     step "Building configuration"
-    run_quiet nix --extra-experimental-features 'nix-command flakes' build "${DOTFILES_DIR}#darwinConfigurations.${HOSTNAME}.system"
+    run_quiet nix --extra-experimental-features 'nix-command flakes' build $NIX_BUILD_FLAGS "${DOTFILES_DIR}#darwinConfigurations.${HOSTNAME}.system"
 
     step "Applying system settings"
     run_quiet sudo ./result/sw/bin/darwin-rebuild switch --flake "${DOTFILES_DIR}#${HOSTNAME}"
@@ -54,7 +56,7 @@ if [ "$OS" = "Darwin" ]; then
     step "Activating home-manager"
 else
     step "Building configuration"
-    run_quiet nix --extra-experimental-features 'nix-command flakes' build "${DOTFILES_DIR}#homeConfigurations.${HOSTNAME}.activationPackage"
+    run_quiet nix --extra-experimental-features 'nix-command flakes' build $NIX_BUILD_FLAGS "${DOTFILES_DIR}#homeConfigurations.${HOSTNAME}.activationPackage"
 
     step "Activating home-manager"
     if command_exists home-manager; then

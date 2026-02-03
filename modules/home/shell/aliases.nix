@@ -34,7 +34,8 @@
     tdl = "tree -a -I 'node_modules|.svelte-kit|.git' --dirsfirst";
 
     # Nix
-    rebuild = "darwin-rebuild switch --flake ~/.dotfiles";
+    rebuild = "~/.dotfiles/scripts/switch.sh";
     nfu = "nix flake update ~/.dotfiles";
+    ngc = "nix-collect-garbage -d && nix store optimise";
   };
 }

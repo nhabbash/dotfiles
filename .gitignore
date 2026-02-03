@@ -12,8 +12,7 @@ secrets/
 *.key
 *.pem
 
-# Machine-specific local configs
-.zshrc.local
+# Machine-specific configs (not tracked)
 .zshrc.work
 .gitconfig.local
 

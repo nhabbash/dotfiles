@@ -1,28 +1,30 @@
 # Home Manager modules entry point
-{ config, pkgs, lib, username, hostname, isWork, ... }:
+{ config, pkgs, lib, username, hostname, isWork, enableGui, ... }:
 
 let
-  homeDirectory = "/Users/${username}";
-in
-{
-  imports = [
+  # CLI-only modules (always included)
+  cliModules = [
     ./shell/zsh.nix
     ./shell/starship.nix
     ./shell/aliases.nix
-    ./terminal/kitty.nix
-    ./terminal/zellij.nix
     ./git/git.nix
     ./cli/tools.nix
     ./editors/neovim.nix
-    ./editors/vscode.nix
     ./kubernetes/k8s.nix
   ];
 
+  # GUI modules (only when enableGui = true)
+  guiModules = [
+    ./terminal/kitty.nix
+    ./terminal/zellij.nix
+    ./editors/vscode.nix
+  ];
+in
+{
+  imports = cliModules ++ lib.optionals enableGui guiModules;
+
   # Basic home configuration
-  home = {
-    inherit username homeDirectory;
-    stateVersion = "24.05";
-  };
+  home.stateVersion = "24.05";
 
   # Let Home Manager install and manage itself
   programs.home-manager.enable = true;
@@ -31,11 +33,11 @@ in
   home.sessionVariables = {
     EDITOR = "nvim";
     VISUAL = "nvim";
-    XDG_CONFIG_HOME = "${homeDirectory}/.config";
-    XDG_DATA_HOME = "${homeDirectory}/.local/share";
-    XDG_CACHE_HOME = "${homeDirectory}/.cache";
+    XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
+    XDG_DATA_HOME = "${config.home.homeDirectory}/.local/share";
+    XDG_CACHE_HOME = "${config.home.homeDirectory}/.cache";
   };
 
-  # Pass isWork flag to other modules
-  _module.args = { inherit isWork; };
+  # Pass flags to other modules
+  _module.args = { inherit isWork enableGui; };
 }

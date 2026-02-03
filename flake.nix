@@ -19,7 +19,7 @@
     let
       username = "nassim";
 
-      # Helper to create darwin configurations
+      # Helper to create darwin configurations (macOS)
       mkDarwinConfig = { hostname, system ? "aarch64-darwin", isWork ? false }: darwin.lib.darwinSystem {
         inherit system;
         specialArgs = { inherit username hostname isWork; };
@@ -33,12 +33,30 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               backupFileExtension = "backup";
-              extraSpecialArgs = { inherit username hostname isWork; };
+              extraSpecialArgs = { inherit username hostname isWork; enableGui = true; };
               users.${username} = import ./modules/home;
             };
           }
         ];
       };
+
+      # Helper to create home-manager configurations (Linux)
+      mkHomeConfig = { hostname, system ? "x86_64-linux", enableGui ? false }:
+        let pkgs = nixpkgs.legacyPackages.${system};
+        in home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          extraSpecialArgs = { inherit username hostname enableGui; isWork = false; };
+          modules = [
+            ./modules/home
+            {
+              home = {
+                inherit username;
+                homeDirectory = "/home/${username}";
+                stateVersion = "24.05";
+              };
+            }
+          ];
+        };
     in
     {
       darwinConfigurations = {
@@ -62,8 +80,25 @@
         };
       };
 
+      # Linux configurations (standalone home-manager)
+      homeConfigurations = {
+        # Linux server/VPS (CLI only, no GUI apps)
+        "linux-server" = mkHomeConfig {
+          hostname = "linux-server";
+          system = "x86_64-linux";
+          enableGui = false;
+        };
+
+        # Linux desktop/laptop (includes GUI apps)
+        "linux-desktop" = mkHomeConfig {
+          hostname = "linux-desktop";
+          system = "x86_64-linux";
+          enableGui = true;
+        };
+      };
+
       # Development shell for working on these dotfiles
-      devShells = nixpkgs.lib.genAttrs [ "aarch64-darwin" "x86_64-darwin" ] (system:
+      devShells = nixpkgs.lib.genAttrs [ "aarch64-darwin" "x86_64-darwin" "x86_64-linux" ] (system:
         let pkgs = nixpkgs.legacyPackages.${system};
         in {
           default = pkgs.mkShell {

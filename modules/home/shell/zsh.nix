@@ -1,9 +1,14 @@
 # Zsh configuration
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   programs.zsh = {
     enable = true;
+
+    # Put nix-managed zsh files in .config/zsh
+    # This leaves ~/.zshrc free for user/tool edits
+    dotDir = "${config.xdg.configHome}/zsh";
+
     enableCompletion = true;
     autosuggestion = {
       enable = true;
@@ -26,7 +31,7 @@
       plugins = [ "git" ];
     };
 
-    # Extra init (runs at the end of .zshrc)
+    # Extra init (runs at the end of .config/zsh/.zshrc)
     initContent = ''
       # Homebrew (must be early for PATH)
       if [[ -f /opt/homebrew/bin/brew ]]; then
@@ -75,10 +80,6 @@
 
       # Additional PATH entries
       export PATH="$HOME/.local/bin:$PATH"
-
-      # Source machine-specific configs (not tracked in git)
-      [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
-      [[ -f ~/.zshrc.work ]] && source ~/.zshrc.work
     '';
 
     # Profile extra (runs in .zprofile, for login shells)
@@ -89,4 +90,11 @@
       fi
     '';
   };
+
+  # Create ~/.zshrc.base that sources the nix config
+  home.file.".zshrc.base".text = ''
+    # Nix-managed zsh config - do not edit directly
+    # Edit ~/.zshrc for custom additions
+    source ${config.xdg.configHome}/zsh/.zshrc
+  '';
 }

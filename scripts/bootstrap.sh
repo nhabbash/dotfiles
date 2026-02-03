@@ -25,7 +25,7 @@ sudo git config --global --add safe.directory "${DOTFILES_DIR}" 2>/dev/null || t
 
 # Backup existing shell configs that nix-darwin needs to manage
 # nix-darwin adds nix initialization to these system-wide files
-for f in /etc/bashrc /etc/zshrc; do
+for f in /etc/bashrc /etc/zshrc /etc/zshenv; do
     if [ -f "$f" ] && [ ! -f "${f}.before-nix-darwin" ]; then
         echo "==> Backing up $f to ${f}.before-nix-darwin"
         sudo mv "$f" "${f}.before-nix-darwin"

@@ -1,16 +1,21 @@
 # Starship prompt configuration
-format = """
-[░▒▓](#a3aed2)\
+#
+# Unicode reference:
+#   \ue0b0 =  (powerline arrow right)
+#   \ue0a0 =  (git branch)
+#   \u2638 = ☸ (kubernetes wheel)
+#   \U000f0399 = 󰎙 (nodejs)
+
+format = """[\u2591\u2592\u2593](#a3aed2)\
 [  ](bg:#a3aed2 fg:#090c0c)\
-[](bg:#769ff0 fg:#a3aed2)\
+[\ue0b0](bg:#769ff0 fg:#a3aed2)\
 $directory\
-[](fg:#769ff0 bg:#394260)\
+[\ue0b0](fg:#769ff0 bg:#394260)\
 $git_branch\
 $git_status\
-[](fg:#394260 bg:#2d344b)\
+[\ue0b0](fg:#394260 bg:#2d344b)\
 ${custom.nodejs}\
-[](fg:#2d344b)\
-
+[\ue0b0](fg:#2d344b)
 $character"""
 
 [directory]
@@ -20,7 +25,7 @@ truncation_length = 3
 truncation_symbol = ".../"
 
 [git_branch]
-symbol = ""
+symbol = "\ue0a0"
 style = "bg:#394260"
 format = "[[ $symbol $branch ](fg:#769ff0 bg:#394260)]($style)"
 
@@ -31,13 +36,13 @@ format = "[[($all_status$ahead_behind )](fg:#769ff0 bg:#394260)]($style)"
 [custom.nodejs]
 command = "node --version | tr -d '\\n'"
 when = true
-symbol = "󰎙"
+symbol = "\U000f0399"
 style = "bg:#2d344b"
 format = "[[ $symbol $output ](fg:#769ff0 bg:#2d344b)]($style)"
 disabled = false
 
 [kubernetes]
-symbol = "☸"
+symbol = "\u2638"
 style = "bg:#212736"
 format = "[[ $symbol ($context \\($namespace\\)) ](fg:#769ff0 bg:#212736)]($style)"
 disabled = false

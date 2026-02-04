@@ -2,14 +2,12 @@
 { config, pkgs, lib, username, isWork, enableGui, ... }:
 
 let
-  cliModules = [
+  coreModules = [
+    ./packages.nix
     ./shell/zsh.nix
     ./shell/starship.nix
     ./shell/aliases.nix
-    ./git/git.nix
-    ./cli/tools.nix
-    ./editors/neovim.nix
-    ./kubernetes/k8s.nix
+    ./git.nix
     ./terminal/zellij.nix
   ];
 
@@ -18,7 +16,7 @@ let
   ];
 in
 {
-  imports = cliModules ++ lib.optionals enableGui guiModules;
+  imports = coreModules ++ lib.optionals enableGui guiModules;
 
   home.stateVersion = "24.05";
   programs.home-manager.enable = true;
@@ -32,4 +30,25 @@ in
   };
 
   _module.args = { inherit isWork enableGui; };
+
+  # Tool-specific configuration
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+    defaultOptions = [ "--height 40%" "--layout=reverse" "--border" ];
+  };
+
+  programs.bat = {
+    enable = true;
+    config = {
+      theme = "TwoDark";
+      style = "numbers,changes";
+    };
+  };
+
+  programs.eza = {
+    enable = true;
+    icons = "auto";
+    git = true;
+  };
 }

@@ -31,8 +31,8 @@
 
     # Tools
     zz = "zellij";
-    zs = "zellij attach -c";                        # attach or create session: zs work
-    zrs = "zellij action rename-session";           # rename session: zrs new-name
+    zs = "zellij attach -c";
+    zrs = "zellij action rename-session";
     tdl = "tree -a -I 'node_modules|.svelte-kit|.git' --dirsfirst";
 
     # Nix

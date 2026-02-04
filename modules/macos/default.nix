@@ -1,4 +1,4 @@
-# Darwin modules entry point
+# macOS system configuration
 { ... }:
 
 {
@@ -6,5 +6,6 @@
     ./system.nix
     ./dock.nix
     ./finder.nix
+    ./apps.nix
   ];
 }

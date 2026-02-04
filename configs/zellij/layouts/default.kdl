@@ -1,3 +1,16 @@
+// Zellij layout configuration
+//
+// Unicode reference (KDL uses \u{XXXX} syntax):
+//   \u{e0b0} =  (powerline arrow right)
+//   \u{e0b2} =  (powerline arrow left)
+//   \u{2764} = ❤ (heart)
+//   \u{f0219} =  (kubernetes)
+//   \u{f00ed} = 󰃭 (calendar)
+//   \u{f0f3} =  (bell)
+//   \u{f021} =  (sync)
+//   \u{f0293} = 󰊓 (fullscreen)
+//   \u{f0e59} = 󰹙 (floating)
+
 layout {
     default_tab_template {
         // Top status bar - main status (mode, session, tabs, datetime)
@@ -7,31 +20,31 @@ layout {
                 // Format configuration
                 format_left   " #[bg=#313244] {mode}#[bg=#313244] {tabs}"
                 format_center "{notifications}"
-                format_right  "#[bg=#313244,fg=#94e2d5]#[fg=#11111b,bg=#94e2d5] #[bg=#45475a,fg=#94e2d5] {command_kube}#[bg=#313244,fg=#45475a]#[bg=#313244,fg=#eba0ac]#[bg=#eba0ac,fg=#11111b]󰃭 #[bg=#45475a,fg=#eba0ac] {datetime}#[bg=#313244,fg=#45475a]"
+                format_right  "#[bg=#313244,fg=#94e2d5]\u{e0b2}#[fg=#11111b,bg=#94e2d5]\u{f0219} #[bg=#45475a,fg=#94e2d5]\u{e0b2} {command_kube}#[bg=#313244,fg=#45475a]\u{e0b2}#[bg=#313244,fg=#eba0ac]\u{e0b2}#[bg=#eba0ac,fg=#11111b]\u{f00ed} #[bg=#45475a,fg=#eba0ac]\u{e0b2} {datetime}#[bg=#313244,fg=#45475a]\u{e0b2}"
                 format_space  "#[bg=#313244]"
                 format_hide_on_overlength "true"
                 format_precedence "lrc"
 
                 // Notifications
-                notification_format_unread           "#[bg=#f9e2af,fg=#11111b,blink]  #[bg=#45475a,fg=#f9e2af] {message}#[bg=#313244,fg=#45475a]"
+                notification_format_unread           "#[bg=#f9e2af,fg=#11111b,blink] \u{f0f3} #[bg=#45475a,fg=#f9e2af]\u{e0b2} {message}#[bg=#313244,fg=#45475a]\u{e0b2}"
                 notification_format_no_notifications ""
                 notification_show_interval           "10"
 
 
                 // Tab formatting
-                tab_normal              "#[bg=#313244,fg=#89b4fa]#[bg=#89b4fa,fg=#11111b]{index} #[bg=#45475a,fg=#89b4fa] {name}{floating_indicator}#[bg=#313244,fg=#45475a]"
-                tab_normal_fullscreen   "#[bg=#313244,fg=#89b4fa]#[bg=#89b4fa,fg=#11111b]{index} #[bg=#45475a,fg=#89b4fa] {name}{fullscreen_indicator}#[bg=#313244,fg=#45475a]"
-                tab_normal_sync         "#[bg=#313244,fg=#89b4fa]#[bg=#89b4fa,fg=#11111b]{index} #[bg=#45475a,fg=#89b4fa] {name}{sync_indicator}#[bg=#313244,fg=#45475a]"
-                tab_active              "#[bg=#313244,fg=#fab387]#[bg=#fab387,fg=#11111b]{index} #[bg=#45475a,fg=#fab387] {name}{floating_indicator}#[bg=#313244,fg=#45475a]"
-                tab_active_fullscreen   "#[bg=#313244,fg=#fab387]#[bg=#fab387,fg=#11111b]{index} #[bg=#45475a,fg=#fab387] {name}{fullscreen_indicator}#[bg=#313244,fg=#45475a]"
-                tab_active_sync         "#[bg=#313244,fg=#fab387]#[bg=#fab387,fg=#11111b]{index} #[bg=#45475a,fg=#fab387] {name}{sync_indicator}#[bg=#313244,fg=#45475a]"
+                tab_normal              "#[bg=#313244,fg=#89b4fa]\u{e0b2}#[bg=#89b4fa,fg=#11111b]{index} #[bg=#45475a,fg=#89b4fa]\u{e0b2} {name}{floating_indicator}#[bg=#313244,fg=#45475a]\u{e0b2}"
+                tab_normal_fullscreen   "#[bg=#313244,fg=#89b4fa]\u{e0b2}#[bg=#89b4fa,fg=#11111b]{index} #[bg=#45475a,fg=#89b4fa]\u{e0b2} {name}{fullscreen_indicator}#[bg=#313244,fg=#45475a]\u{e0b2}"
+                tab_normal_sync         "#[bg=#313244,fg=#89b4fa]\u{e0b2}#[bg=#89b4fa,fg=#11111b]{index} #[bg=#45475a,fg=#89b4fa]\u{e0b2} {name}{sync_indicator}#[bg=#313244,fg=#45475a]\u{e0b2}"
+                tab_active              "#[bg=#313244,fg=#fab387]\u{e0b2}#[bg=#fab387,fg=#11111b]{index} #[bg=#45475a,fg=#fab387]\u{e0b2} {name}{floating_indicator}#[bg=#313244,fg=#45475a]\u{e0b2}"
+                tab_active_fullscreen   "#[bg=#313244,fg=#fab387]\u{e0b2}#[bg=#fab387,fg=#11111b]{index} #[bg=#45475a,fg=#fab387]\u{e0b2} {name}{fullscreen_indicator}#[bg=#313244,fg=#45475a]\u{e0b2}"
+                tab_active_sync         "#[bg=#313244,fg=#fab387]\u{e0b2}#[bg=#fab387,fg=#11111b]{index} #[bg=#45475a,fg=#fab387]\u{e0b2} {name}{sync_indicator}#[bg=#313244,fg=#45475a]\u{e0b2}"
                 tab_separator           "#[bg=#313244] "
 
-                tab_sync_indicator       " "
-                tab_fullscreen_indicator " 󰊓"
-                tab_floating_indicator   " 󰹙"
+                tab_sync_indicator       " \u{f021}"
+                tab_fullscreen_indicator " \u{f0293}"
+                tab_floating_indicator   " \u{f0e59}"
 
-                tab_display_count        "3"
+                tab_display_count        "10"
                 tab_truncate_start_format "#[fg=#9399b2] < +{count} ..."
                 tab_truncate_end_format  "#[fg=#9399b2] ... +{count} >"
 
@@ -53,25 +66,25 @@ layout {
         pane size=1 borderless=true {
             plugin location="zjstatus" {
                 // Mode indicators
-                mode_normal        "#[bg=#a6e3a1,fg=#11111b] ❤ NORMAL#[bg=#313244,fg=#a6e3a1]"
-                mode_tmux          "#[bg=#cba6f7,fg=#11111b] ❤ TMUX#[bg=#313244,fg=#cba6f7]"
-                mode_locked        "#[bg=#f38ba8,fg=#11111b] ❤ LOCKED#[bg=#313244,fg=#f38ba8]"
-                mode_pane          "#[bg=#94e2d5,fg=#11111b] ❤ PANE#[bg=#313244,fg=#94e2d5]"
-                mode_tab           "#[bg=#94e2d5,fg=#11111b] ❤ TAB#[bg=#313244,fg=#94e2d5]"
-                mode_scroll        "#[bg=#94e2d5,fg=#11111b] ❤ SCROLL#[bg=#313244,fg=#94e2d5]"
-                mode_enter_search  "#[bg=#94e2d5,fg=#11111b] ❤ ENT-SEARCH#[bg=#313244,fg=#94e2d5]"
-                mode_search        "#[bg=#94e2d5,fg=#11111b] ❤ SEARCH#[bg=#313244,fg=#94e2d5]"
-                mode_resize        "#[bg=#f9e2af,fg=#11111b] ❤ RESIZE#[bg=#313244,fg=#f9e2af]"
-                mode_rename_tab    "#[bg=#f9e2af,fg=#11111b] ❤ RENAME-TAB#[bg=#313244,fg=#f9e2af]"
-                mode_rename_pane   "#[bg=#f9e2af,fg=#11111b] ❤ RENAME-PANE#[bg=#313244,fg=#f9e2af]"
-                mode_move          "#[bg=#f9e2af,fg=#11111b] ❤ MOVE#[bg=#313244,fg=#f9e2af]"
-                mode_session       "#[bg=#f5c2e7,fg=#11111b] ❤ SESSION#[bg=#313244,fg=#f5c2e7]"
-                mode_prompt        "#[bg=#f5c2e7,fg=#11111b] ❤ PROMPT#[bg=#313244,fg=#f5c2e7]"
+                mode_normal        "#[bg=#a6e3a1,fg=#11111b] \u{2764} NORMAL#[bg=#313244,fg=#a6e3a1]\u{e0b0}"
+                mode_tmux          "#[bg=#cba6f7,fg=#11111b] \u{2764} TMUX#[bg=#313244,fg=#cba6f7]\u{e0b0}"
+                mode_locked        "#[bg=#f38ba8,fg=#11111b] \u{2764} LOCKED#[bg=#313244,fg=#f38ba8]\u{e0b0}"
+                mode_pane          "#[bg=#94e2d5,fg=#11111b] \u{2764} PANE#[bg=#313244,fg=#94e2d5]\u{e0b0}"
+                mode_tab           "#[bg=#94e2d5,fg=#11111b] \u{2764} TAB#[bg=#313244,fg=#94e2d5]\u{e0b0}"
+                mode_scroll        "#[bg=#94e2d5,fg=#11111b] \u{2764} SCROLL#[bg=#313244,fg=#94e2d5]\u{e0b0}"
+                mode_enter_search  "#[bg=#94e2d5,fg=#11111b] \u{2764} ENT-SEARCH#[bg=#313244,fg=#94e2d5]\u{e0b0}"
+                mode_search        "#[bg=#94e2d5,fg=#11111b] \u{2764} SEARCH#[bg=#313244,fg=#94e2d5]\u{e0b0}"
+                mode_resize        "#[bg=#f9e2af,fg=#11111b] \u{2764} RESIZE#[bg=#313244,fg=#f9e2af]\u{e0b0}"
+                mode_rename_tab    "#[bg=#f9e2af,fg=#11111b] \u{2764} RENAME-TAB#[bg=#313244,fg=#f9e2af]\u{e0b0}"
+                mode_rename_pane   "#[bg=#f9e2af,fg=#11111b] \u{2764} RENAME-PANE#[bg=#313244,fg=#f9e2af]\u{e0b0}"
+                mode_move          "#[bg=#f9e2af,fg=#11111b] \u{2764} MOVE#[bg=#313244,fg=#f9e2af]\u{e0b0}"
+                mode_session       "#[bg=#f5c2e7,fg=#11111b] \u{2764} SESSION#[bg=#313244,fg=#f5c2e7]\u{e0b0}"
+                mode_prompt        "#[bg=#f5c2e7,fg=#11111b] \u{2764} PROMPT#[bg=#313244,fg=#f5c2e7]\u{e0b0}"
 
-                format_left   "#[bg=#313244,fg=#74c7ec]#[bg=#74c7ec,fg=#11111b] {session} #[bg=#313244,fg=#74c7ec] {mode}"
+                format_left   "#[bg=#313244,fg=#74c7ec]\u{e0b2}#[bg=#74c7ec,fg=#11111b] {session} #[bg=#313244,fg=#74c7ec]\u{e0b0} {mode}"
                 format_center ""
                 format_right  "{pipe_zjstatus_hints}"
-                format_precedence "lrc" 
+                format_precedence "lrc"
 
                 format_space  "#[bg=#313244]"
 

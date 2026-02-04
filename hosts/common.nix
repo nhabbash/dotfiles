@@ -3,7 +3,7 @@
 
 {
   imports = [
-    ../modules/darwin
+    ../modules/macos
   ];
 
   # Nix configuration
@@ -13,12 +13,11 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # System packages available globally
+  # Minimal system packages (emergency access)
   environment.systemPackages = with pkgs; [
     vim
     git
     curl
-    wget
   ];
 
   # Fonts

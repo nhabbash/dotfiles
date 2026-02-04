@@ -30,7 +30,7 @@
               useUserPackages = true;
               backupFileExtension = "backup";
               extraSpecialArgs = { inherit username hostname isWork; enableGui = true; };
-              users.${username} = import ./modules/home;
+              users.${username} = import ./modules;
             };
           }
         ];
@@ -42,7 +42,7 @@
           inherit pkgs;
           extraSpecialArgs = { inherit username hostname enableGui; isWork = false; };
           modules = [
-            ./modules/home
+            ./modules
             {
               home = {
                 inherit username;

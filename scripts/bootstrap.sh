@@ -1,7 +1,11 @@
 #!/bin/bash
-# Bootstrap new machine: ./scripts/bootstrap.sh [hostname] [-v|--verbose]
+# Bootstrap new machine: ./scripts/bootstrap.sh [hostname] [-v|--verbose] [-e|--editable]
 # macOS: personal-macbook | work-macbook
 # Linux: linux-server | linux-desktop
+#
+# Flags:
+#   -e, --editable   Use direct symlinks (configs editable at expected paths)
+#   -v, --verbose    Show detailed output
 
 set -e
 
@@ -10,9 +14,12 @@ DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
 source "$SCRIPT_DIR/lib.sh"
 
 HOSTNAME=""
+EDITABLE=false
+
 for arg in "$@"; do
     case $arg in
         -v|--verbose) VERBOSE=true ;;
+        -e|--editable) EDITABLE=true ;;
         *) HOSTNAME="$arg" ;;
     esac
 done
@@ -27,7 +34,12 @@ if [ -z "$HOSTNAME" ]; then
     fi
 fi
 
-header "Bootstrapping: $HOSTNAME ($OS)"
+MODE_LABEL=""
+if [ "$EDITABLE" = true ]; then
+    MODE_LABEL=" (editable)"
+fi
+
+header "Bootstrapping: $HOSTNAME ($OS)$MODE_LABEL"
 
 SUMMARY_ITEMS=()
 
@@ -204,6 +216,36 @@ EOF
 EOF
         SUMMARY_ITEMS+=("Created ~/.gitconfig.local")
     fi
+fi
+
+# Editable mode: replace nix store symlinks with direct symlinks to dotfiles
+if [ "$EDITABLE" = true ]; then
+    step "Creating editable symlinks"
+
+    CONFIGS_DIR="${DOTFILES_DIR}/configs"
+
+    # Kitty
+    mkdir -p "$HOME/.config/kitty"
+    ln -sfn "${CONFIGS_DIR}/kitty/kitty.conf" "$HOME/.config/kitty/kitty.conf"
+    ln -sfn "${CONFIGS_DIR}/kitty/current-theme.conf" "$HOME/.config/kitty/current-theme.conf"
+
+    # Zellij
+    mkdir -p "$HOME/.config/zellij/layouts" "$HOME/.config/zellij/themes"
+    ln -sfn "${CONFIGS_DIR}/zellij/config.kdl" "$HOME/.config/zellij/config.kdl"
+    ln -sfn "${CONFIGS_DIR}/zellij/layouts/default.kdl" "$HOME/.config/zellij/layouts/default.kdl"
+    ln -sfn "${CONFIGS_DIR}/zellij/themes/catppuccin-mocha.kdl" "$HOME/.config/zellij/themes/catppuccin-mocha.kdl"
+
+    # Starship (if external config exists)
+    if [ -f "${CONFIGS_DIR}/starship.toml" ]; then
+        ln -sfn "${CONFIGS_DIR}/starship.toml" "$HOME/.config/starship.toml"
+    fi
+
+    # Git (if external config exists)
+    if [ -f "${CONFIGS_DIR}/git/config" ]; then
+        ln -sfn "${CONFIGS_DIR}/git/config" "$HOME/.gitconfig"
+    fi
+
+    SUMMARY_ITEMS+=("Editable symlinks created")
 fi
 
 success "Bootstrap complete!"

@@ -1,0 +1,59 @@
+# =============================================================================
+# Appearance
+# =============================================================================
+theme = Catppuccin Macchiato
+font-family = Inconsolata Nerd Font Mono
+font-size = 16
+background-opacity = 0.98
+cursor-style-blink = false
+
+# =============================================================================
+# Window
+# =============================================================================
+window-height = 30
+window-width = 160
+window-save-state = always
+window-padding-balance = true
+confirm-close-surface = true
+
+# =============================================================================
+# Scrollback
+# =============================================================================
+scrollback-limit = 10000000
+
+# =============================================================================
+# Shell
+# =============================================================================
+shell-integration = zsh
+shell-integration-features = no-cursor
+
+# =============================================================================
+# macOS
+# =============================================================================
+macos-option-as-alt = left
+macos-titlebar-style = tabs
+
+# =============================================================================
+# Keybindings
+# =============================================================================
+
+# Line navigation (Ctrl+A / Ctrl+E)
+keybind = alt+h=text:\x01
+keybind = alt+l=text:\x05
+keybind = cmd+left=text:\x01
+keybind = cmd+right=text:\x05
+
+# Word navigation (Alt+B / Alt+F)
+keybind = alt+left=esc:b
+keybind = alt+right=esc:f
+
+# Shift+Enter sends escaped return
+keybind = shift+enter=text:\x1b\r
+
+# Reload config
+keybind = super+r=reload_config
+
+# =============================================================================
+# Cursor Trail (via custom shader)
+# =============================================================================
+custom-shader = ~/.config/ghostty/shaders/cursor_blaze.glsl

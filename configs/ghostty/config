@@ -54,6 +54,7 @@ keybind = shift+enter=text:\x1b\r
 keybind = super+r=reload_config
 
 # =============================================================================
-# Cursor Trail (via custom shader)
+# Cursor Trail
 # =============================================================================
-custom-shader = ~/.config/ghostty/shaders/cursor_blaze.glsl
+custom-shader = ~/.config/ghostty/shaders/cursor_warp.glsl
+custom-shader-animation = always

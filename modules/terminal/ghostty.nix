@@ -17,6 +17,6 @@ in
     source = ../../configs/ghostty/config;
   };
 
-  # Shader referenced from config as ~/.config/ghostty/shaders/
-  xdg.configFile."ghostty/shaders/cursor_blaze.glsl".source = ../../configs/ghostty/shaders/cursor_blaze.glsl;
+  # Cursor trail shader
+  xdg.configFile."ghostty/shaders/cursor_warp.glsl".source = ../../configs/ghostty/shaders/cursor_warp.glsl;
 }

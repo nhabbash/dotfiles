@@ -72,7 +72,7 @@ layout {
                 // Mode indicators
                 mode_normal        "#[bg=#a6e3a1,fg=#11111b] \u{2764} NORMAL#[bg=#313244,fg=#a6e3a1]\u{e0b4}"
                 mode_tmux          "#[bg=#cba6f7,fg=#11111b] \u{2764} TMUX#[bg=#313244,fg=#cba6f7]\u{e0b4}"
-                mode_locked        "#[bg=#f38ba8,fg=#11111b] \u{2764} LOCKED#[bg=#313244,fg=#f38ba8]\u{e0b4}#[fg=#9399b2] Ctrl+Space#[fg=#6c7086] unlock"
+                mode_locked        "#[bg=#f38ba8,fg=#11111b] \u{2764} LOCKED#[bg=#313244,fg=#f38ba8]\u{e0b4}#[fg=#9399b2]"
                 mode_pane          "#[bg=#94e2d5,fg=#11111b] \u{2764} PANE#[bg=#313244,fg=#94e2d5]\u{e0b4}"
                 mode_tab           "#[bg=#94e2d5,fg=#11111b] \u{2764} TAB#[bg=#313244,fg=#94e2d5]\u{e0b4}"
                 mode_scroll        "#[bg=#94e2d5,fg=#11111b] \u{2764} SCROLL#[bg=#313244,fg=#94e2d5]\u{e0b4}"

@@ -8,11 +8,16 @@ let
     ./shell/starship.nix
     ./shell/aliases.nix
     ./git.nix
+    ./jj.nix
+    ./gh.nix
+    ./agents.nix
     ./terminal/zellij.nix
+    ./terminal/tmux.nix
   ];
 
   guiModules = [
     ./terminal/kitty.nix
+    ./terminal/ghostty.nix
   ];
 in
 {

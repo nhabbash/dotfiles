@@ -1,4 +1,4 @@
 # Claude Code configuration
 
-# Default model
-export ANTHROPIC_MODEL="claude-opus-4-6[1m]"
+# Default model (overridden per-machine in work.zsh / personal.zsh)
+export ANTHROPIC_MODEL="claude-sonnet-4-6"

@@ -41,5 +41,8 @@ cleanup-mcp() {
   pkill -9 -f "node.*vitest" 2>/dev/null && echo "killed stuck vitest" || echo "no stuck vitest"
 }
 
+# Claude Code: use opus on work machine (1M context via provider)
+export ANTHROPIC_MODEL="claude-opus-4-6[1m]"
+
 alias cursorcli='agent'
 alias opencode='AWS_REGION= AWS_PROFILE= command opencode'

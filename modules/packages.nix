@@ -37,7 +37,6 @@
     htop
     curl
     wget
-    stow
     glow
   ];
 }

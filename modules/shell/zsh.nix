@@ -1,8 +1,8 @@
 # Zsh configuration
-{ config, pkgs, lib, dotfilesDir, isWork, ... }:
+# Shell config files (configs/zsh/*.zsh) are symlinked by home.activation.linkConfigs in default.nix
+{ config, pkgs, lib, isWork, ... }:
 
 let
-  mkLink = path: config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${path}";
   profileFile = if isWork then "work" else "personal";
 in
 {
@@ -37,17 +37,6 @@ in
       source ~/.config/zsh/zellij.zsh
       source ~/.config/zsh/${profileFile}.zsh
     '';
-  };
-
-  # Symlink shell config files from the repo (editable, no rebuild needed)
-  xdg.configFile = {
-    "zsh/core.zsh".source = mkLink "configs/zsh/core.zsh";
-    "zsh/aliases.zsh".source = mkLink "configs/zsh/aliases.zsh";
-    "zsh/functions.zsh".source = mkLink "configs/zsh/functions.zsh";
-    "zsh/claude.zsh".source = mkLink "configs/zsh/claude.zsh";
-    "zsh/zellij.zsh".source = mkLink "configs/zsh/zellij.zsh";
-    "zsh/work.zsh".source = mkLink "configs/zsh/work.zsh";
-    "zsh/personal.zsh".source = mkLink "configs/zsh/personal.zsh";
   };
 
   # Custom .zshenv - load nix env but don't redirect ZDOTDIR

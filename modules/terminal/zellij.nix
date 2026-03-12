@@ -1,8 +1,8 @@
 # Zellij terminal multiplexer configuration
-{ config, pkgs, dotfilesDir, zellij-tmux-shim, ... }:
+# Config file symlinks managed by home.activation.linkConfigs in default.nix
+{ pkgs, zellij-tmux-shim, ... }:
 
 let
-  mkLink = path: config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${path}";
   shimDir = zellij-tmux-shim;
 in
 {
@@ -10,13 +10,8 @@ in
     zellij
   ];
 
-  xdg.configFile = {
-    "zellij/config.kdl".source = mkLink "configs/zellij/config.kdl";
-    "zellij/themes/catppuccin-mocha.kdl".source = mkLink "configs/zellij/themes/catppuccin-mocha.kdl";
-    "zellij/layouts/default.kdl".source = mkLink "configs/zellij/layouts/default.kdl";
-  };
-
   # zellij-tmux-shim: makes Claude Code agent teams work in zellij
+  # These come from a flake input (not the repo), so they use nix file management
   home.file = {
     ".local/share/zellij-tmux-shim/bin/tmux" = {
       source = "${shimDir}/bin/tmux";

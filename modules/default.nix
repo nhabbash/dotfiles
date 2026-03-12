@@ -2,25 +2,70 @@
 { config, pkgs, lib, username, isWork, enableGui, ... }:
 
 let
-  coreModules = [
+  dotfilesDir = builtins.getEnv "DOTFILES_DIR";
+  homeDir = config.home.homeDirectory;
+  isDarwin = pkgs.stdenv.isDarwin;
+
+  modules = [
     ./packages.nix
     ./shell/zsh.nix
-    ./shell/starship.nix
-    ./git.nix
-    ./jj.nix
-    ./gh.nix
-    ./agents.nix
     ./terminal/zellij.nix
-    ./terminal/tmux.nix
   ];
 
-  guiModules = [
-    ./terminal/kitty.nix
-    ./terminal/ghostty.nix
-  ];
+  # All config symlinks: target (relative to ~) -> source (relative to dotfiles repo)
+  configLinks = {
+    # Shell
+    ".config/zsh/core.zsh" = "configs/zsh/core.zsh";
+    ".config/zsh/aliases.zsh" = "configs/zsh/aliases.zsh";
+    ".config/zsh/functions.zsh" = "configs/zsh/functions.zsh";
+    ".config/zsh/claude.zsh" = "configs/zsh/claude.zsh";
+    ".config/zsh/zellij.zsh" = "configs/zsh/zellij.zsh";
+    ".config/zsh/work.zsh" = "configs/zsh/work.zsh";
+    ".config/zsh/personal.zsh" = "configs/zsh/personal.zsh";
+    ".config/starship.toml" = "configs/starship.toml";
+
+    # Git & tools
+    ".gitconfig" = "configs/git/config";
+    ".config/jj/config.toml" = "configs/jj/config.toml";
+    ".config/gh/config.yml" = "configs/gh/config.yml";
+    ".tmux.conf" = "configs/tmux/tmux.conf";
+
+    # Claude Code
+    ".claude/CLAUDE.md" = "configs/claude/CLAUDE.md";
+    ".claude/statusline.sh" = "configs/claude/statusline.sh";
+
+    # Agents (directory symlink)
+    ".config/agents" = "configs/agents";
+
+    # Zellij
+    ".config/zellij/config.kdl" = "configs/zellij/config.kdl";
+    ".config/zellij/themes/catppuccin-mocha.kdl" = "configs/zellij/themes/catppuccin-mocha.kdl";
+    ".config/zellij/layouts/default.kdl" = "configs/zellij/layouts/default.kdl";
+  }
+  // lib.optionalAttrs enableGui {
+    # Kitty
+    ".config/kitty/kitty.conf" = "configs/kitty/kitty.conf";
+    ".config/kitty/current-theme.conf" = "configs/kitty/current-theme.conf";
+
+    # Ghostty
+    ".config/ghostty/shaders/cursor_warp.glsl" = "configs/ghostty/shaders/cursor_warp.glsl";
+  }
+  // lib.optionalAttrs (enableGui && isDarwin) {
+    "Library/Application Support/com.mitchellh.ghostty/config" = "configs/ghostty/config";
+  }
+  // lib.optionalAttrs (enableGui && !isDarwin) {
+    ".config/ghostty/config" = "configs/ghostty/config";
+  };
+
+  # Build the ln -sf commands (rm first to handle directory symlinks correctly)
+  linkCommands = lib.concatStringsSep "\n" (lib.mapAttrsToList (target: source: ''
+    mkdir -p "$(dirname "${homeDir}/${target}")"
+    rm -f "${homeDir}/${target}"
+    ln -sf "${dotfilesDir}/${source}" "${homeDir}/${target}"
+  '') configLinks);
 in
 {
-  imports = coreModules ++ lib.optionals enableGui guiModules;
+  imports = modules;
 
   home.stateVersion = "24.05";
   programs.home-manager.enable = true;
@@ -31,15 +76,24 @@ in
     XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
     XDG_DATA_HOME = "${config.home.homeDirectory}/.local/share";
     XDG_CACHE_HOME = "${config.home.homeDirectory}/.cache";
-    DOTFILES_DIR = builtins.getEnv "DOTFILES_DIR";
+    DOTFILES_DIR = dotfilesDir;
   };
 
   _module.args = {
-    inherit isWork enableGui;
-    dotfilesDir = builtins.getEnv "DOTFILES_DIR";
+    inherit isWork dotfilesDir;
   };
 
-  # Tool-specific configuration
+  # Direct symlinks to repo files (one-hop, editable)
+  home.activation.linkConfigs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    ${linkCommands}
+  '';
+
+  # Tool integrations (packages are in packages.nix, configs are in configs/)
+  programs.starship = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;

@@ -1,6 +1,10 @@
 # Zsh configuration
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, dotfilesDir, isWork, ... }:
 
+let
+  mkLink = path: config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${path}";
+  profileFile = if isWork then "work" else "personal";
+in
 {
   programs.zsh = {
     enable = true;
@@ -26,52 +30,24 @@
     };
 
     initContent = ''
-      # Homebrew
-      if [[ -f /opt/homebrew/bin/brew ]]; then
-        eval "$(/opt/homebrew/bin/brew shellenv)"
-      fi
-
-      # Performance
-      DISABLE_AUTO_UPDATE="true"
-      DISABLE_MAGIC_FUNCTIONS="true"
-      DISABLE_COMPFIX="true"
-
-      # Expand aliases on space
-      globalias() {
-        if [[ $LBUFFER =~ '[a-zA-Z0-9]+$' ]]; then
-          zle _expand_alias
-          zle expand-word
-        fi
-        zle self-insert
-      }
-      zle -N globalias
-      bindkey " " globalias
-      bindkey "^[[Z" magic-space
-      bindkey -M isearch " " magic-space
-
-      # SSH agent
-      if [ -z "$SSH_AUTH_SOCK" ]; then
-        eval "$(ssh-agent -s)" > /dev/null
-        ssh-add ~/.ssh/id_github_sign_and_auth 2>/dev/null
-      fi
-
-      # Zellij tab naming
-      if [[ -n "$ZELLIJ" ]]; then
-        function zellij_tab_name_update_pre() {
-          local cmd="''${1[(w)1]}"
-          if [[ -n "$cmd" ]]; then
-            { zellij action rename-tab "$cmd" } >/dev/null 2>&1 &!
-          fi
-        }
-        autoload -Uz add-zsh-hook
-        add-zsh-hook preexec zellij_tab_name_update_pre
-      fi
-
-      # Volta
-      export VOLTA_HOME="$HOME/.volta"
-      export PATH="$VOLTA_HOME/bin:$PATH"
-      export PATH="$HOME/.local/bin:$PATH"
+      source ~/.config/zsh/core.zsh
+      source ~/.config/zsh/aliases.zsh
+      source ~/.config/zsh/functions.zsh
+      source ~/.config/zsh/claude.zsh
+      source ~/.config/zsh/zellij.zsh
+      source ~/.config/zsh/${profileFile}.zsh
     '';
+  };
+
+  # Symlink shell config files from the repo (editable, no rebuild needed)
+  xdg.configFile = {
+    "zsh/core.zsh".source = mkLink "configs/zsh/core.zsh";
+    "zsh/aliases.zsh".source = mkLink "configs/zsh/aliases.zsh";
+    "zsh/functions.zsh".source = mkLink "configs/zsh/functions.zsh";
+    "zsh/claude.zsh".source = mkLink "configs/zsh/claude.zsh";
+    "zsh/zellij.zsh".source = mkLink "configs/zsh/zellij.zsh";
+    "zsh/work.zsh".source = mkLink "configs/zsh/work.zsh";
+    "zsh/personal.zsh".source = mkLink "configs/zsh/personal.zsh";
   };
 
   # Custom .zshenv - load nix env but don't redirect ZDOTDIR

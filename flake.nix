@@ -11,12 +11,15 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    zellij-tmux-shim = {
+      url = "github:stanislc/zellij-claude-teams";
+      flake = false;
+    };
   };
 
-  outputs = { self, nixpkgs, darwin, home-manager, ... }:
+  outputs = { self, nixpkgs, darwin, home-manager, zellij-tmux-shim, ... }:
     let
       username = "nassim";
-
       mkDarwinConfig = { hostname, system ? "aarch64-darwin", isWork ? false }: darwin.lib.darwinSystem {
         inherit system;
         specialArgs = { inherit username hostname isWork; };
@@ -29,7 +32,7 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               backupFileExtension = "backup";
-              extraSpecialArgs = { inherit username hostname isWork; enableGui = true; };
+              extraSpecialArgs = { inherit username hostname isWork zellij-tmux-shim; enableGui = true; };
               users.${username} = import ./modules;
             };
           }
@@ -40,7 +43,7 @@
         let pkgs = nixpkgs.legacyPackages.${system};
         in home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
-          extraSpecialArgs = { inherit username hostname enableGui; isWork = false; };
+          extraSpecialArgs = { inherit username hostname enableGui zellij-tmux-shim; isWork = false; };
           modules = [
             ./modules
             {

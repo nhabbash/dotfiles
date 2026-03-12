@@ -1,6 +1,7 @@
 # Jujutsu version control configuration
-{ config, pkgs, ... }:
+{ config, dotfilesDir, ... }:
 
 {
-  xdg.configFile."jj/config.toml".source = ../configs/jj/config.toml;
+  xdg.configFile."jj/config.toml".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/configs/jj/config.toml";
 }

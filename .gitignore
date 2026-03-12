@@ -16,6 +16,11 @@ secrets/
 .zshrc.work
 .gitconfig.local
 
+# Work-specific agent configs (exist locally via directory symlink, not committed)
+configs/agents/monday-sprint-board.md
+configs/agents/local-dev-tips.md
+configs/agents/slack.md
+
 # macOS
 .DS_Store
 *.swp

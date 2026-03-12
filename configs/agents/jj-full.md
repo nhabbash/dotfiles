@@ -333,6 +333,17 @@ For using workspaces with agent teams, see `~/.config/agents/delegation.md`.
 
 ## Agent Instructions
 
+### Critical: verify position before every task
+
+**jj has no passive branch isolation.** In git, being "on a branch" protects you. In jj, `@` is just wherever you last left it. Always verify before working:
+
+```bash
+# MANDATORY first step before any work
+jj log -r '@'    # Where am I? What bookmark? What parent?
+```
+
+If `@` is not where you expect, navigate first. Never assume.
+
 ### Before making any changes
 
 **Always identify the target first:**
@@ -349,6 +360,62 @@ jj new <bookmark> -m "fix: ..."
 ```
 
 Never edit from wherever `@` happens to be — always navigate first.
+
+### Switching between features
+
+In git you'd `git checkout <branch>`. In jj, use `jj new`:
+
+```bash
+# Switch to work on a different feature
+jj new <target-bookmark> -m "feat: next thing"
+
+# Or start fresh from master
+jj new master@origin -m "feat: new feature"
+```
+
+The files on disk change, `@` moves, previous work stays on its bookmark. This is clean isolation — but you must actively navigate, it won't protect you passively.
+
+### Structuring commit history
+
+**jj auto-tracks everything into `@`. There is no staging area.** Structure commits by declaring intent upfront with `jj new`, not by splitting after the fact.
+
+```bash
+# WRONG: do a bunch of work, then try to untangle
+# ... write code for feature A and feature B ...
+jj split  # painful, error-prone
+
+# RIGHT: declare each unit before starting it
+jj new -m "feat: add BrandKit entity"
+# only work on BrandKit files
+jj new -m "feat: add Insight entity"
+# only work on Insight files
+```
+
+**If you forget and need to split:** `jj squash --into` and `jj split` work, but note that jj uses **cwd-relative paths**, not repo-root paths.
+
+### Subagent work
+
+**Always prepare a change for the subagent before launching it**, or use `isolation: "worktree"`. Otherwise the subagent's files land in whatever `@` currently is, mixing with unrelated work.
+
+```bash
+# Option 1: Pre-create the change
+jj new -m "feat: add AnalyticsEvent entity"
+# THEN launch the subagent — its work lands cleanly in this change
+
+# Option 2: Use worktree isolation (for background agents)
+# Pass isolation: "worktree" to the Agent tool
+```
+
+### Importing work from other branches
+
+Use sequential `jj new` + `jj restore`, not multi-parent merges (those create merge commits that don't work for linear PR history).
+
+```bash
+# For each branch to import:
+jj new -m "feat: description of this branch's work"
+jj restore --from <branch>@origin -- path/to/file1 path/to/file2
+# repeat for next branch
+```
 
 ### When user asks to "commit"
 
@@ -372,6 +439,41 @@ Do NOT accumulate all work into a single change via `jj edit`. This loses histor
 3. Make the fix
 4. `jj bookmark set <bookmark> -r @` — move bookmark forward
 5. `jj git push -b <bookmark>` — push (no force-push needed)
+
+## Git interop
+
+jj and git share the same `.git` store. Some tools (Claude Code's `isolation: "worktree"`, git hooks, external scripts) modify git directly. jj won't see those changes until you sync.
+
+### After any tool touches git directly
+
+```bash
+jj git import    # re-read .git, pick up new branches/commits
+```
+
+Run this after:
+- A subagent finishes with `isolation: "worktree"` (uses git worktree, not jj workspace)
+- Any script that runs `git commit`, `git branch`, or `git push`
+- Manual git commands
+
+### Integrating a git worktree agent's work
+
+When a subagent uses `isolation: "worktree"`, it creates a git worktree and makes git commits there. To bring that work into jj:
+
+```bash
+# 1. Import the new git branch into jj
+jj git import
+
+# 2. Create a jj change from the branch
+jj new <branch-name> -m "integrate: agent work"
+
+# 3. Or cherry-pick files from it
+jj new -m "feat: agent's work"
+jj restore --from <branch-name> -- path/to/files
+```
+
+### When in doubt
+
+If jj behaves unexpectedly (missing commits, stale bookmarks, unexpected conflicts), `jj git import` is a safe first step — it's read-only and just syncs jj's view with git's state.
 
 ## Troubleshooting
 

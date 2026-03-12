@@ -1,6 +1,7 @@
 # Git configuration
-{ config, pkgs, lib, ... }:
+{ config, dotfilesDir, ... }:
 
 {
-  home.file.".gitconfig".source = ../configs/git/config;
+  home.file.".gitconfig".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/configs/git/config";
 }

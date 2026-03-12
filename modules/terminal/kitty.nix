@@ -1,9 +1,12 @@
 # Kitty terminal configuration
-{ config, pkgs, ... }:
+{ config, dotfilesDir, ... }:
 
+let
+  mkLink = path: config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${path}";
+in
 {
   xdg.configFile = {
-    "kitty/kitty.conf".source = ../../configs/kitty/kitty.conf;
-    "kitty/current-theme.conf".source = ../../configs/kitty/current-theme.conf;
+    "kitty/kitty.conf".source = mkLink "configs/kitty/kitty.conf";
+    "kitty/current-theme.conf".source = mkLink "configs/kitty/current-theme.conf";
   };
 }

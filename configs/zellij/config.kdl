@@ -312,6 +312,7 @@ plugins {
 
 load_plugins {
   zjstatus-hints
+  "https://github.com/Cynary/zellij-tab-name/releases/download/v0.4.2/zellij-tab-name.wasm"
 }
 
 ui {

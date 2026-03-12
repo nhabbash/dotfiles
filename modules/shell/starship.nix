@@ -1,5 +1,5 @@
 # Starship prompt configuration
-{ config, pkgs, lib, ... }:
+{ config, dotfilesDir, ... }:
 
 {
   programs.starship = {
@@ -7,5 +7,6 @@
     enableZshIntegration = true;
   };
 
-  xdg.configFile."starship.toml".source = ../../configs/starship.toml;
+  xdg.configFile."starship.toml".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/configs/starship.toml";
 }

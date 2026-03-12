@@ -6,6 +6,8 @@
 #   \u2638 = ☸ (kubernetes wheel)
 #   \U000f0399 = 󰎙 (nodejs)
 
+command_timeout = 2000
+
 format = """[\u2591\u2592\u2593](#a3aed2)\
 [  ](bg:#a3aed2 fg:#090c0c)\
 [\ue0b0](bg:#769ff0 fg:#a3aed2)\

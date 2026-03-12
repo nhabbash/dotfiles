@@ -1,11 +1,14 @@
 # AI agent instructions and Claude Code configuration
-{ config, pkgs, ... }:
+{ config, dotfilesDir, ... }:
 
+let
+  mkLink = path: config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${path}";
+in
 {
-  xdg.configFile."agents" = {
-    source = ../configs/agents;
-    recursive = true;
-  };
+  xdg.configFile."agents".source = mkLink "configs/agents";
 
-  home.file.".claude/CLAUDE.md".source = ../configs/claude/CLAUDE.md;
+  home.file = {
+    ".claude/CLAUDE.md".source = mkLink "configs/claude/CLAUDE.md";
+    ".claude/statusline.sh".source = mkLink "configs/claude/statusline.sh";
+  };
 }

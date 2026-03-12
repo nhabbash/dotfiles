@@ -1,6 +1,7 @@
 # GitHub CLI configuration
-{ config, pkgs, ... }:
+{ config, dotfilesDir, ... }:
 
 {
-  xdg.configFile."gh/config.yml".source = ../configs/gh/config.yml;
+  xdg.configFile."gh/config.yml".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/configs/gh/config.yml";
 }

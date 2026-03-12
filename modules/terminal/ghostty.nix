@@ -1,22 +1,20 @@
 # Ghostty terminal configuration
 # macOS uses ~/Library/Application Support/com.mitchellh.ghostty/
 # Linux uses ~/.config/ghostty/
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, dotfilesDir, ... }:
 
 let
   isDarwin = pkgs.stdenv.isDarwin;
+  mkLink = path: config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${path}";
 in
 {
-  # Linux: XDG config path
   xdg.configFile."ghostty/config" = lib.mkIf (!isDarwin) {
-    source = ../../configs/ghostty/config;
+    source = mkLink "configs/ghostty/config";
   };
 
-  # macOS: Application Support path
   home.file."Library/Application Support/com.mitchellh.ghostty/config" = lib.mkIf isDarwin {
-    source = ../../configs/ghostty/config;
+    source = mkLink "configs/ghostty/config";
   };
 
-  # Cursor trail shader
-  xdg.configFile."ghostty/shaders/cursor_warp.glsl".source = ../../configs/ghostty/shaders/cursor_warp.glsl;
+  xdg.configFile."ghostty/shaders/cursor_warp.glsl".source = mkLink "configs/ghostty/shaders/cursor_warp.glsl";
 }

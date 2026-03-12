@@ -60,7 +60,24 @@
       "inputs": {
         "darwin": "darwin",
         "home-manager": "home-manager",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "zellij-tmux-shim": "zellij-tmux-shim"
+      }
+    },
+    "zellij-tmux-shim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1772395708,
+        "narHash": "sha256-cduWc31I/c1ksR2Bp2jpwO2OOBSCNwLuxphNvaEDo3c=",
+        "owner": "stanislc",
+        "repo": "zellij-claude-teams",
+        "rev": "5a9bc6d9a9a4171b0e45bc7df4ea0a01fa444883",
+        "type": "github"
+      },
+      "original": {
+        "owner": "stanislc",
+        "repo": "zellij-claude-teams",
+        "type": "github"
       }
     }
   },

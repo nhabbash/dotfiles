@@ -6,7 +6,6 @@ let
     ./packages.nix
     ./shell/zsh.nix
     ./shell/starship.nix
-    ./shell/aliases.nix
     ./git.nix
     ./jj.nix
     ./gh.nix
@@ -32,9 +31,13 @@ in
     XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
     XDG_DATA_HOME = "${config.home.homeDirectory}/.local/share";
     XDG_CACHE_HOME = "${config.home.homeDirectory}/.cache";
+    DOTFILES_DIR = builtins.getEnv "DOTFILES_DIR";
   };
 
-  _module.args = { inherit isWork enableGui; };
+  _module.args = {
+    inherit isWork enableGui;
+    dotfilesDir = builtins.getEnv "DOTFILES_DIR";
+  };
 
   # Tool-specific configuration
   programs.fzf = {
@@ -53,7 +56,6 @@ in
 
   programs.eza = {
     enable = true;
-    icons = "auto";
-    git = true;
+    enableZshIntegration = false;
   };
 }

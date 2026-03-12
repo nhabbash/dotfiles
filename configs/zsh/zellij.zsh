@@ -11,9 +11,7 @@ function _zellij_tab_name_pipe() {
   local title="$1"
   title="${title//\\/\\\\}"
   title="${title//\"/\\\"}"
-  title="${title//\{/\{\{}"
-  title="${title//\}/\}\}}"
-  { zellij pipe --name change-tab-name -- "{\"pane_id\": \"$ZELLIJ_PANE_ID\", \"name\": \"$title\"}"; } >/dev/null 2>&1 &!
+  zellij pipe --name change-tab-name -- "{\"pane_id\": \"$ZELLIJ_PANE_ID\", \"name\": \"$title\"}" >/dev/null 2>&1
 }
 
 function _zellij_tab_name_from_cwd() {
@@ -29,10 +27,25 @@ function _zellij_tab_name_from_cwd() {
   _zellij_tab_name_pipe "$name"
 }
 
+function zellij_tab_auto_preexec() {
+  if [[ "$ZELLIJ_TAB_AUTO_RENAME" != "1" || "$ZELLIJ_TAB_AUTO_LOCKED" == "1" ]]; then
+    return
+  fi
+  # Show the command name while it's running
+  local cmd="${1%% *}"
+  cmd="${cmd##*/}"
+  local dir="$PWD"
+  [[ "$dir" == "$HOME" ]] && dir="~" || dir="${dir##*/}"
+  local name="{tab_position}: $cmd ($dir)"
+  _ZELLIJ_LAST_TAB_NAME=""
+  _zellij_tab_name_pipe "$name"
+}
+
 function zellij_tab_auto_precmd() {
   if [[ "$ZELLIJ_TAB_AUTO_RENAME" != "1" || "$ZELLIJ_TAB_AUTO_LOCKED" == "1" ]]; then
     return
   fi
+  # Back to directory name when command finishes
   _zellij_tab_name_from_cwd
 }
 
@@ -56,6 +69,7 @@ alias tab-name='tab_name'
 alias rename-tab='tab_name'
 
 autoload -Uz add-zsh-hook
+add-zsh-hook preexec zellij_tab_auto_preexec
 add-zsh-hook precmd zellij_tab_auto_precmd
 
 # --- Claude Code agent teams (tmux shim) ---

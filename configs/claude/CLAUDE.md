@@ -1,6 +1,7 @@
 @~/.config/agents/research.md
 @~/.config/agents/visual-testing.md
 @~/.config/agents/delegation.md
+@~/.config/agents/orchestration.md
 
 ## Version control
 

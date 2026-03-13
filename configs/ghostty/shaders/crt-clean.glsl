@@ -4,11 +4,11 @@
 // === TUNE THESE (all 0.0 to 1.0) ===
 //
 #define CURVATURE       0.28   // barrel distortion: 0 = flat, 0.5 = moderate, 1 = heavy
-#define SCAN_INTENSITY  0.70   // scanline darkness: 0 = off, 0.3 = subtle, 0.7 = heavy
-#define SCAN_DENSITY    0.60   // scanline spacing: 0 = thick/sparse, 0.5 = balanced, 1 = fine/dense
-#define CHROMA_SHIFT    0.26   // RGB color split: 0 = off, 0.1 = subtle, 0.5 = heavy
+#define SCAN_INTENSITY  0.5   // scanline darkness: 0 = off, 0.3 = subtle, 0.7 = heavy
+#define SCAN_DENSITY    0.4   // scanline spacing: 0 = thick/sparse, 0.5 = balanced, 1 = fine/dense
+#define CHROMA_SHIFT    0.20   // RGB color split: 0 = off, 0.1 = subtle, 0.5 = heavy
 #define BLOOM           0.22   // glow bleed on bright pixels: 0 = off, 0.3 = soft, 0.7 = dreamy
-#define DOT_MATRIX      0.45   // RGB subpixel pattern: 0 = off, 0.2 = subtle, 0.6 = visible
+#define DOT_MATRIX      0.18   // RGB subpixel pattern: 0 = off, 0.2 = subtle, 0.6 = visible
 #define VIGNETTE        0.10   // edge darkening: 0 = off, 0.2 = subtle, 0.6 = heavy
 #define BRIGHTNESS      0.45   // creative boost only: 0 = dimmer, 0.5 = original, 1 = brighter
                                // (scanline/dot darkening is auto-compensated)
@@ -68,13 +68,17 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
         color += max(bloom - color, vec3(0.0)) * bloomStr;
     }
 
-    // --- Scanlines (with auto brightness compensation) ---
-    // Average of sin scanline with intensity s = 1 - s*0.5, so compensate by 1/(1-s*0.5)
+    // --- Scanlines: soft sine profile within integer period ---
+    // fragCoord.y = physical pixels (no curvature distortion)
+    // integer period = no Moiré from frequency mismatch
+    // smooth sin² profile = no hard-edge interference with text rendering
     float scanCompensation = 1.0;
     if (scanStr > 0.0) {
-        float scanline = sin(cuv.y * scanFreq * 3.14159) * 0.5 + 0.5;
-        color *= mix(1.0, scanline, scanStr);
-        scanCompensation = 1.0 / (1.0 - scanStr * 0.5);
+        float period = floor(mix(2.0, 8.0, 1.0 - SCAN_DENSITY));
+        float phase = mod(fragCoord.y, period) / period; // 0..1 per period
+        float scanline = 1.0 - scanStr * pow(sin(phase * 3.14159), 2.0);
+        color *= scanline;
+        scanCompensation = 1.0 / (1.0 - scanStr * 0.5); // sin² averages 0.5
     }
 
     // --- Dot Matrix (with auto brightness compensation) ---

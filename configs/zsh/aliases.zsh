@@ -5,10 +5,10 @@ alias ls="eza --icons auto --git"
 alias ll="eza -l --icons --sort newest --group-directories-first -s extension"
 alias la="eza -a --icons auto --git"
 alias lt="eza --tree --icons auto --git"
-alias c="code ."
+alias c="codium ."
 alias s="cursor ."
 alias e="exit"
-alias r="cd ~/Development"
+alias dev="cd ~/Development"
 
 # Git
 alias g="git"
@@ -44,3 +44,6 @@ alias ngc="nix-collect-garbage -d && nix store optimise"
 # Ghostty CRT shader toggle
 alias crt-on='sed -i "" "s|^# *custom-shader = .*crt-clean.glsl|custom-shader = ~/.config/ghostty/shaders/crt-clean.glsl|" "$DOTFILES_DIR/configs/ghostty/config"'
 alias crt-off='sed -i "" "s|^custom-shader = .*crt-clean.glsl|# custom-shader = ~/.config/ghostty/shaders/crt-clean.glsl|" "$DOTFILES_DIR/configs/ghostty/config"'
+
+# zellij
+alias zj='zellij'

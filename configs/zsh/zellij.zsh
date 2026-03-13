@@ -36,7 +36,7 @@ function zellij_tab_auto_preexec() {
   cmd="${cmd##*/}"
   local dir="$PWD"
   [[ "$dir" == "$HOME" ]] && dir="~" || dir="${dir##*/}"
-  local name="{tab_position}: $cmd ($dir)"
+  local name="$cmd ($dir)"
   _ZELLIJ_LAST_TAB_NAME=""
   _zellij_tab_name_pipe "$name"
 }

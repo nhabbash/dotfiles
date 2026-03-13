@@ -44,9 +44,9 @@ Split panes require running inside `tmux` before starting `claude`. Without tmux
 
 ### Teammate models
 
-Use cheaper models for straightforward tasks:
-- `haiku` — simple, well-defined tasks (create a type file following an exact pattern)
-- `sonnet` — moderate complexity (implement a feature with some exploration needed)
+Choose model based on the task type, not as a blanket default:
+- `haiku` — execution tasks where the plan is already provided (write code following a pattern, run tests, create fixtures)
+- `sonnet` — tasks requiring judgment (code review, analysis, exploration, debugging, feature implementation with ambiguity)
 - `opus` — complex tasks requiring deep reasoning or architectural decisions
 
 ### Parallel implementation with jj workspaces

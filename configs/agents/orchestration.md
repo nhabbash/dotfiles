@@ -17,7 +17,8 @@ A senior engineer doesn't read every file before giving a task to a junior. They
 | Tier | Model | Role | When |
 |---|---|---|---|
 | Default | Sonnet | Orchestration, planning, most interactions | Always unless escalated |
-| Execution | Haiku | File reads, code writing, tests, fixtures | Delegated tasks |
+| Execution | Haiku | Code writing, tests, fixtures (plan already provided) | Delegated implementation tasks |
+| Analysis | Sonnet | Code review, debugging, exploration, judgment calls | Tasks requiring reasoning, not just execution |
 | Escalation | Opus | Novel architecture, complex debugging, hard design calls | User explicitly switches |
 
 The orchestrator should almost never read files. If it needs to understand something, it should:

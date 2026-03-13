@@ -52,7 +52,19 @@ setup_zshrc() {
     fi
     if [ ! -f "$HOME/.zshrc" ]; then
         cat > "$HOME/.zshrc" << 'ZSHRC'
-# Editable zsh config - add custom config below
+# ~/.zshrc — local, untracked. Safe to edit directly.
+# For changes you want on ALL machines → edit ~/Development/dotfiles/configs/zsh/
+# For changes on THIS machine only    → add them below, or in ~/.zshrc.local
+#
+# Zsh config map:
+#   aliases.zsh      — all shared aliases          (edit + dotfiles push)
+#   functions.zsh    — shell functions              (edit + dotfiles push)
+#   core.zsh         — PATH, homebrew, keybindings  (edit + dotfiles push)
+#   personal.zsh     — personal machine overrides   (edit + dotfiles push)
+#   work.zsh         — work machine overrides       (edit + dotfiles push)
+#   modules/shell/zsh.nix — plugins, history        (edit + dotfiles rebuild)
+#   ~/.zshrc.local   — this machine only, untracked (edit freely)
+
 source ~/.zshrc.base
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 ZSHRC

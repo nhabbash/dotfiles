@@ -47,8 +47,8 @@ let
     ".config/kitty/kitty.conf" = "configs/kitty/kitty.conf";
     ".config/kitty/current-theme.conf" = "configs/kitty/current-theme.conf";
 
-    # Ghostty
-    ".config/ghostty/shaders/cursor_warp.glsl" = "configs/ghostty/shaders/cursor_warp.glsl";
+    # Ghostty (whole shaders dir so new shaders auto-appear)
+    ".config/ghostty/shaders" = "configs/ghostty/shaders";
   }
   // lib.optionalAttrs (enableGui && isDarwin) {
     "Library/Application Support/com.mitchellh.ghostty/config" = "configs/ghostty/config";
@@ -57,10 +57,10 @@ let
     ".config/ghostty/config" = "configs/ghostty/config";
   };
 
-  # Build the ln -sf commands (rm first to handle directory symlinks correctly)
+  # Build the ln -sf commands (rm first to handle stale files/dirs/symlinks)
   linkCommands = lib.concatStringsSep "\n" (lib.mapAttrsToList (target: source: ''
     mkdir -p "$(dirname "${homeDir}/${target}")"
-    rm -f "${homeDir}/${target}"
+    rm -rf "${homeDir}/${target}"
     ln -sf "${dotfilesDir}/${source}" "${homeDir}/${target}"
   '') configLinks);
 in

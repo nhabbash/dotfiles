@@ -210,6 +210,18 @@ plugins {
     about location="zellij:about"
 
     // User plugins
+    vertical-tabs location="https://github.com/cfal/zellij-vertical-tabs/releases/download/v0.1.0/zellij-vertical-tabs.wasm" {
+        format        "#[fg=#89b4fa]{index} {name}"
+        format_active "#[fg=#fab387]{index} {name}"
+        max_name_length 20
+    }
+    zbuffers location="https://github.com/Strech/zbuffers/releases/download/v0.5.0/zbuffers.wasm"
+    zjpane   location="https://github.com/FuriouZz/zjpane/releases/download/v0.2.0/zjpane.wasm"
+    pane-picker location="https://github.com/shihanng/zellij-pane-picker/releases/download/v0.6.0/zellij-pane-picker.wasm" {
+        plugin_select_down "Ctrl n"
+        plugin_select_up   "Ctrl p"
+    }
+
     zj-quit location="https://github.com/cristiand391/zj-quit/releases/download/0.3.1/zj-quit.wasm" {
         confirm_key "y"
         cancel_key "Esc"

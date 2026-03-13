@@ -17,12 +17,10 @@ layout {
     }
 
     default_tab_template {
-        // Top status bar - main status (mode, session, tabs, datetime)
+        // Top status bar — session name, mode, kube context, datetime
         pane size=1 borderless=true {
             plugin location="zjstatus" {
-
-                // Format configuration
-                format_left   " #[bg=#313244] {mode}#[bg=#313244] {tabs}"
+                format_left   "#[bg=#313244,fg=#74c7ec]\u{e0b6}#[bg=#74c7ec,fg=#11111b] {session} #[bg=#313244,fg=#74c7ec]\u{e0b4} {mode}"
                 format_center "{notifications}"
                 format_right  "#[bg=#313244,fg=#94e2d5]\u{e0b6}#[fg=#11111b,bg=#94e2d5]\u{f0219} #[bg=#45475a,fg=#94e2d5]\u{e0b4} {command_kube}#[bg=#313244,fg=#45475a]\u{e0b4}#[bg=#313244,fg=#eba0ac]\u{e0b6}#[bg=#eba0ac,fg=#11111b]\u{f00ed} #[bg=#45475a,fg=#eba0ac]\u{e0b4} {datetime}#[bg=#313244,fg=#45475a]\u{e0b4}"
                 format_space  "#[bg=#313244]"
@@ -34,27 +32,24 @@ layout {
                 notification_format_no_notifications ""
                 notification_show_interval           "10"
 
-
-                // Tab formatting
-                tab_normal              "#[bg=#313244,fg=#89b4fa]\u{e0b6}#[bg=#89b4fa,fg=#11111b]{index}#[bg=#45475a,fg=#89b4fa]\u{e0b4} {name}{floating_indicator}#[bg=#313244,fg=#45475a]\u{e0b4}"
-                tab_normal_fullscreen   "#[bg=#313244,fg=#89b4fa]\u{e0b6}#[bg=#89b4fa,fg=#11111b]{index}#[bg=#45475a,fg=#89b4fa]\u{e0b4} {name}{fullscreen_indicator}#[bg=#313244,fg=#45475a]\u{e0b4}"
-                tab_normal_sync         "#[bg=#313244,fg=#89b4fa]\u{e0b6}#[bg=#89b4fa,fg=#11111b]{index}#[bg=#45475a,fg=#89b4fa]\u{e0b4} {name}{sync_indicator}#[bg=#313244,fg=#45475a]\u{e0b4}"
-                tab_active              "#[bg=#313244,fg=#fab387]\u{e0b6}#[bg=#fab387,fg=#11111b]{index}#[bg=#45475a,fg=#fab387]\u{e0b4} {name}{floating_indicator}#[bg=#313244,fg=#45475a]\u{e0b4}"
-                tab_active_fullscreen   "#[bg=#313244,fg=#fab387]\u{e0b6}#[bg=#fab387,fg=#11111b]{index}#[bg=#45475a,fg=#fab387]\u{e0b4} {name}{fullscreen_indicator}#[bg=#313244,fg=#45475a]\u{e0b4}"
-                tab_active_sync         "#[bg=#313244,fg=#fab387]\u{e0b6}#[bg=#fab387,fg=#11111b]{index}#[bg=#45475a,fg=#fab387]\u{e0b4} {name}{sync_indicator}#[bg=#313244,fg=#45475a]\u{e0b4}"
-                tab_separator           "#[bg=#313244] "
-
-                tab_sync_indicator       " \u{f021}"
-                tab_fullscreen_indicator " \u{f0293}"
-                tab_floating_indicator   " \u{f0e59}"
-
-                tab_display_count        "20"
-                tab_truncate_start_format "#[fg=#9399b2] \u{e0b6}+{count}\u{e0b4}"
-                tab_truncate_end_format  "#[fg=#9399b2] +{count}\u{e0b6}"
+                // Mode indicators
+                mode_normal        "#[bg=#a6e3a1,fg=#11111b] NORMAL#[bg=#313244,fg=#a6e3a1]\u{e0b4}"
+                mode_locked        "#[bg=#f38ba8,fg=#11111b] LOCKED#[bg=#313244,fg=#f38ba8]\u{e0b4}#[fg=#9399b2]"
+                mode_pane          "#[bg=#94e2d5,fg=#11111b] PANE#[bg=#313244,fg=#94e2d5]\u{e0b4}"
+                mode_tab           "#[bg=#94e2d5,fg=#11111b] TAB#[bg=#313244,fg=#94e2d5]\u{e0b4}"
+                mode_scroll        "#[bg=#94e2d5,fg=#11111b] SCROLL#[bg=#313244,fg=#94e2d5]\u{e0b4}"
+                mode_search        "#[bg=#94e2d5,fg=#11111b] SEARCH#[bg=#313244,fg=#94e2d5]\u{e0b4}"
+                mode_enter_search  "#[bg=#94e2d5,fg=#11111b] ENT-SEARCH#[bg=#313244,fg=#94e2d5]\u{e0b4}"
+                mode_resize        "#[bg=#f9e2af,fg=#11111b] RESIZE#[bg=#313244,fg=#f9e2af]\u{e0b4}"
+                mode_rename_tab    "#[bg=#f9e2af,fg=#11111b] RENAME-TAB#[bg=#313244,fg=#f9e2af]\u{e0b4}"
+                mode_rename_pane   "#[bg=#f9e2af,fg=#11111b] RENAME-PANE#[bg=#313244,fg=#f9e2af]\u{e0b4}"
+                mode_move          "#[bg=#f9e2af,fg=#11111b] MOVE#[bg=#313244,fg=#f9e2af]\u{e0b4}"
+                mode_session       "#[bg=#f5c2e7,fg=#11111b] SESSION#[bg=#313244,fg=#f5c2e7]\u{e0b4}"
+                mode_prompt        "#[bg=#f5c2e7,fg=#11111b] PROMPT#[bg=#313244,fg=#f5c2e7]\u{e0b4}"
 
                 // Datetime
-                datetime          "{format}"
-                datetime_format   "%A, %d %b %Y %H:%M"
+                datetime        "{format}"
+                datetime_format "%d %b %H:%M"
 
                 // Kubernetes context
                 command_kube_command   "bash -c \"kubectl config current-context || echo none\""
@@ -63,37 +58,32 @@ layout {
             }
         }
 
-        // Main content area
-        children
+        // Main area: vertical tab sidebar + content
+        pane split_direction="vertical" {
+            // Vertical tab list (left sidebar)
+            pane size=18 borderless=true {
+                plugin location="vertical-tabs" {
+                    format        " #[fg=#585b70]{index} #[fg=#cdd6f4]{name}"
+                    format_active " #[fg=#fab387]{index} #[fg=#fab387]{name}"
+                    max_name_length 14
+                    border "false"
+                    padding_top 1
+                }
+            }
+            // Tab content
+            children
+        }
 
-        // Bottom status bar - keybinding hints only
+        // Bottom status bar — keybind hints
         pane size=1 borderless=true {
             plugin location="zjstatus" {
-                // Mode indicators
-                mode_normal        "#[bg=#a6e3a1,fg=#11111b] \u{2764} NORMAL#[bg=#313244,fg=#a6e3a1]\u{e0b4}"
-                mode_tmux          "#[bg=#cba6f7,fg=#11111b] \u{2764} TMUX#[bg=#313244,fg=#cba6f7]\u{e0b4}"
-                mode_locked        "#[bg=#f38ba8,fg=#11111b] \u{2764} LOCKED#[bg=#313244,fg=#f38ba8]\u{e0b4}#[fg=#9399b2]"
-                mode_pane          "#[bg=#94e2d5,fg=#11111b] \u{2764} PANE#[bg=#313244,fg=#94e2d5]\u{e0b4}"
-                mode_tab           "#[bg=#94e2d5,fg=#11111b] \u{2764} TAB#[bg=#313244,fg=#94e2d5]\u{e0b4}"
-                mode_scroll        "#[bg=#94e2d5,fg=#11111b] \u{2764} SCROLL#[bg=#313244,fg=#94e2d5]\u{e0b4}"
-                mode_enter_search  "#[bg=#94e2d5,fg=#11111b] \u{2764} ENT-SEARCH#[bg=#313244,fg=#94e2d5]\u{e0b4}"
-                mode_search        "#[bg=#94e2d5,fg=#11111b] \u{2764} SEARCH#[bg=#313244,fg=#94e2d5]\u{e0b4}"
-                mode_resize        "#[bg=#f9e2af,fg=#11111b] \u{2764} RESIZE#[bg=#313244,fg=#f9e2af]\u{e0b4}"
-                mode_rename_tab    "#[bg=#f9e2af,fg=#11111b] \u{2764} RENAME-TAB#[bg=#313244,fg=#f9e2af]\u{e0b4}"
-                mode_rename_pane   "#[bg=#f9e2af,fg=#11111b] \u{2764} RENAME-PANE#[bg=#313244,fg=#f9e2af]\u{e0b4}"
-                mode_move          "#[bg=#f9e2af,fg=#11111b] \u{2764} MOVE#[bg=#313244,fg=#f9e2af]\u{e0b4}"
-                mode_session       "#[bg=#f5c2e7,fg=#11111b] \u{2764} SESSION#[bg=#313244,fg=#f5c2e7]\u{e0b4}"
-                mode_prompt        "#[bg=#f5c2e7,fg=#11111b] \u{2764} PROMPT#[bg=#313244,fg=#f5c2e7]\u{e0b4}"
-
-                format_left   "#[bg=#313244,fg=#74c7ec]\u{e0b6}#[bg=#74c7ec,fg=#11111b] {session} #[bg=#313244,fg=#74c7ec]\u{e0b4} {mode}"
+                format_left   ""
                 format_center ""
                 format_right  "{pipe_zjstatus_hints}"
                 format_hide_on_overlength "true"
                 format_precedence "lrc"
-
                 format_space  "#[bg=#313244]"
 
-                // Pipe configuration for zjstatus-hints
                 pipe_zjstatus_hints_format "{output}"
             }
         }

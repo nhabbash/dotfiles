@@ -90,6 +90,37 @@ c_branch="\033[38;5;104m"
 c_cyan="\033[36m"
 c_magenta="\033[35m"
 c_tok="\033[38;5;245m"
+c_orange="\033[38;5;208m"
+c_warm="\033[38;5;221m"
+c_red="\033[38;5;204m"
+
+# --- Gateway stats (single curl, ~5ms) ---
+gw_json=$(curl -sf --max-time 1 http://127.0.0.1:39517/v1/internal/stats 2>/dev/null)
+if [ -n "$gw_json" ]; then
+  gw_up=true
+  month_cost=$(echo "$gw_json" | jq -r '.month_cost // 0')
+  budget=3000
+  budget_left=$(printf "%.0f" "$(echo "$budget - $month_cost" | bc -l 2>/dev/null || echo 0)")
+  budget_pct=$((budget_left * 100 / budget))
+  ttfb_avg=$(echo "$gw_json" | jq -r '.latency.ttfb_ms.avg // 0')
+  ttfb_display=$(printf "%.1f" "$(echo "$ttfb_avg / 1000" | bc -l 2>/dev/null || echo 0)")
+else
+  gw_up=false
+fi
+
+# --- Session cost from gateway log ---
+session_cost=""
+if [ -n "$gw_json" ]; then
+  session_id=$(echo "$gw_json" | jq -r '.sessions[0].id // empty')
+  if [ -n "$session_id" ]; then
+    session_cost=$(grep "otel record stored.*$session_id" ~/.axcli/gateway.log 2>/dev/null \
+      | awk '{for(i=1;i<=NF;i++){if($i~/cost=/)split($i,a,"=")&&t+=a[2]; if($i~/model=/)split($i,a,"=")&&m[a[2]]++}} END{printf "$%.2f",t}')
+    model_mix=$(grep "otel record stored.*$session_id" ~/.axcli/gateway.log 2>/dev/null \
+      | awk '{for(i=1;i<=NF;i++) if($i~/model=/) {split($i,a,"="); m[a[2]]++}} END{for(k in m) printf "%s:%d\n", toupper(substr(k,1,1)), m[k]}' \
+      | sort | tr '\n' ' ' | sed 's/ $//')
+  fi
+fi
+
 # ── LINE 1 ──
 # Status dot reflects context pressure
 if [ "$pct" -lt 60 ]; then
@@ -106,6 +137,7 @@ printf "${dot_color}%s${rst} ${c_model}%s${rst}" "$dot" "$model"
 printf "  ${dim}│${rst}  ${bar_color}%s${rst} %s%%" "$bar" "$pct"
 printf "  ${dim}│${rst}  ${c_tok}%s${rst}" "$tokens_display"
 printf "  ${dim}│${rst}  ${dim}⏱${rst} %s" "$time_display"
+[ -n "$session_cost" ] && [ "$session_cost" != '$0.00' ] && printf "  ${dim}│${rst}  ${c_orange}%s${rst}" "$session_cost"
 printf "  ${dim}│${rst}  ${c_dir}%s${rst}" "$dir_display"
 [ -n "$branch" ] && printf "  ${dim}│${rst}  ${c_branch}⎇ %s${rst}" "$branch"
 
@@ -134,7 +166,7 @@ if [ -n "$transcript" ] && [ -f "$transcript" ]; then
         server=$(echo "$name" | sed 's/^mcp__//;s/__.*$//')
         prev=${mcp_servers[$server]:-0}
         mcp_servers[$server]=$((prev + count))
-      elif [[ "$name" != "Task" ]]; then
+      elif [[ "$name" != "Agent" ]]; then
         if [ "$top_n" -lt 5 ]; then
           builtin_names+=("${name}x${count}")
           top_n=$((top_n + 1))
@@ -155,9 +187,20 @@ if [ -n "$transcript" ] && [ -f "$transcript" ]; then
       done
     fi
 
-    agent_count=$(echo "$all_tools" | grep -c '^Task$' || true)
+    agent_count=$(echo "$all_tools" | grep -c '^Agent$' || true)
     if [ "$agent_count" -gt 0 ] 2>/dev/null; then
       line2+="  · agents($agent_count)"
+    fi
+
+    # Gateway metrics
+    if [ -n "$model_mix" ]; then
+      line2+="  · $model_mix"
+    fi
+    if [ "$gw_up" = true ]; then
+      line2+="  · \$$budget_left▾"
+      line2+="  · ↕${ttfb_display}s"
+    elif [ "$gw_up" = false ]; then
+      line2+="  · gw ▼"
     fi
 
     # Truncate to terminal width to prevent Ink canvas width growth
@@ -189,6 +232,21 @@ if [ -n "$transcript" ] && [ -f "$transcript" ]; then
 
     if [ "$agent_count" -gt 0 ] 2>/dev/null; then
       printf "  ${dim}·${rst}  ${dim}agents(${rst}%s${dim})${rst}" "$agent_count"
+    fi
+
+    # Gateway metrics (colored)
+    if [ -n "$model_mix" ]; then
+      printf "  ${dim}·${rst}  ${c_tok}%s${rst}" "$model_mix"
+    fi
+    if [ "$gw_up" = true ]; then
+      if [ "$budget_pct" -lt 10 ]; then
+        printf "  ${dim}·${rst}  ${c_red}\$%s▾ !${rst}" "$budget_left"
+      else
+        printf "  ${dim}·${rst}  ${c_warm}\$%s▾${rst}" "$budget_left"
+      fi
+      printf "  ${dim}·${rst}  ${c_tok}↕%ss${rst}" "$ttfb_display"
+    elif [ "$gw_up" = false ]; then
+      printf "  ${dim}·${rst}  ${c_red}gw ▼${rst}"
     fi
   fi
 fi

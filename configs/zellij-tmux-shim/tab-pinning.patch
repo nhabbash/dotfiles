@@ -1,0 +1,100 @@
+--- a/bin/tmux	2026-03-13 15:14:25
++++ b/bin/tmux	2026-03-13 15:15:22
+@@ -32,6 +32,65 @@
+ # Helpers
+ # ---------------------------------------------------------------------------
+ 
++# --- Tab pinning ---
++# Limitation: zellij CLI has no way to create a pane in a specific tab without
++# switching focus to it first. There is no --tab-index flag on `new-pane`.
++# The plugin API has `move_panes_to_tab` but that requires a WASM plugin.
++# As a workaround, we switch to the team tab, create the pane, then switch back.
++# This causes a brief visual flicker but keeps agent panes in the correct tab.
++#
++# If zellij adds tab-targeted pane creation in the future, this can be simplified
++# to pass the tab index directly to `new-pane`.
++
++# Get the 1-based index of the currently focused tab
++get_current_tab_index() {
++    local idx=0
++    while IFS= read -r line; do
++        idx=$((idx + 1))
++        if echo "$line" | grep -q 'focus=true'; then
++            echo "$idx"
++            return 0
++        fi
++    done < <(zellij action dump-layout 2>/dev/null | grep '^\s*tab ')
++    echo "1"
++}
++
++# Record the team lead's tab on first call, return it on subsequent calls
++get_team_tab() {
++    local team_tab_file="${STATE_DIR}/team_tab"
++    if [ -f "$team_tab_file" ]; then
++        cat "$team_tab_file"
++    else
++        local idx
++        idx=$(get_current_tab_index)
++        echo "$idx" > "$team_tab_file"
++        echo "$idx"
++    fi
++}
++
++# Switch to the team tab if not already there, return the original tab index.
++# Caller should switch back after pane creation with restore_user_tab.
++ensure_team_tab() {
++    local team_tab current_tab
++    team_tab=$(get_team_tab)
++    current_tab=$(get_current_tab_index)
++    if [ "$current_tab" != "$team_tab" ]; then
++        log_debug "tab-pin: switching from tab $current_tab to team tab $team_tab"
++        zellij action go-to-tab "$team_tab" 2>/dev/null
++    fi
++    echo "$current_tab"
++}
++
++# Switch back to where the user was before we created the pane
++restore_user_tab() {
++    local original_tab="$1" team_tab
++    team_tab=$(get_team_tab)
++    if [ "$original_tab" != "$team_tab" ]; then
++        log_debug "tab-pin: restoring user to tab $original_tab"
++        zellij action go-to-tab "$original_tab" 2>/dev/null
++    fi
++}
++
+ # Validate that a pane key is a non-negative integer (prevents path traversal via ../../)
+ validate_pane_key() {
+     case "$1" in
+@@ -334,9 +393,15 @@
+     # Build zellij new-pane command
+     zellij_args=(action new-pane --close-on-exit -d "$sw_direction")
+ 
++    # Pin pane creation to the team lead's tab
++    _original_tab=$(ensure_team_tab)
++
+     # Launch the wrapper in a new zellij pane.
+     zellij "${zellij_args[@]}" -- "${SHIM_DIR}/bin/zellij-pane-wrapper" "$STATE_DIR" "$SHIM_DIR" "$NEW_PANE_ID" &
+ 
++    # Restore user's tab immediately after launching
++    restore_user_tab "$_original_tab"
++
+     # Wait for wrapper to signal readiness (creates .ready sentinel)
+     if ! wait_for_ready "$PANE_KEY"; then
+         log_debug "split-window: pane ${NEW_PANE_ID} failed to become ready"
+@@ -606,9 +671,15 @@
+     if [ -n "$nw_name" ]; then
+         zellij_args+=(-n "$nw_name")
+     fi
++
++    # Pin pane creation to the team lead's tab
++    _original_tab=$(ensure_team_tab)
+ 
+     zellij "${zellij_args[@]}" -- "${SHIM_DIR}/bin/zellij-pane-wrapper" "$STATE_DIR" "$SHIM_DIR" "$NEW_PANE_ID" &
+ 
++    # Restore user's tab immediately after launching
++    restore_user_tab "$_original_tab"
++
+     if ! wait_for_ready "$PANE_KEY"; then
+         log_debug "new-window: pane ${NEW_PANE_ID} failed to become ready"
+         exit 1

@@ -15,6 +15,7 @@ window-width = 160
 window-save-state = always
 window-padding-balance = true
 confirm-close-surface = true
+macos-non-native-fullscreen = visible-menu
 
 # =============================================================================
 # Scrollback

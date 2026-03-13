@@ -1,6 +1,7 @@
 # Work-specific config — loaded only on work machines
 
-# Monday.com company dotfiles
+# Monday.com company dotfiles (skip kubectl completion — managed by nix)
+export MONDAY_DOTFILES_SKIP_KUBECTL_COMPLETION=1
 [[ -f ~/dotfiles/.bash_profile ]] && source ~/dotfiles/.bash_profile
 unalias claude 2>/dev/null
 
@@ -13,10 +14,10 @@ export SSL_CERT_FILE="$HOME/.certs/all-ca-bundle.pem"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-# Pyenv
+# Pyenv (lazy init — skip rehash on startup)
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)" 2>/dev/null
+export PATH="$PYENV_ROOT/shims:$PATH"
 
 # AWS
 export AWS_PROFILE=default

@@ -21,7 +21,7 @@ function _zellij_tab_name_from_cwd() {
   else
     dir="${dir##*/}"
   fi
-  local name="{tab_position}: $dir"
+  local name="$dir"
   [[ "$name" == "$_ZELLIJ_LAST_TAB_NAME" ]] && return
   _ZELLIJ_LAST_TAB_NAME="$name"
   _zellij_tab_name_pipe "$name"

@@ -37,15 +37,12 @@ let
     # Agents (directory symlink)
     ".config/agents" = "configs/agents";
 
-    # Zellij
-    ".config/zellij/config.kdl" = "configs/zellij/config.kdl";
-    ".config/zellij/themes/catppuccin-mocha.kdl" = "configs/zellij/themes/catppuccin-mocha.kdl";
-    ".config/zellij/layouts/default.kdl" = "configs/zellij/layouts/default.kdl";
+    # Zellij (whole dir so new layouts/themes/plugins just work)
+    ".config/zellij" = "configs/zellij";
   }
   // lib.optionalAttrs enableGui {
     # Kitty
-    ".config/kitty/kitty.conf" = "configs/kitty/kitty.conf";
-    ".config/kitty/current-theme.conf" = "configs/kitty/current-theme.conf";
+    ".config/kitty" = "configs/kitty";
 
     # Ghostty (whole shaders dir so new shaders auto-appear)
     ".config/ghostty/shaders" = "configs/ghostty/shaders";

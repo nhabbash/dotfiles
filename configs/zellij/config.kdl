@@ -174,6 +174,19 @@ keybinds clear-defaults=true {
     // Global shortcuts
     shared_except "locked" {
         bind "Ctrl space" { SwitchToMode "locked"; }
+        bind "Ctrl b" {
+            LaunchOrFocusPlugin "zbuffers" {
+                floating true
+            }
+            SwitchToMode "locked"
+        }
+        bind "Alt y" {
+            LaunchOrFocusPlugin "pane-picker" {
+                floating true
+                move_to_focused_tab true
+            }
+            SwitchToMode "locked"
+        }
     }
 
     shared_except "locked" "entersearch" {
@@ -325,6 +338,7 @@ plugins {
 load_plugins {
   zjstatus-hints
   "https://github.com/Cynary/zellij-tab-name/releases/download/v0.4.2/zellij-tab-name.wasm"
+  zjpane  // preloaded silently for tmux shim pipe API
 }
 
 ui {

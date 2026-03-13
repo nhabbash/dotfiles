@@ -108,6 +108,10 @@ Reading the same core files every session when the architecture hasn't changed.
 Using Explore/Plan agents with many tool calls just to form a plan.
 **Fix**: Plan from memory. Explore only when architecture has genuinely changed.
 
+### 7. Delegating work already in context
+Target files are already loaded in the orchestrator's context (from earlier in the session or system-reminders). Delegating means the agent re-reads the same files, paying initialization overhead and re-read cost with no benefit.
+**Fix**: If the target file is already in context and the change is ≤ 3-4 edits, do it directly. Delegate only when the task is large enough that keeping it out of the orchestrator's context is worth the overhead.
+
 ## Session Hygiene
 
 - One plan = one session. Don't mix planning + multi-round execution.

@@ -22,7 +22,7 @@ init_progress() {
 }
 
 step() {
-    ((STEP++))
+    (( STEP++ )) || true
     printf "${BOLD}[%d/%d]${NC} %s...\n" "$STEP" "$TOTAL_STEPS" "$1"
 }
 

@@ -113,6 +113,11 @@ cmd_rebuild() {
 cmd_pull() {
     header "Pulling latest changes"
 
+    if [ -n "$(git -C "$DOTFILES_DIR" status --porcelain)" ]; then
+        error "Uncommitted changes detected — commit or push them first (run 'dotfiles status')"
+        return 1
+    fi
+
     local before after
     before="$(git -C "$DOTFILES_DIR" rev-parse HEAD)"
     git -C "$DOTFILES_DIR" pull --rebase || { error "Pull failed"; return 1; }

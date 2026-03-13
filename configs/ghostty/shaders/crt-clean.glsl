@@ -10,7 +10,7 @@
 #define BLOOM           0.22   // glow bleed on bright pixels: 0 = off, 0.3 = soft, 0.7 = dreamy
 #define DOT_MATRIX      0.18   // RGB subpixel pattern: 0 = off, 0.2 = subtle, 0.6 = visible
 #define VIGNETTE        0.10   // edge darkening: 0 = off, 0.2 = subtle, 0.6 = heavy
-#define BRIGHTNESS      0.45   // creative boost only: 0 = dimmer, 0.5 = original, 1 = brighter
+#define BRIGHTNESS      0.35   // creative boost only: 0 = dimmer, 0.5 = original, 1 = brighter
                                // (scanline/dot darkening is auto-compensated)
 //
 // ==================

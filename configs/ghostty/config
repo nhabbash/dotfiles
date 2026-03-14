@@ -54,6 +54,10 @@ keybind = shift+enter=text:\x1b\r
 # Reload config
 keybind = super+r=reload_config
 
+# Always handle copy/paste at the terminal level (prevents passthrough to apps)
+keybind = cmd+c=copy_to_clipboard
+keybind = cmd+v=paste_from_clipboard
+
 
 # =============================================================================
 # Cursor Trail

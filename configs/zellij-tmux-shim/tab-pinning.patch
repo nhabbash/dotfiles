@@ -1,9 +1,9 @@
 --- a/bin/tmux	2026-03-13 15:14:25
-+++ b/bin/tmux	2026-03-13 15:15:22
-@@ -32,6 +32,65 @@
++++ b/bin/tmux	2026-03-14 18:00:00
+@@ -32,6 +32,72 @@
  # Helpers
  # ---------------------------------------------------------------------------
- 
+
 +# --- Tab pinning ---
 +# Limitation: zellij CLI has no way to create a pane in a specific tab without
 +# switching focus to it first. There is no --tab-index flag on `new-pane`.
@@ -27,14 +27,21 @@
 +    echo "1"
 +}
 +
-+# Record the team lead's tab on first call, return it on subsequent calls
++# Record the team lead's tab on first call, return it on subsequent calls.
++# Prefers the per-pane index written by activate.sh at shell startup — captured
++# before the user can switch tabs. Falls back to the current focused tab.
 +get_team_tab() {
 +    local team_tab_file="${STATE_DIR}/team_tab"
 +    if [ -f "$team_tab_file" ]; then
 +        cat "$team_tab_file"
 +    else
++        local pane_tab_file="${STATE_DIR}/pane_tab_idx_${ZELLIJ_PANE_ID:-0}"
 +        local idx
-+        idx=$(get_current_tab_index)
++        if [ -f "$pane_tab_file" ]; then
++            idx=$(cat "$pane_tab_file")
++        else
++            idx=$(get_current_tab_index)
++        fi
 +        echo "$idx" > "$team_tab_file"
 +        echo "$idx"
 +    fi
@@ -66,35 +73,57 @@
  # Validate that a pane key is a non-negative integer (prevents path traversal via ../../)
  validate_pane_key() {
      case "$1" in
-@@ -334,9 +393,15 @@
+@@ -334,9 +400,15 @@
      # Build zellij new-pane command
      zellij_args=(action new-pane --close-on-exit -d "$sw_direction")
- 
+
 +    # Pin pane creation to the team lead's tab
 +    _original_tab=$(ensure_team_tab)
 +
      # Launch the wrapper in a new zellij pane.
      zellij "${zellij_args[@]}" -- "${SHIM_DIR}/bin/zellij-pane-wrapper" "$STATE_DIR" "$SHIM_DIR" "$NEW_PANE_ID" &
- 
+
 +    # Restore user's tab immediately after launching
 +    restore_user_tab "$_original_tab"
 +
      # Wait for wrapper to signal readiness (creates .ready sentinel)
      if ! wait_for_ready "$PANE_KEY"; then
          log_debug "split-window: pane ${NEW_PANE_ID} failed to become ready"
-@@ -606,9 +671,15 @@
+@@ -606,9 +678,15 @@
      if [ -n "$nw_name" ]; then
          zellij_args+=(-n "$nw_name")
      fi
 +
 +    # Pin pane creation to the team lead's tab
 +    _original_tab=$(ensure_team_tab)
- 
+
      zellij "${zellij_args[@]}" -- "${SHIM_DIR}/bin/zellij-pane-wrapper" "$STATE_DIR" "$SHIM_DIR" "$NEW_PANE_ID" &
- 
+
 +    # Restore user's tab immediately after launching
 +    restore_user_tab "$_original_tab"
 +
      if ! wait_for_ready "$PANE_KEY"; then
          log_debug "new-window: pane ${NEW_PANE_ID} failed to become ready"
          exit 1
+--- a/activate.sh	2026-03-13 15:14:25
++++ b/activate.sh	2026-03-14 18:00:00
+@@ -104,4 +104,19 @@
+ rm -f "$ZELLIJ_TMUX_SHIM_STATE/parent.env"
+ rm -rf "$ZELLIJ_TMUX_SHIM_STATE/next_id.lock"
+
++# Record the focused tab index for this pane at shell startup.
++# Shell startup guarantees we are the focused tab (the user just opened us).
++# The tmux shim reads this to find the team lead's tab even if the user
++# switches to another tab before the first agent spawns.
++# Scoped by ZELLIJ_PANE_ID so multiple Claude Code tabs don't collide.
++if [ -n "${ZELLIJ_PANE_ID:-}" ]; then
++    _tab_idx=0
++    while IFS= read -r _line; do
++        _tab_idx=$((_tab_idx + 1))
++        echo "$_line" | grep -q 'focus=true' && break
++    done < <(zellij action dump-layout 2>/dev/null | grep '^\s*tab ')
++    [ "$_tab_idx" -gt 0 ] && echo "$_tab_idx" > "${ZELLIJ_TMUX_SHIM_STATE}/pane_tab_idx_${ZELLIJ_PANE_ID}"
++    unset _tab_idx _line
++fi
++
+ export ZELLIJ_TMUX_SHIM_ACTIVE=1

@@ -13,6 +13,9 @@
 #   modules/shell/zsh.nix      Plugins, oh-my-zsh, autosuggestions, history settings
 #                              Edit this + run 'dotfiles rebuild' to apply
 
+# File descriptor limit — macOS default (256) is too low for zellij with many tabs/plugins
+ulimit -n 4096
+
 # Homebrew
 if [[ -f /opt/homebrew/bin/brew ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"

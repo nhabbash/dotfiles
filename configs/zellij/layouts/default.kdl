@@ -12,7 +12,7 @@ layout {
         plugin location="zjstatus" {
             format_left   "#[bg=#313244,fg=#74c7ec]\u{e0b6}#[bg=#74c7ec,fg=#11111b] {session} #[bg=#313244,fg=#74c7ec]\u{e0b4}"
             format_center "{notifications}"
-            format_right  "#[bg=#313244,fg=#94e2d5]\u{e0b6}#[fg=#11111b,bg=#94e2d5]\u{f0219} #[bg=#45475a,fg=#94e2d5]\u{e0b4} {command_kube}#[bg=#313244,fg=#45475a]\u{e0b4}#[bg=#313244,fg=#eba0ac]\u{e0b6}#[bg=#eba0ac,fg=#11111b]\u{f00ed} #[bg=#45475a,fg=#eba0ac]\u{e0b4} {datetime}#[bg=#313244,fg=#45475a]\u{e0b4}"
+            format_right  "#[bg=#313244,fg=#a6e3a1]\u{e0b6}#[bg=#a6e3a1,fg=#11111b]\u{f4bc}#[bg=#45475a,fg=#a6e3a1]\u{e0b4} {command_cpu}#[bg=#313244,fg=#45475a]\u{e0b4}#[bg=#313244,fg=#89dceb]\u{e0b6}#[bg=#89dceb,fg=#11111b]\u{f538}#[bg=#45475a,fg=#89dceb]\u{e0b4} {command_mem}#[bg=#313244,fg=#45475a]\u{e0b4}#[bg=#313244,fg=#eba0ac]\u{e0b6}#[bg=#eba0ac,fg=#11111b]\u{f00ed}#[bg=#45475a,fg=#eba0ac]\u{e0b4} {datetime}#[bg=#313244,fg=#45475a]\u{e0b4}"
             format_space  "#[bg=#313244]"
             format_hide_on_overlength "true"
             format_precedence "lrc"
@@ -38,24 +38,26 @@ layout {
             datetime        "{format}"
             datetime_format "%d %b %H:%M"
 
-            command_kube_command   "bash -c \"kubectl config current-context || echo none\""
-            command_kube_format    "{stdout}"
-            command_kube_interval  "10"
+            command_cpu_command  "bash -c \"ps -A -o %cpu= | awk -v c=$(sysctl -n hw.logicalcpu) '{s+=$1}END{printf \\\"%.0f%%\\\", s/c}'\""
+            command_cpu_format   "{stdout}"
+            command_cpu_interval "5"
+
+            command_mem_command  "bash -c \"memory_pressure | grep -o '[0-9]*%' | head -1\""
+            command_mem_format   "{stdout}"
+            command_mem_interval "10"
         }
     }
 
     // Main area: sidebar + content
     pane split_direction="vertical" {
         // Vertical tab sidebar
-        pane size=16 borderless=true {
+        pane size=20 borderless=true {
             plugin location="https://github.com/cfal/zellij-vertical-tabs/releases/download/v0.1.0/zellij-vertical-tabs.wasm" {
-                format        " #[fg=#89b4fa]\u{e0b6}#[bg=#89b4fa,fg=#11111b]{index}#[bg=#45475a,fg=#89b4fa]\u{e0b4} {=10:name}{indicators}#[bg=none,fg=#45475a]\u{e0b4}"
-                format_active " #[fg=#fab387]\u{e0b6}#[bg=#fab387,fg=#11111b]{index}#[bg=#45475a,fg=#fab387]\u{e0b4} {=10:name}{indicators}#[bg=none,fg=#45475a]\u{e0b4}"
-                indicator_active ""
-                indicator_fullscreen " 󰊓"
-                indicator_sync " "
+                format        " #[fg=#89b4fa]\u{e0b6}#[bg=#89b4fa,fg=#11111b]{index}#[bg=none,fg=#89b4fa]\u{e0b4} {=12:name}"
+                format_active " #[fg=#fab387]\u{e0b6}#[bg=#fab387,fg=#11111b]{index}#[bg=none,fg=#fab387]\u{e0b4} {=12:name}"
                 max_name_length 12
-                border ""
+                overflow_above "  ^ +{count}"
+                overflow_below "  v +{count}"
                 padding_top 1
             }
         }

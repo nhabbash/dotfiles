@@ -49,6 +49,12 @@ let
   }
   // lib.optionalAttrs (enableGui && isDarwin) {
     "Library/Application Support/com.mitchellh.ghostty/config" = "configs/ghostty/config";
+
+    # AeroSpace (tiling window manager)
+    ".config/aerospace" = "configs/aerospace";
+
+    # Hammerspoon (macOS automation)
+    ".hammerspoon" = "configs/hammerspoon";
   }
   // lib.optionalAttrs (enableGui && !isDarwin) {
     ".config/ghostty/config" = "configs/ghostty/config";

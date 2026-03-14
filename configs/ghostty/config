@@ -3,7 +3,7 @@
 # =============================================================================
 theme = Catppuccin Macchiato
 font-family = Inconsolata Nerd Font Mono
-font-size = 16
+font-size = 14
 background-opacity = 0.98
 cursor-style-blink = false
 

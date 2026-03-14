@@ -26,6 +26,7 @@
 
     # Editors
     neovim
+    tree-sitter
 
     # Kubernetes
     kubectl

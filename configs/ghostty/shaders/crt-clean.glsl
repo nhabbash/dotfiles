@@ -3,12 +3,12 @@
 //
 // === TUNE THESE (all 0.0 to 1.0) ===
 //
-#define CURVATURE       0.28   // barrel distortion: 0 = flat, 0.5 = moderate, 1 = heavy
-#define SCAN_INTENSITY  0.5   // scanline darkness: 0 = off, 0.3 = subtle, 0.7 = heavy
+#define CURVATURE       0.48   // barrel distortion: 0 = flat, 0.5 = moderate, 1 = heavy
+#define SCAN_INTENSITY  0.55   // scanline darkness: 0 = off, 0.3 = subtle, 0.7 = heavy
 #define SCAN_DENSITY    0.4   // scanline spacing: 0 = thick/sparse, 0.5 = balanced, 1 = fine/dense
-#define CHROMA_SHIFT    0.20   // RGB color split: 0 = off, 0.1 = subtle, 0.5 = heavy
-#define BLOOM           0.22   // glow bleed on bright pixels: 0 = off, 0.3 = soft, 0.7 = dreamy
-#define DOT_MATRIX      0.18   // RGB subpixel pattern: 0 = off, 0.2 = subtle, 0.6 = visible
+#define CHROMA_SHIFT    0.25   // RGB color split: 0 = off, 0.1 = subtle, 0.5 = heavy
+#define BLOOM           0.58   // glow bleed on bright pixels: 0 = off, 0.3 = soft, 0.7 = dreamy
+#define DOT_MATRIX      0.38   // RGB subpixel pattern: 0 = off, 0.2 = subtle, 0.6 = visible
 #define VIGNETTE        0.10   // edge darkening: 0 = off, 0.2 = subtle, 0.6 = heavy
 #define BRIGHTNESS      0.35   // creative boost only: 0 = dimmer, 0.5 = original, 1 = brighter
                                // (scanline/dot darkening is auto-compensated)

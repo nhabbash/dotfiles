@@ -30,6 +30,9 @@ let
     ".config/gh/config.yml" = "configs/gh/config.yml";
     ".tmux.conf" = "configs/tmux/tmux.conf";
 
+    # Neovim (LazyVim)
+    ".config/nvim" = "configs/nvim";
+
     # Claude Code
     ".claude/CLAUDE.md" = "configs/claude/CLAUDE.md";
     ".claude/statusline.sh" = "configs/claude/statusline.sh";

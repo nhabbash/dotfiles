@@ -1,0 +1,286 @@
+#!/usr/bin/env bash
+#
+# crt-lab — interactive CRT shader parameter tuner for Ghostty
+#
+# Usage:
+#   crt-lab            Start on preset 1 (Clean)
+#   crt-lab --preset N Start on preset N (1-indexed)
+#
+# Keys: ↑↓ select param  ←→ nudge  [/] coarse  n/p preset  r reload  s screenshot  w save  q quit
+#
+set -uo pipefail
+
+# ── Paths ─────────────────────────────────────────────────────────────────────
+SHADERS_DIR="$HOME/.config/ghostty/shaders"
+SHADER_OUT="$SHADERS_DIR/crt-lab.glsl"
+SHADER_BODY="$SHADERS_DIR/crt-lab.glsl"  # same file; script owns the full output
+REAL_CONFIG="$HOME/Library/Application Support/com.mitchellh.ghostty/config"
+DOTS_CONFIG="$HOME/Development/dotfiles/configs/ghostty/config"
+SESSION_DIR="/tmp/crt-lab-$$"
+SHOT_COUNTER=0
+SHOT_STATUS=""
+
+# ── Config patching ───────────────────────────────────────────────────────────
+
+patch_configs() {
+    local from="$1" to="$2"
+    sed -i '' "s|${from}|${to}|g" "$REAL_CONFIG" 2>/dev/null || true
+    sed -i '' "s|${from}|${to}|g" "$DOTS_CONFIG" 2>/dev/null || true
+}
+
+# ── Cleanup ───────────────────────────────────────────────────────────────────
+
+cleanup() {
+    tput cnorm 2>/dev/null
+    printf "\n\033[0m"
+    patch_configs 'crt-lab\.glsl' 'crt-clean.glsl'
+    # Print screenshots if any were taken
+    if [[ -d "$SESSION_DIR" ]] && compgen -G "$SESSION_DIR/*.png" > /dev/null 2>&1; then
+        echo ""
+        echo "Screenshots saved:"
+        for f in "$SESSION_DIR"/*.png; do
+            echo "  $f"
+        done
+    fi
+}
+trap cleanup EXIT INT TERM
+
+# ── Parameter definitions ──────────────────────────────────────────────────────
+# Parallel arrays — all 13 entries, indices 0..12
+
+PARAM_NAMES=(
+    "Curvature"
+    "Scan Intensity"
+    "Scan Density"
+    "Scan Speed"
+    "Phosphor"
+    "Flicker"
+    "Chroma Shift"
+    "Bloom"
+    "Bloom Radius"
+    "Dot Matrix"
+    "Vignette"
+    "Brightness"
+    "Grain"
+)
+
+PARAM_DEFINES=(
+    "CURVATURE"
+    "SCAN_INTENSITY"
+    "SCAN_DENSITY"
+    "SCAN_SPEED"
+    "PHOSPHOR_DECAY"
+    "FLICKER_AMP"
+    "CHROMA_SHIFT"
+    "BLOOM"
+    "BLOOM_RADIUS"
+    "DOT_MATRIX"
+    "VIGNETTE"
+    "BRIGHTNESS"
+    "GRAIN_AMP"
+)
+
+PARAM_DESCS=(
+    "barrel distortion"
+    "scanline darkness"
+    "line spacing"
+    "scroll rate"
+    "beam asymmetry"
+    "60Hz pulse"
+    "RGB split"
+    "glow"
+    "spread"
+    "phosphor dots"
+    "edge darkening"
+    "creative boost"
+    "film noise"
+)
+
+# ⟳ marks animated params (use iTime): indices 3 (Scan Speed), 4 (Phosphor), 5 (Flicker), 12 (Grain)
+PARAM_ANIMATED=(0 0 0 1 1 1 0 0 0 0 0 0 1)
+
+# Fine step per param (← →)
+PARAM_FINE=(0.02 0.02 0.10 0.02 0.02 0.02 0.02 0.02 0.05 0.02 0.02 0.02 0.02)
+
+# Coarse step per param ([ ])
+PARAM_COARSE=(0.10 0.10 0.20 0.10 0.10 0.10 0.10 0.10 0.20 0.10 0.10 0.10 0.10)
+
+
+# ── Preset definitions ────────────────────────────────────────────────────────
+# Space-separated values matching PARAM_DEFINES order (13 values each)
+
+PRESET_NAMES=("Clean" "Classic" "Warm Analog" "P31 Green" "High Refresh" "Heavy Phosphor" "Retro Max")
+PRESET_PGREEN=(0 0 0 1 0 0 0)  # 1 = enable PHOSPHOR_GREEN define for this preset
+
+PRESET_DATA=(
+    "0.30 0.10 0.50 0.00 0.00 0.00 0.00 0.10 0.10 0.00 0.05 0.45 0.00"
+    "0.48 0.35 0.50 0.10 0.15 0.05 0.22 0.55 0.30 0.00 0.10 0.40 0.05"
+    "0.48 0.38 0.50 0.25 0.55 0.10 0.18 0.70 0.35 0.00 0.12 0.38 0.20"
+    "0.50 0.42 0.50 0.15 0.40 0.08 0.00 0.00 0.00 0.00 0.15 0.38 0.20"
+    "0.25 0.25 0.70 0.60 0.10 0.05 0.15 0.35 0.20 0.00 0.08 0.50 0.05"
+    "0.45 0.40 0.50 0.15 0.80 0.25 0.20 0.80 0.50 0.10 0.15 0.35 0.15"
+    "0.70 0.60 0.50 0.30 0.65 0.20 0.50 0.75 0.45 0.40 0.30 0.38 0.30"
+)
+TOTAL_PRESETS=${#PRESET_NAMES[@]}
+
+# ── Mutable state ─────────────────────────────────────────────────────────────
+
+SELECTED=0      # currently highlighted parameter (0-indexed)
+PRESET_IDX=0    # current preset (0-indexed)
+declare -a PARAM_VALS
+
+load_preset() {
+    local idx=$1
+    read -ra PARAM_VALS <<< "${PRESET_DATA[$idx]}"
+}
+
+# Load initial preset
+load_preset 0
+
+
+# ── Parameter definitions ──────────────────────────────────────────────────────
+# Parallel arrays — all 13 entries, indices 0..12
+
+PARAM_NAMES=(
+    "Curvature"
+    "Scan Intensity"
+    "Scan Density"
+    "Scan Speed"
+    "Phosphor"
+    "Flicker"
+    "Chroma Shift"
+    "Bloom"
+    "Bloom Radius"
+    "Dot Matrix"
+    "Vignette"
+    "Brightness"
+    "Grain"
+)
+
+PARAM_DEFINES=(
+    "CURVATURE"
+    "SCAN_INTENSITY"
+    "SCAN_DENSITY"
+    "SCAN_SPEED"
+    "PHOSPHOR_DECAY"
+    "FLICKER_AMP"
+    "CHROMA_SHIFT"
+    "BLOOM"
+    "BLOOM_RADIUS"
+    "DOT_MATRIX"
+    "VIGNETTE"
+    "BRIGHTNESS"
+    "GRAIN_AMP"
+)
+
+PARAM_DESCS=(
+    "barrel distortion"
+    "scanline darkness"
+    "line spacing"
+    "scroll rate"
+    "beam asymmetry"
+    "60Hz pulse"
+    "RGB split"
+    "glow"
+    "spread"
+    "phosphor dots"
+    "edge darkening"
+    "creative boost"
+    "film noise"
+)
+
+# ⟳ marks animated params (use iTime): indices 3 (Scan Speed), 4 (Phosphor), 5 (Flicker), 12 (Grain)
+PARAM_ANIMATED=(0 0 0 1 1 1 0 0 0 0 0 0 1)
+
+# Fine step per param (← →)
+PARAM_FINE=(0.02 0.02 0.10 0.02 0.02 0.02 0.02 0.02 0.05 0.02 0.02 0.02 0.02)
+
+# Coarse step per param ([ ])
+PARAM_COARSE=(0.10 0.10 0.20 0.10 0.10 0.10 0.10 0.10 0.20 0.10 0.10 0.10 0.10)
+
+
+# ── Preset definitions ────────────────────────────────────────────────────────
+# Space-separated values matching PARAM_DEFINES order (13 values each)
+
+PRESET_NAMES=("Clean" "Classic" "Warm Analog" "P31 Green" "High Refresh" "Heavy Phosphor" "Retro Max")
+PRESET_PGREEN=(0 0 0 1 0 0 0)  # 1 = enable PHOSPHOR_GREEN define for this preset
+
+PRESET_DATA=(
+    "0.30 0.10 0.50 0.00 0.00 0.00 0.00 0.10 0.10 0.00 0.05 0.45 0.00"
+    "0.48 0.35 0.50 0.10 0.15 0.05 0.22 0.55 0.30 0.00 0.10 0.40 0.05"
+    "0.48 0.38 0.50 0.25 0.55 0.10 0.18 0.70 0.35 0.00 0.12 0.38 0.20"
+    "0.50 0.42 0.50 0.15 0.40 0.08 0.00 0.00 0.00 0.00 0.15 0.38 0.20"
+    "0.25 0.25 0.70 0.60 0.10 0.05 0.15 0.35 0.20 0.00 0.08 0.50 0.05"
+    "0.45 0.40 0.50 0.15 0.80 0.25 0.20 0.80 0.50 0.10 0.15 0.35 0.15"
+    "0.70 0.60 0.50 0.30 0.65 0.20 0.50 0.75 0.45 0.40 0.30 0.38 0.30"
+)
+TOTAL_PRESETS=${#PRESET_NAMES[@]}
+
+# ── Mutable state ─────────────────────────────────────────────────────────────
+
+SELECTED=0      # currently highlighted parameter (0-indexed)
+PRESET_IDX=0    # current preset (0-indexed)
+declare -a PARAM_VALS
+
+load_preset() {
+    local idx=$1
+    read -ra PARAM_VALS <<< "${PRESET_DATA[$idx]}"
+}
+
+# Load initial preset
+load_preset 0
+
+
+# ── Float arithmetic ──────────────────────────────────────────────────────────
+
+# Nudge PARAM_VALS[$1] by delta $2, clamped to [0,1]
+nudge_param() {
+    local idx=$1 delta=$2
+    local new_val
+    new_val=$(echo "scale=4; v=${PARAM_VALS[$idx]}+($delta); if(v>1)v=1; if(v<0)v=0; v" | bc 2>/dev/null)
+    # bc may omit leading zero for values like .48 — normalize
+    [[ "$new_val" == .* ]] && new_val="0${new_val}"
+    PARAM_VALS[$idx]="$new_val"
+}
+
+
+# ── Shader emission ───────────────────────────────────────────────────────────
+
+write_shader() {
+    local rows cols pgreen_line=""
+    rows=$(tput lines 2>/dev/null || echo 40)
+    cols=$(tput cols  2>/dev/null || echo 180)
+
+    # P31 Green preset: emit the PHOSPHOR_GREEN define
+    [[ "${PRESET_PGREEN[$PRESET_IDX]}" == "1" ]] && pgreen_line="#define PHOSPHOR_GREEN 1"
+
+    mkdir -p "$SHADERS_DIR"
+
+    cat > "$SHADER_OUT" << HEADER
+// crt-lab — generated $(date '+%Y-%m-%d %H:%M:%S')
+// Preset: ${PRESET_NAMES[$PRESET_IDX]}
+#define ROWS           ${rows}
+#define COLS           ${cols}
+#define CURVATURE      ${PARAM_VALS[0]}
+#define SCAN_INTENSITY ${PARAM_VALS[1]}
+#define SCAN_DENSITY   ${PARAM_VALS[2]}
+#define SCAN_SPEED     ${PARAM_VALS[3]}
+#define PHOSPHOR_DECAY ${PARAM_VALS[4]}
+#define FLICKER_AMP    ${PARAM_VALS[5]}
+#define CHROMA_SHIFT   ${PARAM_VALS[6]}
+#define BLOOM          ${PARAM_VALS[7]}
+#define BLOOM_RADIUS   ${PARAM_VALS[8]}
+#define DOT_MATRIX     ${PARAM_VALS[9]}
+#define VIGNETTE       ${PARAM_VALS[10]}
+#define BRIGHTNESS     ${PARAM_VALS[11]}
+#define GRAIN_AMP      ${PARAM_VALS[12]}
+${pgreen_line}
+HEADER
+
+    # Append GLSL body — skip any existing header lines from previous runs
+    # (lines starting with // or #define) so the body always comes from source
+    grep -v '^\s*//' "$HOME/Development/dotfiles/configs/ghostty/shaders/crt-lab.glsl" \
+         | grep -v '^\s*#define' \
+         >> "$SHADER_OUT" 2>/dev/null || true
+}
+

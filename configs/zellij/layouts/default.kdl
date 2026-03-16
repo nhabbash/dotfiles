@@ -12,7 +12,7 @@ layout {
         plugin location="zjstatus" {
             format_left   "#[bg=#313244,fg=#74c7ec]\u{e0b6}#[bg=#74c7ec,fg=#11111b] {session} #[bg=#313244,fg=#74c7ec]\u{e0b4}"
             format_center "{notifications}"
-            format_right  "#[bg=#313244,fg=#a6e3a1]\u{e0b6}#[bg=#a6e3a1,fg=#11111b]\u{f4bc}#[bg=#45475a,fg=#a6e3a1]\u{e0b4} {command_cpu}#[bg=#313244,fg=#45475a]\u{e0b4}#[bg=#313244,fg=#89dceb]\u{e0b6}#[bg=#89dceb,fg=#11111b]\u{f538}#[bg=#45475a,fg=#89dceb]\u{e0b4} {command_mem}#[bg=#313244,fg=#45475a]\u{e0b4}#[bg=#313244,fg=#eba0ac]\u{e0b6}#[bg=#eba0ac,fg=#11111b]\u{f00ed}#[bg=#45475a,fg=#eba0ac]\u{e0b4} {datetime}#[bg=#313244,fg=#45475a]\u{e0b4}"
+            format_right  "#[bg=#313244,fg=#eba0ac]\u{e0b6}#[bg=#eba0ac,fg=#11111b]\u{f00ed}#[bg=#45475a,fg=#eba0ac]\u{e0b4} {datetime}#[bg=#313244,fg=#45475a]\u{e0b4}"
             format_space  "#[bg=#313244]"
             format_hide_on_overlength "true"
             format_precedence "lrc"
@@ -36,15 +36,8 @@ layout {
             mode_prompt        "#[bg=#f5c2e7,fg=#11111b] PROMPT#[bg=#313244,fg=#f5c2e7]\u{e0b4}"
 
             datetime        "{format}"
-            datetime_format "%d %b %H:%M"
+            datetime_format "%d %b %H:%M:%S"
 
-            command_cpu_command  "bash -c \"ps -A -o %cpu= | awk -v c=$(sysctl -n hw.logicalcpu) '{s+=$1}END{printf \\\"%.0f%%\\\", s/c}'\""
-            command_cpu_format   "{stdout}"
-            command_cpu_interval "5"
-
-            command_mem_command  "bash -c \"memory_pressure | grep -o '[0-9]*%' | head -1\""
-            command_mem_format   "{stdout}"
-            command_mem_interval "10"
         }
     }
 

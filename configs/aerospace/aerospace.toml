@@ -193,9 +193,14 @@ on-mode-changed = []
 # if.app-id = 'com.google.Chrome' # use aerospace list-apps to get ids
 # run = 'move-node-to-workspace B'
 
-# Fix Ghossty tabs issue
+# Fix Ghostty tabs issue
 [[on-window-detected]]
 if.app-id="com.mitchellh.ghostty"
 run= [
   "layout floating",
 ]
+
+# Force Finder to tile (it defaults to floating, so closing it won't resize other windows)
+[[on-window-detected]]
+if.app-id = "com.apple.finder"
+run = "layout tiling"

@@ -21,7 +21,8 @@ in
       save = 100000;
       ignoreDups = true;
       ignoreSpace = true;
-      share = true;
+      share = false;   # don't share history across sessions in real-time (causes up-arrow pollution)
+      append = true;   # still write to history file immediately so new sessions see it
     };
 
     oh-my-zsh = {

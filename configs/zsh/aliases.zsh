@@ -47,3 +47,6 @@ alias crt-off='sed -i "" "s|^custom-shader = .*crt-clean.glsl|# custom-shader = 
 
 # zellij
 alias zj='zellij'
+
+# AeroSpace
+alias aerospace-clean='aerospace list-windows --all --json | jq -r ".[] | select(.\"window-title\"==\"\") | .\"window-id\"" | xargs -n1 aerospace close --window-id'

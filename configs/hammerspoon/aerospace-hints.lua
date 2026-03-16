@@ -97,7 +97,7 @@ end
 -- ── Canvas ────────────────────────────────────────────────────────────────
 local function makeCanvas()
 	local screen = hs.screen.primaryScreen()
-	local frame = screen:frame()
+	local frame = screen:fullFrame()
 	local w = frame.w - MARGIN_X * 2
 
 	local cv = hs.canvas.new({
@@ -173,13 +173,15 @@ function M.stop()
 	end
 end
 
--- Reposition when monitors change
+-- Reposition when monitors change (delay to let AeroSpace/macOS settle)
 hs.screen.watcher
 	.new(function()
-		if canvas then
-			M.stop()
-			M.start()
-		end
+		hs.timer.doAfter(1.0, function()
+			if canvas then
+				M.stop()
+				M.start()
+			end
+		end)
 	end)
 	:start()
 

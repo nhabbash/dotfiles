@@ -1,3 +1,5 @@
 hs.dockicon.hide()
 
-require("aerospace-hints").start()
+if hs.application.find("AeroSpace") or hs.fs.attributes(os.getenv("HOME") .. "/.config/aerospace") then
+  require("aerospace-hints").start()
+end

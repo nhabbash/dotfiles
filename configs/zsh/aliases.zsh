@@ -48,3 +48,4 @@ alias crt-off='sed -i "" "s|^custom-shader = .*crt-clean.glsl|# custom-shader = 
 # zellij
 alias zj='zellij'
 
+alias crt-lab='$DOTFILES_DIR/scripts/crt-lab'

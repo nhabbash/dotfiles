@@ -64,5 +64,50 @@ themes {
             emphasis_2 "#89b4fa"   // blue
             emphasis_3 "#f9e2af"   // yellow
         }
+
+        text_selected {
+            base "#11111b"
+            background "#cdd6f4"
+            emphasis_0 "#89b4fa"
+            emphasis_1 "#fab387"
+            emphasis_2 "#89b4fa"
+            emphasis_3 "#f9e2af"
+        }
+
+        ribbon_selected {
+            base "#11111b"
+            background "#89b4fa"
+            emphasis_0 "#11111b"
+            emphasis_1 "#11111b"
+            emphasis_2 "#11111b"
+            emphasis_3 "#11111b"
+        }
+
+        frame_unselected {
+            base "#585b70"
+            background "#1e1e2e"
+            emphasis_0 "#585b70"
+            emphasis_1 "#585b70"
+            emphasis_2 "#585b70"
+            emphasis_3 "#585b70"
+        }
+
+        frame_selected {
+            base "#89b4fa"
+            background "#1e1e2e"
+            emphasis_0 "#89b4fa"
+            emphasis_1 "#89b4fa"
+            emphasis_2 "#89b4fa"
+            emphasis_3 "#89b4fa"
+        }
+
+        frame_highlight {
+            base "#fab387"
+            background "#1e1e2e"
+            emphasis_0 "#fab387"
+            emphasis_1 "#fab387"
+            emphasis_2 "#fab387"
+            emphasis_3 "#fab387"
+        }
     }
 }

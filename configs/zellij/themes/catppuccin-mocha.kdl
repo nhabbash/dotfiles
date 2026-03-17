@@ -11,7 +11,7 @@ themes {
         // Surface colors
         black "#181825"
         red "#f38ba8"
-        green "#a6e3a1"
+        green "#89b4fa"
         yellow "#f9e2af"
         blue "#89b4fa"
         magenta "#f5c2e7"
@@ -52,7 +52,7 @@ themes {
             background "#313244"   // surface0
             emphasis_0 "#89b4fa"   // blue
             emphasis_1 "#fab387"   // peach
-            emphasis_2 "#a6e3a1"   // green
+            emphasis_2 "#89b4fa"   // blue
             emphasis_3 "#f9e2af"   // yellow
         }
 
@@ -61,7 +61,7 @@ themes {
             background "#1e1e2e"   // base background
             emphasis_0 "#89b4fa"   // blue
             emphasis_1 "#fab387"   // peach
-            emphasis_2 "#a6e3a1"   // green
+            emphasis_2 "#89b4fa"   // blue
             emphasis_3 "#f9e2af"   // yellow
         }
     }

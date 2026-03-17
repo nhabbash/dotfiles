@@ -1,0 +1,60 @@
+# Unified keymap reference for terminal navigation and window management.
+# This file is the source of truth for how bindings are intended to work
+# across Ghostty, AeroSpace, and Zellij.
+
+[modifiers.ghostty]
+alt_key = "macOS Option"
+option_as_alt = false
+notes = "Ghostty keybind syntax uses alt/cmd names, but behavior depends on macos-option-as-alt in Ghostty config."
+
+[modifiers.aerospace]
+alt_key = "macOS Option"
+notes = "AeroSpace captures macOS-level hotkeys directly before terminal apps can use the same key for app-local behavior."
+
+[modifiers.zellij]
+alt_key = "terminal Meta/Alt sequence"
+notes = "Zellij only receives modifiers the terminal passes through. Direct pane navigation intentionally avoids raw alt+h/j/k/l to prevent overlap with AeroSpace."
+
+[ghostty.text_navigation]
+line_start = "cmd+left"
+line_end = "cmd+right"
+word_back = "alt+left"
+word_forward = "alt+right"
+
+[ghostty.misc]
+reload_config = "cmd+r"
+copy = "cmd+c"
+paste = "cmd+v"
+
+[aerospace.window_navigation]
+left = "alt+h"
+down = "alt+j"
+up = "alt+k"
+right = "alt+l"
+
+[aerospace.window_move]
+left = "alt+shift+h"
+down = "alt+shift+j"
+up = "alt+shift+k"
+right = "alt+shift+l"
+
+[zellij.direct_pane_navigation]
+left = "ctrl+shift+h"
+down = "ctrl+shift+j"
+up = "ctrl+shift+k"
+right = "ctrl+shift+l"
+
+[zellij.direct_tab_navigation]
+previous = "ctrl+shift+u"
+next = "ctrl+shift+o"
+
+[zellij.modes]
+lock = "ctrl+space"
+pane = "v"
+tab = "t"
+resize = "r"
+move = "m"
+
+[zellij.rename]
+pane = "v+r"
+tab = "t+r"

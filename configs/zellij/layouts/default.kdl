@@ -21,7 +21,7 @@ layout {
             notification_format_no_notifications ""
             notification_show_interval           "10"
 
-            mode_normal        "#[bg=#a6e3a1,fg=#11111b] NORMAL#[bg=#313244,fg=#a6e3a1]\u{e0b4}"
+            mode_normal        "#[bg=#89b4fa,fg=#11111b] NORMAL#[bg=#313244,fg=#89b4fa]\u{e0b4}"
             mode_locked        "#[bg=#f38ba8,fg=#11111b] LOCKED#[bg=#313244,fg=#f38ba8]\u{e0b4}"
             mode_pane          "#[bg=#94e2d5,fg=#11111b] PANE#[bg=#313244,fg=#94e2d5]\u{e0b4}"
             mode_tab           "#[bg=#94e2d5,fg=#11111b] TAB#[bg=#313244,fg=#94e2d5]\u{e0b4}"
@@ -68,7 +68,7 @@ layout {
             format_precedence "lrc"
             format_space  "#[bg=#313244]"
 
-            mode_normal        "[bg=#313245,fg=#a6e3a1]\u{e0b6}#[bg=#a6e3a1,fg=#11111b]NORMAL#[bg=#313244,fg=#a6e3a1]\u{e0b4}"
+            mode_normal        "[bg=#313245,fg=#89b4fa]\u{e0b6}#[bg=#89b4fa,fg=#11111b]NORMAL#[bg=#313244,fg=#89b4fa]\u{e0b4}"
             mode_locked        "[bg=#313245,fg=#f38ba8]\u{e0b6}#[bg=#f38ba8,fg=#11111b]LOCKED#[bg=#313244,fg=#f38ba8]\u{e0b4}"
             mode_pane          "[bg=#313245,fg=#94e2d5]\u{e0b6}#[bg=#94e2d5,fg=#11111b]PANE#[bg=#313244,fg=#94e2d5]\u{e0b4}"
             mode_tab           "[bg=#313245,fg=#94e2d5]\u{e0b6}#[bg=#94e2d5,fg=#11111b]TAB#[bg=#313244,fg=#94e2d5]\u{e0b4}"

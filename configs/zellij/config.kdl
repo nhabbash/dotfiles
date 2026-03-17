@@ -14,20 +14,28 @@ keybinds clear-defaults=true {
         bind "v" { SwitchToMode "pane"; }
     }
     locked {
+        // BEGIN GENERATED: zellij-locked-navigation
         bind "Ctrl space" { SwitchToMode "normal"; }
+        bind "Ctrl Shift h" { MoveFocus "left"; }
+        bind "Ctrl Shift j" { MoveFocus "down"; }
+        bind "Ctrl Shift k" { MoveFocus "up"; }
+        bind "Ctrl Shift l" { MoveFocus "right"; }
+        bind "Ctrl Shift o" { GoToNextTab; }
+        bind "Ctrl Shift u" { GoToPreviousTab; }
+        // END GENERATED: zellij-locked-navigation
     }
     pane {
         bind "left" { MoveFocus "left"; }
         bind "down" { MoveFocus "down"; }
         bind "up" { MoveFocus "up"; }
         bind "right" { MoveFocus "right"; }
-        bind "c" { SwitchToMode "renamepane"; PaneNameInput 0; }
+        bind "r" { SwitchToMode "renamepane"; PaneNameInput 0; }
         bind "d" { NewPane "down"; SwitchToMode "locked"; }
         bind "e" { TogglePaneEmbedOrFloating; SwitchToMode "locked"; }
         bind "f" { ToggleFocusFullscreen; SwitchToMode "locked"; }
         bind "n" { NewPane; SwitchToMode "locked"; }
         bind "p" { SwitchToMode "normal"; }
-        bind "r" { NewPane "right"; SwitchToMode "locked"; }
+        bind "R" { NewPane "right"; SwitchToMode "locked"; }
         bind "w" { ToggleFloatingPanes; SwitchToMode "locked"; }
         bind "x" { CloseFocus; SwitchToMode "locked"; }
         bind "z" { TogglePaneFrames; SwitchToMode "locked"; }
@@ -54,7 +62,7 @@ keybinds clear-defaults=true {
         bind "j" { GoToNextTab; }
         bind "k" { GoToPreviousTab; }
         bind "l" { GoToNextTab; }
-        bind "n" { NewTab; SwitchToMode "locked"; }
+        bind "n" { NewTab "Tab"; SwitchToMode "locked"; }
         bind "r" { SwitchToMode "renametab"; TabNameInput 0; }
         bind "s" { ToggleActiveSyncTab; SwitchToMode "locked"; }
         bind "t" { SwitchToMode "normal"; }
@@ -260,6 +268,14 @@ plugins {
         "half page down" "s + d"
         "half page up" "s + u"
         "increase size" "+"
+        // BEGIN GENERATED: zellij-hints-navigation
+        "focus next tab" "ctrl + shift + o"
+        "focus previous tab" "ctrl + shift + u"
+        "focus pane down" "ctrl + shift + j"
+        "focus pane left" "ctrl + shift + h"
+        "focus pane right" "ctrl + shift + l"
+        "focus pane up" "ctrl + shift + k"
+        // END GENERATED: zellij-hints-navigation
         "lock mode" "ctrl + space"
         "move mode" "m"
         "move pane" "m + n"
@@ -270,7 +286,7 @@ plugins {
         "move pane up" "m + k"
         "new pane" "v + n"
         "new pane down" "v + d"
-        "new pane right" "v + r"
+        "new pane right" "v + R"
         "new tab" "t + n"
         "next tab" "J"
         "page down" "s + ctrl + f"
@@ -280,7 +296,7 @@ plugins {
         "previous tab" "K"
         quit "o + q"
         "quit zellij" "ctrl + q"
-        "rename pane" "v + c"
+        "rename pane" "v + r"
         "rename tab" "t + r"
         "resize down" "r + j"
         "resize left" "r + h"

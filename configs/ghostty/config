@@ -38,13 +38,13 @@ macos-titlebar-style = tabs
 # Keybindings
 # =============================================================================
 
-# Line navigation (Ctrl+A / Ctrl+E)
-keybind = alt+h=text:\x01
-keybind = alt+l=text:\x05
+# BEGIN GENERATED: keymaps
+# Source of truth: ~/.dotfiles/configs/keymaps.toml
+# Line navigation
 keybind = cmd+left=text:\x01
 keybind = cmd+right=text:\x05
 
-# Word navigation (Alt+B / Alt+F)
+# Word navigation
 keybind = alt+left=esc:b
 keybind = alt+right=esc:f
 
@@ -52,16 +52,17 @@ keybind = alt+right=esc:f
 keybind = shift+enter=text:\x1b\r
 
 # Reload config
-keybind = super+r=reload_config
+keybind = cmd+r=reload_config
 
 # Always handle copy/paste at the terminal level (prevents passthrough to apps)
 keybind = cmd+c=copy_to_clipboard
 keybind = cmd+v=paste_from_clipboard
+# END GENERATED: keymaps
 
 
 # =============================================================================
 # Cursor Trail
 # =============================================================================
 custom-shader = ~/.config/ghostty/shaders/cursor_warp.glsl
-custom-shader = ~/.config/ghostty/shaders/crt-clean.glsl
+# custom-shader = ~/.config/ghostty/shaders/crt-clean.glsl
 custom-shader-animation = always

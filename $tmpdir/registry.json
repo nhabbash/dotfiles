@@ -1,0 +1,19 @@
+[
+  {
+    "launch_id": "codex-1773675249-60714-17923",
+    "agent_type": "codex",
+    "status": "captured",
+    "resume_id": "019cf6ea-8046-7071-96bb-4b2267e0c508",
+    "started_at": 1773675249,
+    "completed_at": 1773675249,
+    "cwd": "/Users/nassim/.dotfiles",
+    "launch_cmd": "codex --version",
+    "note": "resume id resolved from local state",
+    "terminal": {
+      "program": "ghostty",
+      "in_zellij": true,
+      "zellij_session": "circular-rustacean",
+      "zellij_pane_id": "6"
+    }
+  }
+]

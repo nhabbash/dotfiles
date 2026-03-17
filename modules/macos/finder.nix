@@ -19,6 +19,14 @@
     "com.apple.finder" = {
       _FXShowPosixPathInTitle = true;
       _FXSortFoldersFirst = true;
+      _FXSortFoldersFirstOnDesktop = true;
+    };
+    "com.apple.CrashReporter" = {
+      DialogType = "none";
+    };
+    "com.apple.desktopservices" = {
+      DSDontWriteNetworkStores = true;
+      DSDontWriteUSBStores = true;
     };
   };
 }

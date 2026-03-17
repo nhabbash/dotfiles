@@ -9,7 +9,7 @@
       cleanup = "none";  # Don't remove apps not in this list
     };
 
-    taps = lib.optionals isWork [
+    taps = [
       "nikitabobko/tap"
       "FelixKratz/formulae"
     ];
@@ -18,13 +18,13 @@
     casks = [
       # Terminal
       "kitty"
-    ] ++ lib.optionals isWork [
       "nikitabobko/tap/aerospace"
+      # Status bar & widget engine
+      "ubersicht"
     ];
 
     # CLI tools not in nixpkgs (usually prefer nix)
     brews = [
-    ] ++ lib.optionals isWork [
       "felixkratz/formulae/borders"
     ];
 

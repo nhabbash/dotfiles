@@ -53,6 +53,10 @@ let
   // lib.optionalAttrs (enableGui && isDarwin) {
     "Library/Application Support/com.mitchellh.ghostty/config" = "configs/ghostty/config";
     ".config/aerospace" = "configs/aerospace";
+    ".simplebarrc" = "configs/simplebarrc";
+    # AeroSpace helper scripts (stable path so aerospace.toml works regardless of dotfiles location)
+    ".local/bin/aerospace-summon-workspace-here.sh" = "scripts/aerospace-summon-workspace-here.sh";
+    ".local/bin/aerospace-clean.sh" = "scripts/aerospace-clean.sh";
   }
   // lib.optionalAttrs (enableGui && isDarwin && !isWork) {
     # Hammerspoon (macOS automation)
@@ -92,6 +96,14 @@ in
   home.activation.linkConfigs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     ${linkCommands}
   '';
+
+  # simple-bar: clone once into Übersicht widgets dir (macOS only)
+  home.activation.installSimpleBar = lib.mkIf (isDarwin) (lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    SIMPLEBAR_DIR="${homeDir}/Library/Application Support/Übersicht/widgets/simple-bar"
+    if [ ! -d "$SIMPLEBAR_DIR" ]; then
+      ${pkgs.git}/bin/git clone --depth 1 https://github.com/Jean-Tinland/simple-bar "$SIMPLEBAR_DIR"
+    fi
+  '');
 
   # Tool integrations (packages are in packages.nix, configs are in configs/)
   programs.starship = {

@@ -15,6 +15,8 @@
     minimize-to-application = true;
     mineffect = "scale";
     mru-spaces = false;
+    launchanim = false;
+    expose-animation-duration = 0.1;
 
     # Hot corners: 0=none, 2=mission control, 3=app windows, 4=desktop,
     # 5=screen saver, 6=disable saver, 10=sleep, 11=launchpad, 12=notification center

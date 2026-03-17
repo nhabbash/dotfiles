@@ -21,10 +21,15 @@
       NSAutomaticSpellingCorrectionEnabled = false;
 
       # UI
+      _HIHideMenuBar = true;
+      NSWindowResizeTime = 1.0e-3;
       AppleShowAllExtensions = true;
       AppleShowScrollBars = "WhenScrolling";
+      NSDocumentSaveNewDocumentsToCloud = false;
       NSNavPanelExpandedStateForSaveMode = true;
       NSNavPanelExpandedStateForSaveMode2 = true;
+      PMPrintingExpandedStateForPrint = true;
+      PMPrintingExpandedStateForPrint2 = true;
       AppleInterfaceStyle = "Dark";
       AppleInterfaceStyleSwitchesAutomatically = false;
     };
@@ -52,6 +57,12 @@
       Show24Hour = true;
       ShowDate = 1;
       ShowDayOfWeek = true;
+    };
+
+    # Disable Spotlight shortcuts (cmd+space, cmd+alt+space) — conflicts with Raycast
+    CustomUserPreferences."com.apple.symbolichotkeys".AppleSymbolicHotKeys = {
+      "64" = { enabled = false; value = { parameters = [ 65535 49 1048576 ]; type = "standard"; }; };
+      "65" = { enabled = false; value = { parameters = [ 65535 49 1572864 ]; type = "standard"; }; };
     };
   };
 

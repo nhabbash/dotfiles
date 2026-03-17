@@ -9,7 +9,7 @@ config-version = 2
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
 after-startup-command = [
     'exec-and-forget sh -c "echo main > /tmp/aerospace-mode"',
-    'exec-and-forget borders active_color=0xffd9ff00 inactive_color=0xff4b5563 width=5.0 hidpi=on'
+    'exec-and-forget borders active_color=0xffd9ff00 inactive_color=0xff4b5563 width=5.0 hidpi=on blacklist="Übersicht,Hammerspoon,Steam,Steam Helper"'
 ]
 
 # Start AeroSpace at login
@@ -38,7 +38,12 @@ default-root-container-orientation = 'auto'
 # See https://nikitabobko.github.io/AeroSpace/commands#move-mouse
 # Fallback value (if you omit the key): on-focused-monitor-changed = []
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
-on-focus-changed = "move-mouse window-lazy-center"
+on-focus-changed = ['move-mouse window-lazy-center']
+
+exec-on-workspace-change = [
+    '/bin/zsh', '-c',
+    "/usr/bin/osascript -e 'tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-index-jsx\"'",
+]
 
 # You can effectively turn off macOS "Hide application" (cmd-h) feature by toggling this flag
 # Useful if you don't use this macOS feature, but accidentally hit cmd-h or cmd-alt-h key
@@ -114,6 +119,9 @@ on-mode-changed = []
     # '''
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#layout
+    cmd-h = []     # Disable "hide application"
+    cmd-alt-h = [] # Disable "hide others"
+
     alt-slash = 'layout tiles horizontal vertical'
     alt-comma = 'layout accordion horizontal vertical'
 
@@ -140,18 +148,20 @@ on-mode-changed = []
     alt-equal = 'resize smart +50'
 
     # Pull the workspace onto the monitor under the mouse.
-    alt-1 = 'exec-and-forget /Users/nassim/.dotfiles/scripts/aerospace-summon-workspace-here.sh 1'
-    alt-2 = 'exec-and-forget /Users/nassim/.dotfiles/scripts/aerospace-summon-workspace-here.sh 2'
-    alt-3 = 'exec-and-forget /Users/nassim/.dotfiles/scripts/aerospace-summon-workspace-here.sh 3'
-    alt-4 = 'exec-and-forget /Users/nassim/.dotfiles/scripts/aerospace-summon-workspace-here.sh 4'
-    alt-5 = 'exec-and-forget /Users/nassim/.dotfiles/scripts/aerospace-summon-workspace-here.sh 5'
-    alt-b = 'exec-and-forget /Users/nassim/.dotfiles/scripts/aerospace-summon-workspace-here.sh B'
-    alt-m = 'exec-and-forget /Users/nassim/.dotfiles/scripts/aerospace-summon-workspace-here.sh M'
-    alt-n = 'exec-and-forget /Users/nassim/.dotfiles/scripts/aerospace-summon-workspace-here.sh N'
-    alt-c = 'exec-and-forget /Users/nassim/.dotfiles/scripts/aerospace-summon-workspace-here.sh C'
-    alt-s = 'exec-and-forget /Users/nassim/.dotfiles/scripts/aerospace-summon-workspace-here.sh S'
-    alt-t = 'exec-and-forget /Users/nassim/.dotfiles/scripts/aerospace-summon-workspace-here.sh T'
-    alt-v = 'exec-and-forget /Users/nassim/.dotfiles/scripts/aerospace-summon-workspace-here.sh V'
+    alt-1 = 'exec-and-forget ~/.local/bin/aerospace-summon-workspace-here.sh 1'
+    alt-2 = 'exec-and-forget ~/.local/bin/aerospace-summon-workspace-here.sh 2'
+    alt-3 = 'exec-and-forget ~/.local/bin/aerospace-summon-workspace-here.sh 3'
+    alt-4 = 'exec-and-forget ~/.local/bin/aerospace-summon-workspace-here.sh 4'
+    alt-5 = 'exec-and-forget ~/.local/bin/aerospace-summon-workspace-here.sh 5'
+    alt-b = 'exec-and-forget ~/.local/bin/aerospace-summon-workspace-here.sh B'
+    alt-m = 'exec-and-forget ~/.local/bin/aerospace-summon-workspace-here.sh M'
+    alt-n = 'exec-and-forget ~/.local/bin/aerospace-summon-workspace-here.sh N'
+    alt-c = 'exec-and-forget ~/.local/bin/aerospace-summon-workspace-here.sh C'
+    alt-s = 'exec-and-forget ~/.local/bin/aerospace-summon-workspace-here.sh S'
+    alt-t = 'exec-and-forget ~/.local/bin/aerospace-summon-workspace-here.sh T'
+    alt-v = 'exec-and-forget ~/.local/bin/aerospace-summon-workspace-here.sh V'
+    alt-x = 'exec-and-forget ~/.local/bin/aerospace-summon-workspace-here.sh X'
+    alt-y = 'exec-and-forget ~/.local/bin/aerospace-summon-workspace-here.sh Y'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
     alt-shift-1 = 'move-node-to-workspace 1'
@@ -165,6 +175,9 @@ on-mode-changed = []
     alt-shift-c = 'move-node-to-workspace C' # Code
     alt-shift-t = 'move-node-to-workspace T' # Terminal
     alt-shift-s = 'move-node-to-workspace S' # Slack
+    alt-shift-v = 'move-node-to-workspace V'
+    alt-shift-x = 'move-node-to-workspace X'
+    alt-shift-y = 'move-node-to-workspace Y'
 
     alt-shift-f = "fullscreen"
 
@@ -179,7 +192,7 @@ on-mode-changed = []
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
-    esc = ['reload-config', 'exec-and-forget /Users/nassim/.dotfiles/scripts/aerospace-clean.sh', 'mode main', 'exec-and-forget sh -c "echo main > /tmp/aerospace-mode"']
+    esc = ['reload-config', 'exec-and-forget ~/.local/bin/aerospace-clean.sh', 'mode main', 'exec-and-forget sh -c "echo main > /tmp/aerospace-mode"']
     r = ['flatten-workspace-tree', 'mode main', 'exec-and-forget sh -c "echo main > /tmp/aerospace-mode"'] # reset layout
     f = ['layout floating tiling', 'mode main', 'exec-and-forget sh -c "echo main > /tmp/aerospace-mode"'] # Toggle between floating and tiling layout
     backspace = ['close-all-windows-but-current', 'mode main', 'exec-and-forget sh -c "echo main > /tmp/aerospace-mode"']

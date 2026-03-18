@@ -52,6 +52,7 @@ All commands are available as the `dotfiles` alias once your shell is set up.
 | `dotfiles check [hostname]` | Verify repo integrity and generated drift |
 | `dotfiles assets [hostname]` | Install explicit external assets such as pinned widgets |
 | `dotfiles snapshot [hostname]` | Capture current repo and runtime state before/after cutover |
+| `dotfiles preflight [hostname]` | Run snapshot + integrity checks before switching or rebuilding |
 | `dotfiles services [hostname]` | Start/reload local desktop services after setup |
 | `dotfiles doctor [hostname]` | Diagnose setup, links, installs, and service health |
 | `rebuild` | Shorthand alias for `dotfiles rebuild` |
@@ -114,6 +115,16 @@ dotfiles assets
 
 This is intentionally separate from `dotfiles rebuild`, so declarative applies
 do not fetch mutable upstream state during activation.
+
+### Preflight before switching
+
+Before a cutover or risky rebuild, run:
+
+```bash
+dotfiles preflight
+```
+
+This captures a snapshot and runs the same integrity checks as `dotfiles check`.
 
 ### Syncing to another machine
 

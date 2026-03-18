@@ -25,6 +25,9 @@ dotfiles assets [hostname]
 # Capture a pre/post cutover snapshot
 dotfiles snapshot [hostname]
 
+# Run snapshot + integrity checks before switching
+dotfiles preflight [hostname]
+
 # Pull latest and auto-rebuild only if Nix files changed
 dotfiles pull
 

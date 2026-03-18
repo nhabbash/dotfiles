@@ -14,16 +14,15 @@ refactor branch safely.
 Before switching:
 
 1. Ensure current work is committed or otherwise safe.
-2. Run `dotfiles snapshot`
-3. Run `dotfiles check`
+2. Run `dotfiles preflight`
 4. Confirm the refactor branch is clean.
 
 ## Switch Procedure
 
-1. Capture a baseline snapshot on the current branch:
+1. Capture a baseline snapshot and run checks on the current branch:
 
    ```bash
-   dotfiles snapshot
+   dotfiles preflight
    ```
 
 2. Switch to the refactor branch:

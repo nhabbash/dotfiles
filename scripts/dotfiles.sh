@@ -8,6 +8,7 @@
 #   check [hostname]       Verify repo integrity and config drift
 #   assets [hostname]      Install explicit external assets
 #   snapshot [hostname]    Capture current repo and runtime state for cutover
+#   preflight [hostname]   Capture a snapshot and run integrity checks
 #   services [hostname]    Start/reload local desktop services
 #   doctor [hostname]      Diagnose local setup and service health
 #   pull                   Smart pull: only rebuilds if nix files changed
@@ -509,6 +510,26 @@ cmd_snapshot() {
     info "$snapshot_file"
 }
 
+cmd_preflight() {
+    local hostname="${1:-$(detect_hostname)}"
+    local snapshot_file
+
+    header "Preflight for: $hostname"
+    init_progress 2
+
+    step "Capturing current state"
+    snapshot_file="$(capture_snapshot "$hostname")"
+
+    step "Running integrity checks"
+    check_shell_scripts
+    check_python_scripts
+    run_sync_keymaps 1
+    check_nix_eval "$hostname"
+
+    success "Preflight passed."
+    info "$snapshot_file"
+}
+
 cmd_check() {
     local hostname="${1:-$(detect_hostname)}"
 
@@ -843,6 +864,7 @@ case "$COMMAND" in
     check)      cmd_check "${COMMAND_ARGS[@]}" ;;
     assets)     cmd_assets "${COMMAND_ARGS[@]}" ;;
     snapshot)   cmd_snapshot "${COMMAND_ARGS[@]}" ;;
+    preflight)  cmd_preflight "${COMMAND_ARGS[@]}" ;;
     services)   cmd_services "${COMMAND_ARGS[@]}" ;;
     doctor)     cmd_doctor "${COMMAND_ARGS[@]}" ;;
     pull)       cmd_pull ;;
@@ -860,6 +882,7 @@ case "$COMMAND" in
         echo "  check [hostname]       Verify repo integrity and config drift"
         echo "  assets [hostname]      Install explicit external assets"
         echo "  snapshot [hostname]    Capture current repo and runtime state for cutover"
+        echo "  preflight [hostname]   Capture a snapshot and run integrity checks"
         echo "  services [hostname]    Start/reload local desktop services"
         echo "  doctor [hostname]      Diagnose local setup and service health"
         echo "  pull                   Pull changes (rebuilds only if nix files changed)"

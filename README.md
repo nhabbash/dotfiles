@@ -48,6 +48,8 @@ All commands are available as the `dotfiles` alias once your shell is set up.
 | `dotfiles push [message]` | Commit all changes and push |
 | `dotfiles status [hostname]` | Show repo state and local service status |
 | `dotfiles rebuild [hostname]` | Force a full nix rebuild |
+| `dotfiles regen` | Regenerate derived config from source manifests |
+| `dotfiles check [hostname]` | Verify repo integrity and generated drift |
 | `dotfiles services [hostname]` | Start/reload local desktop services after setup |
 | `dotfiles doctor [hostname]` | Diagnose setup, links, installs, and service health |
 | `rebuild` | Shorthand alias for `dotfiles rebuild` |
@@ -77,6 +79,27 @@ vim modules/packages.nix
 dotfiles rebuild
 # or just: rebuild
 ```
+
+### Regenerating derived config
+
+When a file is generated from a canonical source, regenerate it explicitly:
+
+```bash
+dotfiles regen
+```
+
+Use this when you edit a manifest such as `configs/keymaps.toml`.
+
+### Checking repo integrity
+
+Before a risky rebuild or refactor, run:
+
+```bash
+dotfiles check
+```
+
+This validates shell scripts, Python scripts, generated-config drift, and a
+lightweight Nix evaluation for the active host.
 
 ### Syncing to another machine
 
@@ -181,3 +204,12 @@ ngc          # alias for: nix-collect-garbage -d && nix store optimise
 | `configs/zsh/work.zsh` | Work machine overrides | No |
 | `modules/shell/zsh.nix` | Plugins, oh-my-zsh, history settings | **Yes** |
 | `~/.zshrc.local` | Local experiments, untracked | No |
+
+---
+
+## More documentation
+
+- `docs/architecture.md` — ownership model and latency classes
+- `docs/operations.md` — rebuild/regen/check/services/doctor workflow
+- `docs/hosts.md` — host/profile dimensions
+- `docs/adding-tools.md` — how to classify and add new tools

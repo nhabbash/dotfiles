@@ -4,6 +4,8 @@
 # Commands:
 #   bootstrap [hostname]   First-time setup on a new machine
 #   rebuild [hostname]     Rebuild nix configuration
+#   regen                  Regenerate derived config from source manifests
+#   check [hostname]       Verify repo integrity and config drift
 #   services [hostname]    Start/reload local desktop services
 #   doctor [hostname]      Diagnose local setup and service health
 #   pull                   Smart pull: only rebuilds if nix files changed
@@ -40,6 +42,43 @@ ensure_flake_lock() {
     if [ ! -s "${DOTFILES_DIR}/flake.lock" ]; then
         step "Generating flake.lock"
         run_quiet nix --extra-experimental-features 'nix-command flakes' flake update "${DOTFILES_DIR}"
+    fi
+}
+
+run_sync_keymaps() {
+    local check_mode="${1:-0}"
+    if [ "$check_mode" = "1" ]; then
+        run_quiet python3 "$DOTFILES_DIR/scripts/sync-keymaps.py" --check
+    else
+        run_quiet python3 "$DOTFILES_DIR/scripts/sync-keymaps.py"
+    fi
+}
+
+check_shell_scripts() {
+    local script
+    while IFS= read -r script; do
+        run_quiet bash -n "$script"
+    done < <(find "$DOTFILES_DIR/scripts" -type f \( -name "*.sh" -o -path "$DOTFILES_DIR/scripts/dotfiles.sh" -o -path "$DOTFILES_DIR/scripts/crt-cycle" -o -path "$DOTFILES_DIR/scripts/crt-lab" -o -path "$DOTFILES_DIR/scripts/crt-tune" \) | sort)
+}
+
+check_python_scripts() {
+    local script
+    while IFS= read -r script; do
+        run_quiet python3 -m py_compile "$script"
+    done < <(find "$DOTFILES_DIR/scripts" -type f -name "*.py" | sort)
+}
+
+check_nix_eval() {
+    local hostname="$1"
+    local OS="$(uname -s)"
+    local cache_home="/tmp/dotfiles-nix-cache"
+
+    mkdir -p "$cache_home"
+
+    if [ "$OS" = "Darwin" ]; then
+        run_quiet env XDG_CACHE_HOME="$cache_home" DOTFILES_DIR="$DOTFILES_DIR" nix --extra-experimental-features 'nix-command flakes' eval --impure "$DOTFILES_DIR#darwinConfigurations.${hostname}.config.system.primaryUser"
+    else
+        run_quiet env XDG_CACHE_HOME="$cache_home" DOTFILES_DIR="$DOTFILES_DIR" nix --extra-experimental-features 'nix-command flakes' eval --impure "$DOTFILES_DIR#homeConfigurations.${hostname}.config.home.username"
     fi
 }
 
@@ -380,6 +419,37 @@ cmd_services() {
     show_summary
 }
 
+cmd_regen() {
+    header "Regenerating derived config"
+    init_progress 1
+
+    step "Syncing generated keymaps"
+    run_sync_keymaps 0
+
+    success "Regeneration complete."
+}
+
+cmd_check() {
+    local hostname="${1:-$(detect_hostname)}"
+
+    header "Checking repo for: $hostname"
+    init_progress 4
+
+    step "Checking shell scripts"
+    check_shell_scripts
+
+    step "Checking python scripts"
+    check_python_scripts
+
+    step "Checking generated config drift"
+    run_sync_keymaps 1
+
+    step "Checking nix evaluation"
+    check_nix_eval "$hostname"
+
+    success "Checks passed."
+}
+
 cmd_pull() {
     header "Pulling latest changes"
 
@@ -689,6 +759,8 @@ COMMAND_ARGS=("${ARGS[@]:1}")
 case "$COMMAND" in
     bootstrap)  cmd_bootstrap "${COMMAND_ARGS[@]}" ;;
     rebuild)    cmd_rebuild "${COMMAND_ARGS[@]}" ;;
+    regen)      cmd_regen ;;
+    check)      cmd_check "${COMMAND_ARGS[@]}" ;;
     services)   cmd_services "${COMMAND_ARGS[@]}" ;;
     doctor)     cmd_doctor "${COMMAND_ARGS[@]}" ;;
     pull)       cmd_pull ;;
@@ -702,6 +774,8 @@ case "$COMMAND" in
         echo "Commands:"
         echo "  bootstrap [hostname]   First-time setup on a new machine"
         echo "  rebuild [hostname]     Rebuild nix configuration"
+        echo "  regen                  Regenerate derived config from source manifests"
+        echo "  check [hostname]       Verify repo integrity and config drift"
         echo "  services [hostname]    Start/reload local desktop services"
         echo "  doctor [hostname]      Diagnose local setup and service health"
         echo "  pull                   Pull changes (rebuilds only if nix files changed)"

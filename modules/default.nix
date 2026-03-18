@@ -2,9 +2,13 @@
 { config, pkgs, lib, username, isWork, enableGui, ... }:
 
 let
+  policy = import ./policy.nix {
+    inherit pkgs isWork enableGui;
+  };
+  features = policy.features;
   dotfilesDir = builtins.getEnv "DOTFILES_DIR";
   homeDir = config.home.homeDirectory;
-  isDarwin = pkgs.stdenv.isDarwin;
+  isDarwin = policy.isDarwin;
 
   modules = [
     ./packages.nix
@@ -12,67 +16,14 @@ let
     ./terminal/zellij.nix
   ];
 
-  # All config symlinks: target (relative to ~) -> source (relative to dotfiles repo)
-  configLinks = {
-    # Shell
-    ".config/zsh/core.zsh" = "configs/zsh/core.zsh";
-    ".config/zsh/aliases.zsh" = "configs/zsh/aliases.zsh";
-    ".config/zsh/functions.zsh" = "configs/zsh/functions.zsh";
-    ".config/zsh/claude.zsh" = "configs/zsh/claude.zsh";
-    ".config/zsh/zellij.zsh" = "configs/zsh/zellij.zsh";
-    ".config/zsh/work.zsh" = "configs/zsh/work.zsh";
-    ".config/zsh/personal.zsh" = "configs/zsh/personal.zsh";
-    ".config/starship.toml" = "configs/starship.toml";
-
-    # Git & tools
-    ".gitconfig" = "configs/git/config";
-    ".config/jj/config.toml" = "configs/jj/config.toml";
-    ".config/gh/config.yml" = "configs/gh/config.yml";
-    ".tmux.conf" = "configs/tmux/tmux.conf";
-
-    # Neovim (LazyVim)
-    ".config/nvim" = "configs/nvim";
-
-    # Claude Code
-    ".claude/CLAUDE.md" = "configs/claude/CLAUDE.md";
-    ".claude/statusline.sh" = "configs/claude/statusline.sh";
-
-    # Agents (directory symlink)
-    ".config/agents" = "configs/agents";
-
-    # Zellij (whole dir so new layouts/themes/plugins just work)
-    ".config/zellij" = "configs/zellij";
-  }
-  // lib.optionalAttrs enableGui {
-    # Kitty
-    ".config/kitty" = "configs/kitty";
-
-    # Ghostty (whole shaders dir so new shaders auto-appear)
-    ".config/ghostty/shaders" = "configs/ghostty/shaders";
-  }
-  // lib.optionalAttrs (enableGui && isDarwin) {
-    "Library/Application Support/com.mitchellh.ghostty/config" = "configs/ghostty/config";
-    ".config/aerospace" = "configs/aerospace";
-    ".simplebarrc" = "configs/simplebarrc";
-    # AeroSpace helper scripts (stable path so aerospace.toml works regardless of dotfiles location)
-    ".local/bin/aerospace-summon-workspace-here.sh" = "scripts/aerospace-summon-workspace-here.sh";
-    ".local/bin/aerospace-clean.sh" = "scripts/aerospace-clean.sh";
-    ".local/bin/aerospace-refresh-simple-bar.sh" = "scripts/aerospace-refresh-simple-bar.sh";
-  }
-  // lib.optionalAttrs (enableGui && isDarwin) {
-    # Hammerspoon (macOS automation)
-    ".hammerspoon" = "configs/hammerspoon";
-  }
-  // lib.optionalAttrs (enableGui && !isDarwin) {
-    ".config/ghostty/config" = "configs/ghostty/config";
+  # All live-editable config links: target (relative to ~) -> source (relative to dotfiles repo)
+  configLinks = import ./links.nix {
+    inherit lib features;
   };
 
-  # Build the ln -sf commands (rm first to handle stale files/dirs/symlinks)
-  linkCommands = lib.concatStringsSep "\n" (lib.mapAttrsToList (target: source: ''
-    mkdir -p "$(dirname "${homeDir}/${target}")"
-    rm -rf "${homeDir}/${target}"
-    ln -sf "${dotfilesDir}/${source}" "${homeDir}/${target}"
-  '') configLinks);
+  linkTargets = lib.mapAttrs (target: source: {
+    source = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${source}";
+  }) configLinks;
 in
 {
   imports = modules;
@@ -93,13 +44,11 @@ in
     inherit isWork dotfilesDir;
   };
 
-  # Direct symlinks to repo files (one-hop, editable)
-  home.activation.linkConfigs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    ${linkCommands}
-  '';
+  # Direct editable symlinks from the repo into $HOME.
+  home.file = linkTargets;
 
   # simple-bar: clone once into Übersicht widgets dir (macOS only)
-  home.activation.installSimpleBar = lib.mkIf (isDarwin && !isWork) (lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+  home.activation.installSimpleBar = lib.mkIf features.simpleBar (lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     SIMPLEBAR_DIR="${homeDir}/Library/Application Support/Übersicht/widgets/simple-bar"
     if [ ! -d "$SIMPLEBAR_DIR" ]; then
       ${pkgs.git}/bin/git clone --depth 1 https://github.com/Jean-Tinland/simple-bar "$SIMPLEBAR_DIR"

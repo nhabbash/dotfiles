@@ -13,13 +13,19 @@ bash scripts/dotfiles.sh rebuild [hostname]
 # or once bootstrap is done:
 rebuild
 
+# Regenerate derived config
+dotfiles regen
+
+# Verify repo integrity and drift
+dotfiles check [hostname]
+
 # Pull latest and auto-rebuild only if Nix files changed
 dotfiles pull
 
 # Commit and push all changes
 dotfiles push [message]
 
-# Show uncommitted changes
+# Show uncommitted changes and runtime state
 dotfiles status
 
 # Enter dev shell (provides nixfmt)
@@ -31,6 +37,7 @@ nix develop
 ## Architecture
 
 This repo uses **Nix Flakes + nix-darwin + home-manager** to declaratively manage the system. There are two tiers of configuration with different edit latency:
+This repo also has explicit regeneration and runtime layers; see `docs/architecture.md`.
 
 ### Instant (no rebuild needed)
 Files in `configs/` are **symlinked** into place by home-manager activation. Editing them takes effect immediately.
@@ -63,10 +70,17 @@ Machine-local files that are intentionally untracked: `~/.zshrc`, `~/.zshrc.loca
 
 ## Scripts
 
-- `scripts/dotfiles.sh` — Main entry point for bootstrap/rebuild/pull/push/status
+- `scripts/dotfiles.sh` — Main entry point for bootstrap/rebuild/regen/check/services/doctor/pull/push/status
 - `scripts/lib.sh` — Shared helpers: colored output, progress tracking, log parsing
 - `scripts/crt-cycle` — Interactive CRT shader preset cycler for Ghostty
 - `scripts/crt-tune` — Parameterized CRT shader generator (live reloads Ghostty config)
+
+## Further Reading
+
+- `docs/architecture.md`
+- `docs/operations.md`
+- `docs/hosts.md`
+- `docs/adding-tools.md`
 
 ## Notable Configs
 

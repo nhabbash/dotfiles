@@ -157,6 +157,20 @@ local function st(text, attrs)
 	return hs.styledtext.new(text, attrs)
 end
 
+local function activeScreen()
+	local win = hs.window.focusedWindow()
+	if win then
+		return win:screen()
+	end
+
+	local screen = hs.mouse.getCurrentScreen()
+	if screen then
+		return screen
+	end
+
+	return hs.screen.primaryScreen()
+end
+
 local function hide()
 	if canvas then canvas:hide() end
 	visible = false
@@ -167,6 +181,8 @@ local function toggle()
 	if visible then
 		hide()
 	else
+		if canvas then canvas:delete() end
+		canvas = buildCanvas()
 		if canvas then canvas:show() end
 		visible = true
 		if escHK then escHK:enable() end
@@ -197,7 +213,7 @@ end
 
 -- ── Canvas builder ────────────────────────────────────────────────────────────
 local function buildCanvas()
-	local screen = hs.screen.primaryScreen()
+	local screen = activeScreen()
 	local sf     = screen:fullFrame()
 
 	local maxColH = 0

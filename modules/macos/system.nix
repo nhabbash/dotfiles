@@ -1,5 +1,5 @@
 # macOS system preferences
-{ ... }:
+{ isWork, ... }:
 
 {
   system.defaults = {
@@ -21,7 +21,7 @@
       NSAutomaticSpellingCorrectionEnabled = false;
 
       # UI
-      _HIHideMenuBar = true;
+      _HIHideMenuBar = !isWork;
       NSWindowResizeTime = 1.0e-3;
       AppleShowAllExtensions = true;
       AppleShowScrollBars = "WhenScrolling";

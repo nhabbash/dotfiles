@@ -57,8 +57,9 @@ let
     # AeroSpace helper scripts (stable path so aerospace.toml works regardless of dotfiles location)
     ".local/bin/aerospace-summon-workspace-here.sh" = "scripts/aerospace-summon-workspace-here.sh";
     ".local/bin/aerospace-clean.sh" = "scripts/aerospace-clean.sh";
+    ".local/bin/aerospace-refresh-simple-bar.sh" = "scripts/aerospace-refresh-simple-bar.sh";
   }
-  // lib.optionalAttrs (enableGui && isDarwin && !isWork) {
+  // lib.optionalAttrs (enableGui && isDarwin) {
     # Hammerspoon (macOS automation)
     ".hammerspoon" = "configs/hammerspoon";
   }
@@ -98,7 +99,7 @@ in
   '';
 
   # simple-bar: clone once into Übersicht widgets dir (macOS only)
-  home.activation.installSimpleBar = lib.mkIf (isDarwin) (lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+  home.activation.installSimpleBar = lib.mkIf (isDarwin && !isWork) (lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     SIMPLEBAR_DIR="${homeDir}/Library/Application Support/Übersicht/widgets/simple-bar"
     if [ ! -d "$SIMPLEBAR_DIR" ]; then
       ${pkgs.git}/bin/git clone --depth 1 https://github.com/Jean-Tinland/simple-bar "$SIMPLEBAR_DIR"

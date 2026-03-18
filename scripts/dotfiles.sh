@@ -4,9 +4,11 @@
 # Commands:
 #   bootstrap [hostname]   First-time setup on a new machine
 #   rebuild [hostname]     Rebuild nix configuration
+#   services [hostname]    Start/reload local desktop services
+#   doctor [hostname]      Diagnose local setup and service health
 #   pull                   Smart pull: only rebuilds if nix files changed
 #   push [message]         Commit and push all changes
-#   status                 Show uncommitted changes
+#   status [hostname]      Show repo state and local service status
 #
 # Flags:
 #   -v, --verbose          Show detailed output
@@ -71,6 +73,242 @@ ZSHRC
     fi
 }
 
+start_macos_services() {
+    local hostname="$1"
+    local simplebar_dir="$HOME/Library/Application Support/Übersicht/widgets/simple-bar"
+
+    step "Starting local services"
+
+    if [ -d "/Applications/AeroSpace.app" ]; then
+        open -gj -a "AeroSpace" || true
+    fi
+
+    if [ -d "/Applications/Hammerspoon.app" ]; then
+        open -gj -a "Hammerspoon" || true
+        osascript <<'APPLESCRIPT' >/dev/null 2>&1 || true
+tell application "Hammerspoon"
+    reload config
+end tell
+APPLESCRIPT
+    fi
+
+    if [ "$hostname" != "work-macbook" ] || [ -d "$simplebar_dir" ]; then
+        if [ -d "/Applications/Übersicht.app" ]; then
+            open -gj -a "Übersicht" || true
+        fi
+    fi
+}
+
+is_app_installed() {
+    local app_name="$1"
+    [ -d "/Applications/${app_name}.app" ] || [ -d "$HOME/Applications/Home Manager Apps/${app_name}.app" ]
+}
+
+app_bundle_id() {
+    local app_name="$1"
+
+    case "$app_name" in
+        AeroSpace) echo "bobko.aerospace" ;;
+        Hammerspoon) echo "org.hammerspoon.Hammerspoon" ;;
+        Übersicht) echo "tracesOf.Uebersicht" ;;
+        *) echo "" ;;
+    esac
+}
+
+app_running_state() {
+    local app_name="$1"
+    local bundle_id=""
+    local result=""
+
+    bundle_id="$(app_bundle_id "$app_name")"
+
+    if [ -n "$bundle_id" ] && command -v launchctl >/dev/null 2>&1; then
+        if launchctl print "gui/$(id -u)" 2>/dev/null | rg -q "application\\.${bundle_id//./\\.}\\."; then
+            echo "running"
+            return
+        fi
+    fi
+
+    if command -v osascript >/dev/null 2>&1; then
+        result=$(osascript -e "application \"${app_name}\" is running" 2>/dev/null || true)
+        case "$result" in
+            true)
+                echo "running"
+                return
+                ;;
+            false)
+                echo "stopped"
+                return
+                ;;
+        esac
+    fi
+
+    if command -v pgrep >/dev/null 2>&1; then
+        if pgrep -x "$app_name" >/dev/null 2>&1; then
+            echo "running"
+            return
+        fi
+        local pgrep_status=$?
+        if [ "$pgrep_status" -eq 1 ]; then
+            echo "stopped"
+            return
+        fi
+    fi
+
+    echo "unknown"
+}
+
+status_line() {
+    local label="$1"
+    local state="$2"
+    local detail="${3:-}"
+
+    case "$state" in
+        ok)
+            printf "  ${GREEN}%-10s${NC} %s" "ok" "$label"
+            ;;
+        warn)
+            printf "  ${YELLOW}%-10s${NC} %s" "warn" "$label"
+            ;;
+        error)
+            printf "  ${RED}%-10s${NC} %s" "error" "$label"
+            ;;
+        *)
+            printf "  %-10s %s" "$state" "$label"
+            ;;
+    esac
+
+    if [ -n "$detail" ]; then
+        printf " ${DIM}(%s)${NC}" "$detail"
+    fi
+    printf "\n"
+}
+
+check_macos_service() {
+    local hostname="$1"
+    local app_name="$2"
+    local required="$3"
+    local detail=""
+
+    if ! is_app_installed "$app_name"; then
+        if [ "$required" = "required" ]; then
+            status_line "$app_name" "error" "not installed"
+        else
+            status_line "$app_name" "warn" "not installed"
+        fi
+        return
+    fi
+
+    local running_state
+    running_state="$(app_running_state "$app_name")"
+
+    case "$running_state" in
+        running)
+            status_line "$app_name" "ok" "running"
+            ;;
+        stopped)
+            if [ "$required" = "required" ]; then
+                detail="installed but not running"
+                if [ "$app_name" = "Hammerspoon" ] || [ "$app_name" = "AeroSpace" ]; then
+                    detail="${detail}; run 'dotfiles services'"
+                fi
+                status_line "$app_name" "warn" "$detail"
+            else
+                status_line "$app_name" "warn" "installed but not running"
+            fi
+            ;;
+        *)
+            status_line "$app_name" "warn" "installed; runtime state unavailable"
+            ;;
+    esac
+
+    if [ "$app_name" = "Übersicht" ]; then
+        local simplebar_dir="$HOME/Library/Application Support/Übersicht/widgets/simple-bar"
+        if [ "$hostname" = "work-macbook" ] && [ -d "$simplebar_dir" ]; then
+            status_line "simple-bar" "warn" "present on work profile"
+        elif [ "$hostname" != "work-macbook" ] && [ -d "$simplebar_dir" ]; then
+            status_line "simple-bar" "ok" "installed"
+        elif [ "$hostname" != "work-macbook" ]; then
+            status_line "simple-bar" "warn" "missing widget install"
+        else
+            status_line "simple-bar" "ok" "not enabled for work"
+        fi
+    fi
+}
+
+check_hammerspoon_config() {
+    local config_dir="$HOME/.hammerspoon"
+    local init_file="$config_dir/init.lua"
+
+    if [ -L "$config_dir" ] || [ -d "$config_dir" ]; then
+        status_line "Hammerspoon cfg" "ok" "$config_dir"
+    else
+        status_line "Hammerspoon cfg" "error" "missing $config_dir"
+        return
+    fi
+
+    if [ -f "$init_file" ]; then
+        status_line "init.lua" "ok" "$init_file"
+    else
+        status_line "init.lua" "error" "missing $init_file"
+    fi
+}
+
+check_hammerspoon_permissions() {
+    local db="$HOME/Library/Application Support/com.apple.TCC/TCC.db"
+
+    if [ ! -f "$db" ]; then
+        status_line "Accessibility" "warn" "unable to inspect TCC database"
+        return
+    fi
+
+    local access
+    access=$(sqlite3 "$db" "select auth_value from access where service='kTCCServiceAccessibility' and client like '%Hammerspoon.app' order by last_modified desc limit 1;" 2>/dev/null || true)
+
+    if [ "$access" = "2" ]; then
+        status_line "Accessibility" "ok" "granted to Hammerspoon"
+    elif [ -n "$access" ]; then
+        status_line "Accessibility" "warn" "Hammerspoon present but not granted"
+    else
+        status_line "Accessibility" "warn" "no Hammerspoon permission entry yet"
+    fi
+}
+
+show_repo_status() {
+    local changes
+    changes="$(git -C "$DOTFILES_DIR" status --porcelain)"
+
+    echo -e "${BOLD}Repo:${NC}"
+    if [ -z "$changes" ]; then
+        status_line "dotfiles git" "ok" "clean"
+    else
+        local change_count
+        change_count=$(printf "%s\n" "$changes" | sed '/^$/d' | wc -l | tr -d ' ')
+        status_line "dotfiles git" "warn" "$change_count uncommitted change(s)"
+        git -C "$DOTFILES_DIR" status --short
+    fi
+}
+
+show_runtime_status() {
+    local hostname="$1"
+    local OS="$(uname -s)"
+
+    echo ""
+    echo -e "${BOLD}Runtime:${NC}"
+
+    if [ "$OS" != "Darwin" ]; then
+        status_line "platform" "warn" "runtime checks currently implemented for macOS only"
+        return
+    fi
+
+    status_line "hostname" "ok" "$hostname"
+    check_macos_service "$hostname" "AeroSpace" "required"
+    check_macos_service "$hostname" "Hammerspoon" "required"
+    check_hammerspoon_config
+    check_hammerspoon_permissions
+    check_macos_service "$hostname" "Übersicht" "optional"
+}
+
 nix_rebuild() {
     local hostname="$1"
     local OS="$(uname -s)"
@@ -111,14 +349,34 @@ cmd_rebuild() {
     header "Rebuilding for: $hostname"
 
     if [ "$OS" = "Darwin" ]; then
-        init_progress 3
+        init_progress 4
     else
         init_progress 2
     fi
 
     nix_rebuild "$hostname"
 
+    if [ "$OS" = "Darwin" ]; then
+        start_macos_services "$hostname"
+    fi
+
     success "Done!"
+    show_summary
+}
+
+cmd_services() {
+    local hostname="${1:-$(detect_hostname)}"
+    local OS="$(uname -s)"
+
+    if [ "$OS" != "Darwin" ]; then
+        error "Service startup is currently only defined for macOS."
+        return 1
+    fi
+
+    header "Starting services for: $hostname"
+    init_progress 1
+    start_macos_services "$hostname"
+    success "Services ready."
     show_summary
 }
 
@@ -174,14 +432,65 @@ cmd_push() {
 }
 
 cmd_status() {
-    local changes
-    changes="$(git -C "$DOTFILES_DIR" status --porcelain)"
+    local hostname="${1:-$(detect_hostname)}"
 
-    if [ -z "$changes" ]; then
-        echo "Dotfiles clean — no uncommitted changes."
+    header "Status for: $hostname"
+    show_repo_status
+    show_runtime_status "$hostname"
+}
+
+cmd_doctor() {
+    local hostname="${1:-$(detect_hostname)}"
+    local OS="$(uname -s)"
+    local failures=0
+
+    header "Doctor for: $hostname"
+    show_repo_status
+    show_runtime_status "$hostname"
+
+    echo ""
+    echo -e "${BOLD}Checks:${NC}"
+
+    if [ "$OS" = "Darwin" ]; then
+        if ! is_app_installed "AeroSpace"; then
+            status_line "AeroSpace install" "error" "missing app"
+            failures=$((failures + 1))
+        fi
+        if ! is_app_installed "Hammerspoon"; then
+            status_line "Hammerspoon install" "error" "missing app"
+            failures=$((failures + 1))
+        fi
+        if [ ! -L "$HOME/.hammerspoon" ] && [ ! -d "$HOME/.hammerspoon" ]; then
+            status_line "Hammerspoon link" "error" "missing ~/.hammerspoon"
+            failures=$((failures + 1))
+        fi
+        local hammerspoon_state
+        local aerospace_state
+        hammerspoon_state="$(app_running_state "Hammerspoon")"
+        aerospace_state="$(app_running_state "AeroSpace")"
+
+        if [ "$hammerspoon_state" = "stopped" ]; then
+            status_line "Hammerspoon runtime" "warn" "not running; run 'dotfiles services'"
+            failures=$((failures + 1))
+        elif [ "$hammerspoon_state" = "unknown" ]; then
+            status_line "Hammerspoon runtime" "warn" "runtime state unavailable"
+        fi
+
+        if [ "$aerospace_state" = "stopped" ]; then
+            status_line "AeroSpace runtime" "warn" "not running; run 'dotfiles services'"
+            failures=$((failures + 1))
+        elif [ "$aerospace_state" = "unknown" ]; then
+            status_line "AeroSpace runtime" "warn" "runtime state unavailable"
+        fi
     else
-        echo -e "${BOLD}Uncommitted changes:${NC}"
-        git -C "$DOTFILES_DIR" status --short
+        status_line "platform" "warn" "doctor currently focuses on macOS desktop services"
+    fi
+
+    echo ""
+    if [ "$failures" -eq 0 ]; then
+        success "Doctor found no blocking issues."
+    else
+        warn "Doctor found $failures issue(s)."
     fi
 }
 
@@ -325,6 +634,11 @@ cmd_bootstrap() {
     step "Setting up shell configuration"
     setup_zshrc
 
+    if [ "$OS" = "Darwin" ]; then
+        start_macos_services "$hostname"
+        SUMMARY_ITEMS+=("Local desktop services started")
+    fi
+
     if [[ "$hostname" == "work-macbook" ]]; then
         if [ ! -f "$HOME/.gitconfig.local" ]; then
             cat > "$HOME/.gitconfig.local" << 'EOF'
@@ -375,6 +689,8 @@ COMMAND_ARGS=("${ARGS[@]:1}")
 case "$COMMAND" in
     bootstrap)  cmd_bootstrap "${COMMAND_ARGS[@]}" ;;
     rebuild)    cmd_rebuild "${COMMAND_ARGS[@]}" ;;
+    services)   cmd_services "${COMMAND_ARGS[@]}" ;;
+    doctor)     cmd_doctor "${COMMAND_ARGS[@]}" ;;
     pull)       cmd_pull ;;
     push)       cmd_push "${COMMAND_ARGS[*]}" ;;
     status)     cmd_status ;;
@@ -386,9 +702,11 @@ case "$COMMAND" in
         echo "Commands:"
         echo "  bootstrap [hostname]   First-time setup on a new machine"
         echo "  rebuild [hostname]     Rebuild nix configuration"
+        echo "  services [hostname]    Start/reload local desktop services"
+        echo "  doctor [hostname]      Diagnose local setup and service health"
         echo "  pull                   Pull changes (rebuilds only if nix files changed)"
         echo "  push [message]         Commit and push all changes"
-        echo "  status                 Show uncommitted changes"
+        echo "  status [hostname]      Show repo state and local service status"
         echo ""
         echo "Flags:"
         echo "  -v, --verbose          Show detailed output"

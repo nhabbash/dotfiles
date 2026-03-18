@@ -46,8 +46,10 @@ All commands are available as the `dotfiles` alias once your shell is set up.
 |---|---|
 | `dotfiles pull` | Pull remote changes, rebuild only if nix files changed |
 | `dotfiles push [message]` | Commit all changes and push |
-| `dotfiles status` | Show uncommitted changes |
+| `dotfiles status [hostname]` | Show repo state and local service status |
 | `dotfiles rebuild [hostname]` | Force a full nix rebuild |
+| `dotfiles services [hostname]` | Start/reload local desktop services after setup |
+| `dotfiles doctor [hostname]` | Diagnose setup, links, installs, and service health |
 | `rebuild` | Shorthand alias for `dotfiles rebuild` |
 
 ---
@@ -103,6 +105,40 @@ git -C ~/Development/dotfiles status      # see conflicting files
 # Edit the files to resolve, then:
 dotfiles push "merge: resolve conflict"
 ```
+
+### Starting local desktop services
+
+On macOS, `dotfiles rebuild` and `dotfiles bootstrap` now finish by starting the local desktop apps that make the environment usable right away. You can also run that step manually:
+
+```bash
+dotfiles services
+```
+
+Today that starts or reloads:
+- AeroSpace
+- Hammerspoon
+- Übersicht only when the current profile should use it
+
+### Checking what is ready
+
+Use the quick snapshot when you want to know what is configured and what is actually running:
+
+```bash
+dotfiles status
+```
+
+Use the diagnostic pass when you want explicit problems called out:
+
+```bash
+dotfiles doctor
+```
+
+On macOS, these commands currently check:
+- git dirtiness in the dotfiles repo
+- whether AeroSpace, Hammerspoon, and Übersicht are installed
+- whether the relevant apps are running
+- whether `~/.hammerspoon` is linked
+- whether Hammerspoon has an Accessibility permission entry
 
 ### Adding a new tool/config
 

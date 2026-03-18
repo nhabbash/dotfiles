@@ -19,6 +19,7 @@
       # Terminal
       "kitty"
       "nikitabobko/tap/aerospace"
+      "hammerspoon"
       # Status bar & widget engine
       "ubersicht"
     ];

@@ -21,9 +21,11 @@ let
     inherit lib features;
   };
 
-  linkTargets = lib.mapAttrs (target: source: {
-    source = config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${source}";
-  }) configLinks;
+  linkCommands = lib.concatStringsSep "\n" (lib.mapAttrsToList (target: source: ''
+    mkdir -p "$(dirname "${homeDir}/${target}")"
+    rm -rf "${homeDir}/${target}"
+    ln -sf "${dotfilesDir}/${source}" "${homeDir}/${target}"
+  '') configLinks);
 in
 {
   imports = modules;
@@ -45,7 +47,9 @@ in
   };
 
   # Direct editable symlinks from the repo into $HOME.
-  home.file = linkTargets;
+  home.activation.linkConfigs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    ${linkCommands}
+  '';
 
   # Tool integrations (packages are in packages.nix, configs are in configs/)
   programs.starship = {

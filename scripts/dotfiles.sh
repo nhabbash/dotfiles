@@ -159,15 +159,7 @@ start_macos_services() {
 
     if [ -d "/Applications/AeroSpace.app" ]; then
         open -gj -a "AeroSpace" || true
-    fi
-
-    if [ -d "/Applications/Hammerspoon.app" ]; then
-        open -gj -a "Hammerspoon" || true
-        osascript <<'APPLESCRIPT' >/dev/null 2>&1 || true
-tell application "Hammerspoon"
-    reload config
-end tell
-APPLESCRIPT
+        command -v aerospace >/dev/null 2>&1 && aerospace reload-config >/dev/null 2>&1 || true
     fi
 
     if [ "$hostname" != "work-macbook" ] || [ -d "$simplebar_dir" ]; then

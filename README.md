@@ -59,6 +59,28 @@ All commands are available as the `dotfiles` alias once your shell is set up.
 
 ---
 
+## If You Are New To This Repo
+
+Use this rule first:
+
+- edit `configs/*` for normal tool config changes
+- run `dotfiles regen` only for generated config
+- run `dotfiles rebuild` only for `.nix` / host / package changes
+- run `dotfiles services` or `dotfiles doctor` for runtime issues
+
+Common examples:
+
+- change shell aliases: edit `configs/zsh/aliases.zsh`
+- change AeroSpace bindings: edit `configs/aerospace/aerospace.toml`
+- change Hammerspoon guide UI: edit `configs/hammerspoon/`
+- add a package: edit `modules/packages.nix`, then `dotfiles rebuild`
+- add a macOS app: edit `modules/macos/apps.nix`, then `dotfiles rebuild`
+
+If you are unsure where something belongs, read `docs/architecture.md` and
+`docs/adding-tools.md` before changing mechanism files.
+
+---
+
 ## Workflows
 
 ### Changing a config (zsh, zellij, ghostty, kitty…)
@@ -156,7 +178,7 @@ dotfiles push "merge: resolve conflict"
 
 ### Starting local desktop services
 
-On macOS, `dotfiles rebuild` and `dotfiles bootstrap` now finish by starting the local desktop apps that make the environment usable right away. You can also run that step manually:
+On macOS, `dotfiles rebuild` and `dotfiles bootstrap` finish by starting the local desktop apps that are safe to manage automatically. You can also run that step manually:
 
 ```bash
 dotfiles services
@@ -164,8 +186,12 @@ dotfiles services
 
 Today that starts or reloads:
 - AeroSpace
-- Hammerspoon
 - Übersicht only when the current profile should use it
+
+Hammerspoon is intentionally not auto-launched by `dotfiles services`, because
+launching it directly can pop the console. If you want Hammerspoon running in
+the background, configure it through its own login/background behavior rather
+than tying that to rebuild.
 
 ### Checking what is ready
 
@@ -191,7 +217,7 @@ On macOS, these commands currently check:
 ### Adding a new tool/config
 
 1. Add the config files under `configs/<tool>/`
-2. Add a symlink entry in `modules/default.nix` (in the `configLinks` map)
+2. Add a link entry in `modules/links.nix`
 3. Add the package in `modules/packages.nix` if needed
 4. Run `dotfiles rebuild`
 
@@ -238,6 +264,10 @@ ngc          # alias for: nix-collect-garbage -d && nix store optimise
 - `docs/operations.md` — rebuild/regen/check/services/doctor workflow
 - `docs/hosts.md` — host/profile dimensions
 - `docs/adding-tools.md` — how to classify and add new tools
+- `docs/tooling-map.md` — plain-English map of the major tools in this repo
+- `docs/new-machine.md` — bootstrap and post-bootstrap checklist for a fresh machine
+- `docs/verification.md` — how to verify tools are using repo-managed config
+- `docs/troubleshooting.md` — what to do first when something is wrong
 - `docs/cutover.md` — safe switch and rollback procedure for the refactor branch
 - `scripts/generated/` — implementation for generated config workflows
 - `scripts/experiments/` — implementation for mutable experimental tools

@@ -81,7 +81,7 @@ on-mode-changed = []
     inner.horizontal = 10
     inner.vertical =   10
     outer.left =       10
-    outer.bottom =     48
+    outer.bottom =     10
     outer.top =        10
     outer.right =      10
 
@@ -136,6 +136,10 @@ on-mode-changed = []
     alt-ctrl-j = 'focus-monitor down'
     alt-ctrl-k = 'focus-monitor up'
     alt-ctrl-l = 'focus-monitor right'
+    alt-ctrl-shift-h = 'move-workspace-to-monitor left'
+    alt-ctrl-shift-j = 'move-workspace-to-monitor down'
+    alt-ctrl-shift-k = 'move-workspace-to-monitor up'
+    alt-ctrl-shift-l = 'move-workspace-to-monitor right'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move
     alt-shift-h = 'move left'

@@ -1,4 +1,4 @@
--- aerospace-guide.lua
+-- navigation-guide.lua
 -- Keybinding reference overlay. Toggle with ctrl+shift+?.
 
 local M = {}
@@ -30,14 +30,27 @@ local GROUPS = {
 		color = c.green,
 		sections = {
 			{
-				title = "WINDOW",
+				title = "FOCUS",
 				items = {
 					{ "alt  h / j / k / l",       "focus ←↓↑→" },
-					{ "alt  ctrl  h / j / k / l", "focus monitor" },
+					{ "alt  ctrl  h / j / k / l", "focus monitor ←↓↑→" },
 					{ "alt  tab",                 "back & forth" },
-					{ "alt  shift  h / j / k / l",    "move window ←↓↑→" },
-					{ "alt  shift  tab",              "→ next monitor" },
 					{ "alt  shift  f",                "fullscreen" },
+				},
+			},
+			{
+				title = "MOVE WINDOW",
+				items = {
+					{ "alt  shift  h / j / k / l", "move window ←↓↑→" },
+					{ "alt  shift  tab",           "→ next monitor" },
+					{ "alt  shift  [key]",         "move window there" },
+				},
+			},
+			{
+				title = "MOVE WORKSPACE",
+				items = {
+					{ "alt  ctrl  shift  h / j / k / l", "send workspace ←↓↑→" },
+					{ "mouse + alt  [key]",              "pull workspace here" },
 				},
 			},
 			{
@@ -51,10 +64,9 @@ local GROUPS = {
 			{
 				title = "WORKSPACES",
 				items = {
-					{ "alt  1 – 5",         "numbered" },
+					{ "alt  1 – 5",         "summon numbered here" },
 					{ "alt  B  C  M  N",    "browser · code · music · notes" },
 					{ "alt  S  T  V  X  Y", "slack · term · V · X · Y" },
-					{ "alt  shift  [key]",      "move window there" },
 				},
 			},
 			{
@@ -151,6 +163,7 @@ local canvas   = nil
 local escHK    = nil
 local toggleHK = nil
 local visible  = false
+local buildCanvas
 
 -- ── Helpers ───────────────────────────────────────────────────────────────────
 local function st(text, attrs)
@@ -212,7 +225,7 @@ local function colHeight(grp)
 end
 
 -- ── Canvas builder ────────────────────────────────────────────────────────────
-local function buildCanvas()
+buildCanvas = function()
 	local screen = activeScreen()
 	local sf     = screen:fullFrame()
 
@@ -249,7 +262,7 @@ local function buildCanvas()
 	-- ── Title bar ──
 	push {
 		type  = "text",
-		text  = st("  KEYBINDING REFERENCE", {
+		text  = st("  NAVIGATION GUIDE", {
 			font  = { name = FONT, size = TITLE_SZ, traits = { "bold" } },
 			color = c.sky,
 		}),

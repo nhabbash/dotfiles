@@ -37,6 +37,12 @@ dotfiles push [message]
 # Show uncommitted changes and runtime state
 dotfiles status
 
+# Start/reload runtime desktop services that are safe to manage automatically
+dotfiles services [hostname]
+
+# Diagnose runtime health, links, installs, and permissions
+dotfiles doctor [hostname]
+
 # Enter dev shell (provides nixfmt)
 nix develop
 ```
@@ -45,8 +51,13 @@ nix develop
 
 ## Architecture
 
-This repo uses **Nix Flakes + nix-darwin + home-manager** to declaratively manage the system. There are two tiers of configuration with different edit latency:
-This repo also has explicit regeneration and runtime layers; see `docs/architecture.md`.
+This repo uses **Nix Flakes + nix-darwin + home-manager** to declaratively manage the system, while keeping most day-to-day tool configs live-editable. There are four practical classes of change:
+- live edit: edit `configs/*`
+- regenerate: run `dotfiles regen`
+- rebuild: run `dotfiles rebuild`
+- runtime: use `dotfiles services` / `dotfiles doctor`
+
+See `docs/architecture.md` for the full model.
 
 ### Instant (no rebuild needed)
 Files in `configs/` are **symlinked** into place by home-manager activation. Editing them takes effect immediately.
@@ -65,7 +76,8 @@ Key symlink targets:
 ### Requires rebuild
 Editing `.nix` files requires running `rebuild` or `dotfiles rebuild`:
 - `flake.nix` — inputs/outputs, supported hosts
-- `modules/default.nix` — symlink mappings, home-manager config
+- `modules/default.nix` — home-manager config and activation wiring
+- `modules/links.nix` — live config link ownership map
 - `modules/packages.nix` — installed CLI packages
 - `modules/shell/zsh.nix` — zsh plugins and history settings
 - `modules/macos/` — macOS system preferences (keyboard, dock, finder)
@@ -85,6 +97,31 @@ Machine-local files that are intentionally untracked: `~/.zshrc`, `~/.zshrc.loca
 - `scripts/experiments/` — Mutable experimental tools such as CRT shader workflows
 - `scripts/crt-cycle` — Stable wrapper for the CRT preset explorer
 - `scripts/crt-tune` — Stable wrapper for the parameterized CRT shader generator
+
+## Human Operating Rules
+
+If you do not know the internal architecture, follow this decision order:
+
+1. If you are changing tool behavior, start in `configs/`
+2. If you are changing installed packages/apps or host policy, edit `.nix` files
+3. If a file says it is generated, run `dotfiles regen`
+4. If something is installed but not behaving, use `dotfiles doctor`
+
+Do not start by editing activation logic or bootstrap code unless the problem is
+specifically about linking, startup, or machine setup.
+
+## Documentation Policy
+
+Documentation must be updated in the same change whenever behavior changes.
+
+- If a command changes, update `README.md` and any affected docs under `docs/`
+- If ownership or architecture changes, update `docs/architecture.md` and `docs/operations.md`
+- If host-specific behavior changes, update `docs/hosts.md`
+- If tool-install or tool-placement rules change, update `docs/adding-tools.md`
+- If runtime behavior, troubleshooting, onboarding, or verification changes, update the corresponding self-service docs
+
+Treat documentation updates as part of the implementation, not follow-up work.
+If a user-facing workflow changed and the docs were not updated, the task is not complete.
 
 ## Further Reading
 

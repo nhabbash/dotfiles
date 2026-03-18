@@ -51,6 +51,7 @@ All commands are available as the `dotfiles` alias once your shell is set up.
 | `dotfiles regen` | Regenerate derived config from source manifests |
 | `dotfiles check [hostname]` | Verify repo integrity and generated drift |
 | `dotfiles assets [hostname]` | Install explicit external assets such as pinned widgets |
+| `dotfiles snapshot [hostname]` | Capture current repo and runtime state before/after cutover |
 | `dotfiles services [hostname]` | Start/reload local desktop services after setup |
 | `dotfiles doctor [hostname]` | Diagnose setup, links, installs, and service health |
 | `rebuild` | Shorthand alias for `dotfiles rebuild` |
@@ -226,5 +227,6 @@ ngc          # alias for: nix-collect-garbage -d && nix store optimise
 - `docs/operations.md` — rebuild/regen/check/services/doctor workflow
 - `docs/hosts.md` — host/profile dimensions
 - `docs/adding-tools.md` — how to classify and add new tools
+- `docs/cutover.md` — safe switch and rollback procedure for the refactor branch
 - `scripts/generated/` — implementation for generated config workflows
 - `scripts/experiments/` — implementation for mutable experimental tools

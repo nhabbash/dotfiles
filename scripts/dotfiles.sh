@@ -7,6 +7,7 @@
 #   regen                  Regenerate derived config from source manifests
 #   check [hostname]       Verify repo integrity and config drift
 #   assets [hostname]      Install explicit external assets
+#   snapshot [hostname]    Capture current repo and runtime state for cutover
 #   services [hostname]    Start/reload local desktop services
 #   doctor [hostname]      Diagnose local setup and service health
 #   pull                   Smart pull: only rebuilds if nix files changed
@@ -82,6 +83,41 @@ check_nix_eval() {
     else
         run_quiet env XDG_CACHE_HOME="$cache_home" DOTFILES_DIR="$DOTFILES_DIR" nix --extra-experimental-features 'nix-command flakes' eval --impure "$DOTFILES_DIR#homeConfigurations.${hostname}.config.home.username"
     fi
+}
+
+capture_snapshot() {
+    local hostname="$1"
+    local os="$(uname -s)"
+    local out_dir="${TMPDIR:-/tmp}"
+    local out_file="$out_dir/dotfiles-snapshot-${hostname}-$(date +%Y%m%d-%H%M%S).txt"
+
+    {
+        echo "# Dotfiles Snapshot"
+        echo ""
+        echo "timestamp: $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+        echo "hostname: $hostname"
+        echo "os: $os"
+        echo "branch: $(git -C "$DOTFILES_DIR" branch --show-current 2>/dev/null || true)"
+        echo "commit: $(git -C "$DOTFILES_DIR" rev-parse HEAD 2>/dev/null || true)"
+        echo ""
+        echo "## git status"
+        git -C "$DOTFILES_DIR" status --short || true
+        echo ""
+        echo "## dotfiles status"
+        COMMAND=status
+        cmd_status "$hostname" || true
+        echo ""
+        echo "## dotfiles doctor"
+        COMMAND=doctor
+        cmd_doctor "$hostname" || true
+        if [ "$os" = "Darwin" ]; then
+            echo ""
+            echo "## darwin generations"
+            darwin-rebuild --list-generations 2>/dev/null || true
+        fi
+    } > "$out_file"
+
+    printf '%s\n' "$out_file"
 }
 
 setup_zshrc() {
@@ -459,6 +495,20 @@ cmd_regen() {
     success "Regeneration complete."
 }
 
+cmd_snapshot() {
+    local hostname="${1:-$(detect_hostname)}"
+    local snapshot_file
+
+    header "Capturing snapshot for: $hostname"
+    init_progress 1
+
+    step "Recording current state"
+    snapshot_file="$(capture_snapshot "$hostname")"
+
+    success "Snapshot captured."
+    info "$snapshot_file"
+}
+
 cmd_check() {
     local hostname="${1:-$(detect_hostname)}"
 
@@ -792,6 +842,7 @@ case "$COMMAND" in
     regen)      cmd_regen ;;
     check)      cmd_check "${COMMAND_ARGS[@]}" ;;
     assets)     cmd_assets "${COMMAND_ARGS[@]}" ;;
+    snapshot)   cmd_snapshot "${COMMAND_ARGS[@]}" ;;
     services)   cmd_services "${COMMAND_ARGS[@]}" ;;
     doctor)     cmd_doctor "${COMMAND_ARGS[@]}" ;;
     pull)       cmd_pull ;;
@@ -808,6 +859,7 @@ case "$COMMAND" in
         echo "  regen                  Regenerate derived config from source manifests"
         echo "  check [hostname]       Verify repo integrity and config drift"
         echo "  assets [hostname]      Install explicit external assets"
+        echo "  snapshot [hostname]    Capture current repo and runtime state for cutover"
         echo "  services [hostname]    Start/reload local desktop services"
         echo "  doctor [hostname]      Diagnose local setup and service health"
         echo "  pull                   Pull changes (rebuilds only if nix files changed)"

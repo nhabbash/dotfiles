@@ -22,6 +22,9 @@ dotfiles check [hostname]
 # Install explicit external assets
 dotfiles assets [hostname]
 
+# Capture a pre/post cutover snapshot
+dotfiles snapshot [hostname]
+
 # Pull latest and auto-rebuild only if Nix files changed
 dotfiles pull
 
@@ -86,6 +89,7 @@ Machine-local files that are intentionally untracked: `~/.zshrc`, `~/.zshrc.loca
 - `docs/operations.md`
 - `docs/hosts.md`
 - `docs/adding-tools.md`
+- `docs/cutover.md`
 
 ## Notable Configs
 

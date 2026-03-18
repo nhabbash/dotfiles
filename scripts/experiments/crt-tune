@@ -1,0 +1,278 @@
+#!/usr/bin/env bash
+#
+# crt-tune — write a parameterized CRTS shader and live-reload Ghostty
+#
+# The generated shader is written to:
+#   ~/.config/ghostty/shaders/crt-tune.glsl
+#
+# One-time setup: add this line to your Ghostty config:
+#   custom-shader = ~/.config/ghostty/shaders/crt-tune.glsl
+#
+# Usage: crt-tune [OPTIONS]
+#
+#   --scale N      Scanlines/pixel: 0.33=HiDPI (default), 0.67=low-DPI
+#   --thin N       Scanline thinness: 0.50=fused, 0.75=default, 1.00=thin
+#   --blur N       Horiz pixel blur: -3.0=pixely, -2.75=default, -1.0=blurry
+#   --mask N       Mask darkness: 0.25=heavy, 0.65=default, 1.00=none
+#   --min-vin N    Vignette: 0.0=black corners, 0.50=default, 1.0=off
+#   --warp         Enable tube warp (default)
+#   --no-warp      Disable tube warp (flat screen)
+#   --mask-type T  shadow (default) | grille | grille-lite | none
+#   --undo         Restore previous shader
+#   --show         Print current generated shader
+#   -h, --help     Show this help
+
+set -euo pipefail
+
+SHADER_OUT="$HOME/.config/ghostty/shaders/crt-tune.glsl"
+
+# Defaults (match crt.glsl)
+SCALE=0.33333333
+THIN=0.75
+BLUR=-2.75
+MASK=0.65
+MIN_VIN=0.5
+WARP=1
+MASK_TYPE="shadow"
+
+usage() {
+  grep '^#   ' "$0" | sed 's/^#   /  /'
+  echo ""
+  echo "Example:"
+  echo "  crt-tune --thin 0.9 --blur -2.0 --mask 0.5 --no-warp"
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --scale)     SCALE="$2";     shift 2 ;;
+    --thin)      THIN="$2";      shift 2 ;;
+    --blur)      BLUR="$2";      shift 2 ;;
+    --mask)      MASK="$2";      shift 2 ;;
+    --min-vin)   MIN_VIN="$2";   shift 2 ;;
+    --warp)      WARP=1;         shift ;;
+    --no-warp)   WARP=0;         shift ;;
+    --mask-type) MASK_TYPE="$2"; shift 2 ;;
+    --undo)
+      if [[ -f "${SHADER_OUT}.bak" ]]; then
+        cp "${SHADER_OUT}.bak" "$SHADER_OUT"
+        echo "Restored previous shader."
+        if command -v ghostty &>/dev/null; then ghostty +reload-config 2>/dev/null; fi
+      else
+        echo "No previous shader to restore."
+      fi
+      exit 0 ;;
+    --show)      cat "$SHADER_OUT" 2>/dev/null || echo "(not yet generated)"; exit 0 ;;
+    -h|--help)   usage; exit 0 ;;
+    *) echo "Unknown option: $1"; usage; exit 1 ;;
+  esac
+done
+
+# Build conditional defines
+case "$MASK_TYPE" in
+  grille)      MASK_DEFINE="#define CRTS_MASK_GRILLE 1" ;;
+  grille-lite) MASK_DEFINE="#define CRTS_MASK_GRILLE_LITE 1" ;;
+  none)        MASK_DEFINE="#define CRTS_MASK_NONE 1" ;;
+  shadow|*)    MASK_DEFINE="#define CRTS_MASK_SHADOW 1" ;;
+esac
+
+WARP_DEFINE=""
+[[ "$WARP" == "1" ]] && WARP_DEFINE="#define CRTS_WARP 1"
+
+mkdir -p "$(dirname "$SHADER_OUT")"
+
+# Back up current shader before overwriting
+[[ -f "$SHADER_OUT" ]] && cp "$SHADER_OUT" "${SHADER_OUT}.bak"
+
+# --- Write configurable defines (interpolated) ---
+cat > "$SHADER_OUT" << EOF
+// crt-tune — generated $(date '+%Y-%m-%d %H:%M:%S')
+// Re-run: crt-tune --scale $SCALE --thin $THIN --blur $BLUR --mask $MASK --min-vin $MIN_VIN $([ "$WARP" = "1" ] && echo "--warp" || echo "--no-warp") --mask-type $MASK_TYPE
+//
+// CRTS: PUBLIC DOMAIN CRT-STYLED SCALAR by Timothy Lottes
+// Adapted for Ghostty by Qwerasd — https://gist.github.com/qwerasd205/c3da6c610c8ffe17d6d2d3cc7068f17f
+//
+// Scanlines per real screen pixel:  0.33=HiDPI  0.67=low-DPI
+#define SCALE $SCALE
+
+// Tube barrel distortion (comment out to disable)
+$WARP_DEFINE
+
+// Vignette darkness in corners (0.0=black, 1.0=none)
+#define MIN_VIN $MIN_VIN
+
+// Mask type (one active):
+$MASK_DEFINE
+
+// Scanline thinness (0.50=fused, 0.70=default, 1.00=thin)
+#define INPUT_THIN $THIN
+
+// Horizontal scan blur (-3.0=pixely, -2.5=default, -1.0=blurry)
+#define INPUT_BLUR $BLUR
+
+// Shadow mask darkness (0.25=heavy, 0.50=default, 1.00=none)
+#define INPUT_MASK $MASK
+
+EOF
+
+# --- Append fixed GLSL body (literal, no interpolation) ---
+cat >> "$SHADER_OUT" << 'GLSL'
+float FromSrgb1(float c) {
+  return (c <= 0.04045) ? c * (1.0 / 12.92) :
+  pow(c * (1.0 / 1.055) + (0.055 / 1.055), 2.4);
+}
+vec3 FromSrgb(vec3 c) {
+  return vec3(FromSrgb1(c.r), FromSrgb1(c.g), FromSrgb1(c.b));
+}
+
+vec3 CrtsFetch(vec2 uv) {
+  return FromSrgb(texture(iChannel0, uv.xy).rgb);
+}
+
+#define CrtsRcpF1(x) (1.0/(x))
+#define CrtsSatF1(x) clamp((x),0.0,1.0)
+
+float CrtsMax3F1(float a, float b, float c) {
+  return max(a, max(b, c));
+}
+
+vec2 CrtsTone(float thin, float mask) {
+  #ifdef CRTS_MASK_NONE
+  mask = 1.0;
+  #endif
+  #ifdef CRTS_MASK_GRILLE_LITE
+  mask = 0.5 + mask * 0.5;
+  #endif
+  vec2 ret;
+  float midOut = 0.18 / ((1.5 - thin) * (0.5 * mask + 0.5));
+  float pMidIn = 0.18;
+  ret.x = ((-pMidIn) + midOut) / ((1.0 - pMidIn) * midOut);
+  ret.y = ((-pMidIn) * midOut + pMidIn) / (midOut * (-pMidIn) + midOut);
+  return ret;
+}
+
+vec3 CrtsMask(vec2 pos, float dark) {
+  #ifdef CRTS_MASK_GRILLE
+  vec3 m = vec3(dark);
+  float x = fract(pos.x * (1.0 / 3.0));
+  if (x < (1.0 / 3.0)) m.r = 1.0;
+  else if (x < (2.0 / 3.0)) m.g = 1.0;
+  else m.b = 1.0;
+  return m;
+  #endif
+  #ifdef CRTS_MASK_GRILLE_LITE
+  vec3 m = vec3(1.0);
+  float x = fract(pos.x * (1.0 / 3.0));
+  if (x < (1.0 / 3.0)) m.r = dark;
+  else if (x < (2.0 / 3.0)) m.g = dark;
+  else m.b = dark;
+  return m;
+  #endif
+  #ifdef CRTS_MASK_NONE
+  return vec3(1.0);
+  #endif
+  #ifdef CRTS_MASK_SHADOW
+  pos.x += pos.y * 3.0;
+  vec3 m = vec3(dark);
+  float x = fract(pos.x * (1.0 / 6.0));
+  if (x < (1.0 / 3.0)) m.r = 1.0;
+  else if (x < (2.0 / 3.0)) m.g = 1.0;
+  else m.b = 1.0;
+  return m;
+  #endif
+}
+
+vec3 CrtsFilter(
+  vec2 ipos, vec2 inputSizeDivOutputSize, vec2 halfInputSize,
+  vec2 rcpInputSize, vec2 rcpOutputSize, vec2 twoDivOutputSize,
+  float inputHeight, vec2 warp, float thin, float blur, float mask, vec2 tone
+) {
+  vec2 pos;
+  #ifdef CRTS_WARP
+  pos = ipos * twoDivOutputSize - vec2(1.0);
+  pos *= vec2(1.0 + (pos.y * pos.y) * warp.x, 1.0 + (pos.x * pos.x) * warp.y);
+  float vin = 1.0 - ((1.0 - CrtsSatF1(pos.x * pos.x)) * (1.0 - CrtsSatF1(pos.y * pos.y)));
+  vin = CrtsSatF1((-vin) * inputHeight + inputHeight);
+  pos = pos * halfInputSize + halfInputSize;
+  #else
+  pos = ipos * inputSizeDivOutputSize;
+  #endif
+
+  float y0 = floor(pos.y - 0.5) + 0.5;
+  float x0 = floor(pos.x - 1.5) + 0.5;
+  vec2 p = vec2(x0 * rcpInputSize.x, y0 * rcpInputSize.y);
+
+  vec3 colA0 = CrtsFetch(p); p.x += rcpInputSize.x;
+  vec3 colA1 = CrtsFetch(p); p.x += rcpInputSize.x;
+  vec3 colA2 = CrtsFetch(p); p.x += rcpInputSize.x;
+  vec3 colA3 = CrtsFetch(p); p.y += rcpInputSize.y;
+  vec3 colB3 = CrtsFetch(p); p.x -= rcpInputSize.x;
+  vec3 colB2 = CrtsFetch(p); p.x -= rcpInputSize.x;
+  vec3 colB1 = CrtsFetch(p); p.x -= rcpInputSize.x;
+  vec3 colB0 = CrtsFetch(p);
+
+  float off = pos.y - y0;
+  float pi2 = 6.28318530717958;
+  float hlf = 0.5;
+  float scanA = cos(min(0.5, off * thin) * pi2) * hlf + hlf;
+  float scanB = cos(min(0.5, (-off) * thin + thin) * pi2) * hlf + hlf;
+
+  float off0 = pos.x - x0;
+  float off1 = off0 - 1.0;
+  float off2 = off0 - 2.0;
+  float off3 = off0 - 3.0;
+  float pix0 = exp2(blur * off0 * off0);
+  float pix1 = exp2(blur * off1 * off1);
+  float pix2 = exp2(blur * off2 * off2);
+  float pix3 = exp2(blur * off3 * off3);
+  float pixT = CrtsRcpF1(pix0 + pix1 + pix2 + pix3);
+
+  #ifdef CRTS_WARP
+  pixT *= max(MIN_VIN, vin);
+  #endif
+
+  scanA *= pixT;
+  scanB *= pixT;
+
+  vec3 color =
+    (colA0 * pix0 + colA1 * pix1 + colA2 * pix2 + colA3 * pix3) * scanA +
+    (colB0 * pix0 + colB1 * pix1 + colB2 * pix2 + colB3 * pix3) * scanB;
+
+  color *= CrtsMask(ipos, mask);
+
+  float peak = max(1.0 / (256.0 * 65536.0), CrtsMax3F1(color.r, color.g, color.b));
+  vec3 ratio = color * CrtsRcpF1(peak);
+  peak = peak * CrtsRcpF1(peak * tone.x + tone.y);
+  return ratio * peak;
+}
+
+float ToSrgb1(float c) {
+  return (c < 0.0031308 ? c * 12.92 : 1.055 * pow(c, 0.41666) - 0.055);
+}
+vec3 ToSrgb(vec3 c) {
+  return vec3(ToSrgb1(c.r), ToSrgb1(c.g), ToSrgb1(c.b));
+}
+
+void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+  float aspect = iResolution.x / iResolution.y;
+  fragColor.rgb = CrtsFilter(
+    fragCoord.xy, vec2(1.0),
+    iResolution.xy * SCALE * 0.5,
+    1.0 / (iResolution.xy * SCALE),
+    1.0 / iResolution.xy,
+    2.0 / iResolution.xy,
+    iResolution.y,
+    vec2(1.0 / (50.0 * aspect), 1.0 / 50.0),
+    INPUT_THIN, INPUT_BLUR, INPUT_MASK,
+    CrtsTone(INPUT_THIN, INPUT_MASK)
+  );
+  fragColor = vec4(ToSrgb(fragColor.rgb), 1.0);
+}
+GLSL
+
+# Reload Ghostty
+if command -v ghostty &>/dev/null; then
+  ghostty +reload-config 2>/dev/null && echo "Reloaded Ghostty with: scale=$SCALE thin=$THIN blur=$BLUR mask=$MASK min-vin=$MIN_VIN warp=$WARP mask-type=$MASK_TYPE" \
+    || echo "ghostty +reload-config failed — try Cmd+R in Ghostty"
+else
+  echo "Shader written to $SHADER_OUT — reload Ghostty manually (Cmd+R)"
+fi

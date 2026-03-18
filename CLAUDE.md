@@ -19,6 +19,9 @@ dotfiles regen
 # Verify repo integrity and drift
 dotfiles check [hostname]
 
+# Install explicit external assets
+dotfiles assets [hostname]
+
 # Pull latest and auto-rebuild only if Nix files changed
 dotfiles pull
 
@@ -72,8 +75,10 @@ Machine-local files that are intentionally untracked: `~/.zshrc`, `~/.zshrc.loca
 
 - `scripts/dotfiles.sh` — Main entry point for bootstrap/rebuild/regen/check/services/doctor/pull/push/status
 - `scripts/lib.sh` — Shared helpers: colored output, progress tracking, log parsing
-- `scripts/crt-cycle` — Interactive CRT shader preset cycler for Ghostty
-- `scripts/crt-tune` — Parameterized CRT shader generator (live reloads Ghostty config)
+- `scripts/generated/` — Generators for derived config such as keymap sync
+- `scripts/experiments/` — Mutable experimental tools such as CRT shader workflows
+- `scripts/crt-cycle` — Stable wrapper for the CRT preset explorer
+- `scripts/crt-tune` — Stable wrapper for the parameterized CRT shader generator
 
 ## Further Reading
 

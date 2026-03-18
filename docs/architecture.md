@@ -35,9 +35,11 @@ Each area should have one owner:
 
 - Generated manifests and generators
   Canonical source for derived config. Regeneration must be explicit.
+  Implementations live under `scripts/generated/`.
 
 - `scripts/`
   Operational commands, runtime helpers, diagnostics, and experiments.
+  Experimental mutable tools live under `scripts/experiments/`.
 
 - Local untracked files
   Machine-specific or secret state such as `~/.zshrc.local` or

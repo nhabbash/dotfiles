@@ -33,6 +33,10 @@ When making a change, classify it first:
 - Fix startup, running apps, or permissions
   Use `dotfiles services` or `dotfiles doctor`.
 
+Implementation detail:
+- generators live under `scripts/generated/`
+- experimental mutable tools live under `scripts/experiments/`
+
 ## Recovery
 
 If a change breaks runtime behavior:

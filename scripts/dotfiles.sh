@@ -6,6 +6,7 @@
 #   rebuild [hostname]     Rebuild nix configuration
 #   regen                  Regenerate derived config from source manifests
 #   check [hostname]       Verify repo integrity and config drift
+#   assets [hostname]      Install explicit external assets
 #   services [hostname]    Start/reload local desktop services
 #   doctor [hostname]      Diagnose local setup and service health
 #   pull                   Smart pull: only rebuilds if nix files changed
@@ -47,10 +48,11 @@ ensure_flake_lock() {
 
 run_sync_keymaps() {
     local check_mode="${1:-0}"
+    local generator="$DOTFILES_DIR/scripts/generated/sync-keymaps.py"
     if [ "$check_mode" = "1" ]; then
-        run_quiet python3 "$DOTFILES_DIR/scripts/sync-keymaps.py" --check
+        run_quiet python3 "$generator" --check
     else
-        run_quiet python3 "$DOTFILES_DIR/scripts/sync-keymaps.py"
+        run_quiet python3 "$generator"
     fi
 }
 
@@ -134,6 +136,25 @@ APPLESCRIPT
     if [ "$hostname" != "work-macbook" ] || [ -d "$simplebar_dir" ]; then
         if [ -d "/Applications/Übersicht.app" ]; then
             open -gj -a "Übersicht" || true
+        fi
+    fi
+}
+
+install_external_assets() {
+    local hostname="$1"
+    local OS="$(uname -s)"
+    local simplebar_dir="$HOME/Library/Application Support/Übersicht/widgets/simple-bar"
+
+    if [ "$OS" != "Darwin" ]; then
+        return 0
+    fi
+
+    step "Installing external assets"
+
+    if [ "$hostname" != "work-macbook" ]; then
+        if [ ! -d "$simplebar_dir" ]; then
+            mkdir -p "$(dirname "$simplebar_dir")"
+            git clone --depth 1 https://github.com/Jean-Tinland/simple-bar "$simplebar_dir"
         fi
     fi
 }
@@ -417,6 +438,15 @@ cmd_services() {
     start_macos_services "$hostname"
     success "Services ready."
     show_summary
+}
+
+cmd_assets() {
+    local hostname="${1:-$(detect_hostname)}"
+
+    header "Installing assets for: $hostname"
+    init_progress 1
+    install_external_assets "$hostname"
+    success "Assets installed."
 }
 
 cmd_regen() {
@@ -761,6 +791,7 @@ case "$COMMAND" in
     rebuild)    cmd_rebuild "${COMMAND_ARGS[@]}" ;;
     regen)      cmd_regen ;;
     check)      cmd_check "${COMMAND_ARGS[@]}" ;;
+    assets)     cmd_assets "${COMMAND_ARGS[@]}" ;;
     services)   cmd_services "${COMMAND_ARGS[@]}" ;;
     doctor)     cmd_doctor "${COMMAND_ARGS[@]}" ;;
     pull)       cmd_pull ;;
@@ -776,6 +807,7 @@ case "$COMMAND" in
         echo "  rebuild [hostname]     Rebuild nix configuration"
         echo "  regen                  Regenerate derived config from source manifests"
         echo "  check [hostname]       Verify repo integrity and config drift"
+        echo "  assets [hostname]      Install explicit external assets"
         echo "  services [hostname]    Start/reload local desktop services"
         echo "  doctor [hostname]      Diagnose local setup and service health"
         echo "  pull                   Pull changes (rebuilds only if nix files changed)"

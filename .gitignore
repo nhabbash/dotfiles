@@ -30,3 +30,5 @@ configs/agents/slack.md
 .idea/
 .vscode/
 *.code-workspace
+__pycache__/
+*.pyc

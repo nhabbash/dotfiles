@@ -50,6 +50,7 @@ All commands are available as the `dotfiles` alias once your shell is set up.
 | `dotfiles rebuild [hostname]` | Force a full nix rebuild |
 | `dotfiles regen` | Regenerate derived config from source manifests |
 | `dotfiles check [hostname]` | Verify repo integrity and generated drift |
+| `dotfiles assets [hostname]` | Install explicit external assets such as pinned widgets |
 | `dotfiles services [hostname]` | Start/reload local desktop services after setup |
 | `dotfiles doctor [hostname]` | Diagnose setup, links, installs, and service health |
 | `rebuild` | Shorthand alias for `dotfiles rebuild` |
@@ -100,6 +101,18 @@ dotfiles check
 
 This validates shell scripts, Python scripts, generated-config drift, and a
 lightweight Nix evaluation for the active host.
+
+### Installing external assets
+
+Some tools are not packaged directly in Nix or Homebrew and are treated as
+explicit external assets. Install them with:
+
+```bash
+dotfiles assets
+```
+
+This is intentionally separate from `dotfiles rebuild`, so declarative applies
+do not fetch mutable upstream state during activation.
 
 ### Syncing to another machine
 
@@ -213,3 +226,5 @@ ngc          # alias for: nix-collect-garbage -d && nix store optimise
 - `docs/operations.md` — rebuild/regen/check/services/doctor workflow
 - `docs/hosts.md` — host/profile dimensions
 - `docs/adding-tools.md` — how to classify and add new tools
+- `scripts/generated/` — implementation for generated config workflows
+- `scripts/experiments/` — implementation for mutable experimental tools

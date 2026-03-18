@@ -47,14 +47,6 @@ in
   # Direct editable symlinks from the repo into $HOME.
   home.file = linkTargets;
 
-  # simple-bar: clone once into Übersicht widgets dir (macOS only)
-  home.activation.installSimpleBar = lib.mkIf features.simpleBar (lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    SIMPLEBAR_DIR="${homeDir}/Library/Application Support/Übersicht/widgets/simple-bar"
-    if [ ! -d "$SIMPLEBAR_DIR" ]; then
-      ${pkgs.git}/bin/git clone --depth 1 https://github.com/Jean-Tinland/simple-bar "$SIMPLEBAR_DIR"
-    fi
-  '');
-
   # Tool integrations (packages are in packages.nix, configs are in configs/)
   programs.starship = {
     enable = true;

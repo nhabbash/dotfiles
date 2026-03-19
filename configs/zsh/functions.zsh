@@ -226,6 +226,96 @@ function agentz() {
   cursorz "$@"
 }
 
+function _terminal_saver_script() {
+  echo "${DOTFILES_DIR:-$HOME/.dotfiles}/scripts/terminal-saver"
+}
+
+function _terminal_saver_capture_script() {
+  echo "${DOTFILES_DIR:-$HOME/.dotfiles}/scripts/ghostty-capture-buffer"
+}
+
+function _terminal_saver_capture_mode() {
+  local arg
+  for arg in "$@"; do
+    case "$arg" in
+      --)
+        break
+        ;;
+      -s|--screen)
+        echo "screen"
+        return 0
+        ;;
+      -b|--back|--scrollback)
+        echo "scrollback"
+        return 0
+        ;;
+      -f|--fill)
+        return 1
+        ;;
+    esac
+  done
+  echo "screen"
+  return 0
+}
+
+function _terminal_saver_is_info_mode() {
+  local arg
+  for arg in "$@"; do
+    case "$arg" in
+      -h|--help|--list)
+        return 0
+        ;;
+      --)
+        return 1
+        ;;
+    esac
+  done
+  return 1
+}
+
+function screensaver() {
+  local script="$(_terminal_saver_script)"
+  local capture_script="$(_terminal_saver_capture_script)"
+  local capture_mode=""
+  local capture_file=""
+  if [[ ! -x "$script" ]]; then
+    echo "missing script: $script"
+    return 1
+  fi
+
+  capture_mode="$(_terminal_saver_capture_mode "$@")"
+
+  if _terminal_saver_is_info_mode "$@"; then
+    "$script" "$@"
+    return $?
+  fi
+
+  if [[ -n "${ZELLIJ:-}" && -z "${TTE_SAVER_INLINE:-}" ]]; then
+    if [[ -n "$capture_mode" && ! -x "$capture_script" ]]; then
+      echo "missing script: $capture_script"
+      return 1
+    fi
+
+    if [[ -n "$capture_mode" ]]; then
+      capture_file="$(mktemp "${TMPDIR:-/tmp}/screensaver-capture.XXXXXX")" || return 1
+      if ! "$capture_script" "$capture_mode" > "$capture_file"; then
+        rm -f "$capture_file"
+        return 1
+      fi
+    fi
+
+    if [[ -n "$capture_file" ]]; then
+      zellij run -f --close-on-exit --name "screensaver" --cwd "$PWD" --width 100% --height 100% --x 0 --y 0 --pinned true -- env TTE_SAVER_INLINE=1 TTE_SAVER_SOURCE_FILE="$capture_file" TTE_SAVER_SOURCE_FILE_DELETE=1 "$script" "$@"
+      return $?
+    fi
+
+    zellij run -f --close-on-exit --name "screensaver" --cwd "$PWD" --width 100% --height 100% --x 0 --y 0 --pinned true -- env TTE_SAVER_INLINE=1 "$script" "$@"
+    return $?
+  fi
+
+  "$script" "$@"
+}
+
 # jj <-> git sync helpers
 jjpush() {
   jj git push "$@" || return $?

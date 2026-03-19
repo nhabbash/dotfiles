@@ -39,5 +39,6 @@
     curl
     wget
     glow
+    terminaltexteffects
   ];
 }

@@ -105,6 +105,11 @@ dotfiles rebuild
 # or just: rebuild
 ```
 
+This is also how new workstation tools are added. The terminal screensaver
+wrapper in this repo depends on the `terminaltexteffects` package, so after
+pulling these changes you need one rebuild before `screensaver` / `saver`
+works.
+
 ### Regenerating derived config
 
 When a file is generated from a canonical source, regenerate it explicitly:
@@ -151,6 +156,46 @@ If you want to toggle shaders entirely:
 - `crt-on` enables the `crt-clean.glsl` shader line in Ghostty config
 - `crt-off` disables the active shader line
 - after either command, press `cmd+r` in Ghostty
+
+### Running the terminal screensaver
+
+The shell wrapper is:
+
+```bash
+screensaver
+```
+
+Short aliases:
+
+```bash
+saver
+tte-saver
+```
+
+Examples:
+
+```bash
+screensaver
+screensaver -s
+screensaver -b
+screensaver -f
+screensaver matrix
+screensaver --effect rain --message "away for coffee"
+screensaver --effect synthgrid -- --final-gradient-direction horizontal
+```
+
+Behavior:
+
+- outside `zellij`, it uses the terminal alternate screen and restores your
+  previous contents when you press any key
+- inside `zellij`, the wrapper opens a temporary fullscreen floating pane so it
+  covers the tab instead of replacing a tiled pane
+- plain `screensaver` animates the currently visible Ghostty screen
+- `screensaver -s` also animates the currently visible Ghostty screen
+- `screensaver -b` animates the Ghostty scrollback buffer
+- `screensaver -f` uses generated fullscreen filler text instead of capture
+- press any key to stop it
+- `screensaver --list` prints the default random effect pool
 
 ### Checking repo integrity
 

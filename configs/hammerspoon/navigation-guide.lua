@@ -86,16 +86,16 @@ local GROUPS = {
 			{
 				title = "GHOSTTY",
 				items = {
-					{ "cmd  ← / →", "line start / end" },
-					{ "alt  ← / →", "word back / forward" },
+					{ "cmd  ← / →", "word back / forward" },
+					{ "cmd  shift  ← / →", "line start / end" },
 					{ "cmd  r",     "reload config" },
 				},
 			},
 			{
 				title = "ZELLIJ  —  direct nav  (locked mode)",
 				items = {
-					{ "ctrl shift  h / j / k / l", "focus pane ←↓↑→" },
-					{ "ctrl shift  u / o",         "prev / next tab" },
+					{ "ctrl  h / j / k / l", "focus pane ←↓↑→" },
+					{ "ctrl  p / n",         "prev / next tab" },
 					{ "ctrl  space",            "→ normal mode" },
 				},
 			},

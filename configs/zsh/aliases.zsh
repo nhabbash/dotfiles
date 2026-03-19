@@ -49,3 +49,5 @@ alias crt-off='$DOTFILES_DIR/scripts/crt-off'
 alias zj='zellij'
 
 alias crt-lab='$DOTFILES_DIR/scripts/crt-lab'
+alias saver='screensaver'
+alias tte-saver='screensaver'

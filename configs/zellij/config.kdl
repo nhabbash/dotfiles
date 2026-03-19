@@ -16,12 +16,12 @@ keybinds clear-defaults=true {
     locked {
         // BEGIN GENERATED: zellij-locked-navigation
         bind "Ctrl space" { SwitchToMode "normal"; }
-        bind "Ctrl Shift h" { MoveFocus "left"; }
-        bind "Ctrl Shift j" { MoveFocus "down"; }
-        bind "Ctrl Shift k" { MoveFocus "up"; }
-        bind "Ctrl Shift l" { MoveFocus "right"; }
-        bind "Ctrl Shift o" { GoToNextTab; }
-        bind "Ctrl Shift u" { GoToPreviousTab; }
+        bind "Ctrl h" { MoveFocus "left"; }
+        bind "Ctrl j" { MoveFocus "down"; }
+        bind "Ctrl k" { MoveFocus "up"; }
+        bind "Ctrl l" { MoveFocus "right"; }
+        bind "Ctrl n" { GoToNextTab; }
+        bind "Ctrl p" { GoToPreviousTab; }
         // END GENERATED: zellij-locked-navigation
     }
     pane {
@@ -269,12 +269,12 @@ plugins {
         "half page up" "s + u"
         "increase size" "+"
         // BEGIN GENERATED: zellij-hints-navigation
-        "focus next tab" "ctrl + shift + o"
-        "focus previous tab" "ctrl + shift + u"
-        "focus pane down" "ctrl + shift + j"
-        "focus pane left" "ctrl + shift + h"
-        "focus pane right" "ctrl + shift + l"
-        "focus pane up" "ctrl + shift + k"
+        "focus next tab" "ctrl + n"
+        "focus previous tab" "ctrl + p"
+        "focus pane down" "ctrl + j"
+        "focus pane left" "ctrl + h"
+        "focus pane right" "ctrl + l"
+        "focus pane up" "ctrl + k"
         // END GENERATED: zellij-hints-navigation
         "lock mode" "ctrl + space"
         "move mode" "m"
@@ -465,7 +465,7 @@ scroll_buffer_size 20000
 // Enable automatic copying (and clearing) of selection when releasing mouse
 // Default: true
 // 
-// copy_on_select true
+copy_on_select true
  
 // Path to the default editor to use to edit pane scrollbuffer
 // Default: $EDITOR or $VISUAL

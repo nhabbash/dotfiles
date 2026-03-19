@@ -1,25 +1,25 @@
 // crt-lab — generated
-// Preset: Studio Clean
-#define ROWS           55
+// Preset: Daily Driver
+#define ROWS           26
 #define COLS           106
-#define CURVATURE       0.5292
-#define SCAN_INTENSITY  0.0800
-#define SCAN_DENSITY    0.5000
+#define CURVATURE       0.4899
+#define SCAN_INTENSITY  0.1000
+#define SCAN_DENSITY    0.5400
 #define SCAN_SPEED      0.0000
-#define SCAN_THICKNESS  0.3800
+#define SCAN_THICKNESS  0.4200
 #define PHOSPHOR_DECAY  0.0000
 #define FLICKER_AMP     0.0000
-#define CHROMA_SHIFT    0.2000
-#define CONVERGENCE     0.1732
+#define CHROMA_SHIFT    0.2449
+#define CONVERGENCE     0.2449
 #define BLOOM           0.0800
 #define BLOOM_RADIUS    0.1000
-#define HALATION        0.0400
-#define H_SOFTNESS      0.2449
-#define VERTICAL_BLEED  0.1732
-#define DOT_MATRIX      0.0000
-#define EDGE_SOFTNESS   0.2236
+#define HALATION        0.0600
+#define H_SOFTNESS      0.2000
+#define VERTICAL_BLEED  0.1414
+#define DOT_MATRIX      0.0008
+#define EDGE_SOFTNESS   0.1732
 #define VIGNETTE        0.0800
-#define BRIGHTNESS      0.4600
+#define BRIGHTNESS      0.4400
 #define GRAIN_AMP       0.0000
 #define JITTER          0.0000
 #define PI             3.14159265359

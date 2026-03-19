@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+readonly TTY_DEVICE="/dev/tty"
+mode="${1:-screen}"
+
+case "$mode" in
+  screen)
+    action="write_screen_file:paste"
+    ;;
+  scrollback)
+    action="write_scrollback_file:paste"
+    ;;
+  *)
+    echo "usage: ghostty-capture-buffer [screen|scrollback]" >&2
+    exit 1
+    ;;
+esac
+
+if [[ "$(uname -s)" != "Darwin" ]]; then
+  echo "Ghostty capture mode is only implemented for macOS in this repo." >&2
+  exit 1
+fi
+
+if ! command -v osascript >/dev/null 2>&1; then
+  echo "osascript is required for Ghostty capture mode." >&2
+  exit 1
+fi
+
+if [[ ! -r "$TTY_DEVICE" || ! -w "$TTY_DEVICE" ]]; then
+  echo "ghostty-capture-buffer requires an interactive terminal." >&2
+  exit 1
+fi
+
+start_marker="__TTE_CAPTURE_START_${RANDOM}_$$__"
+end_marker="__TTE_CAPTURE_END_${RANDOM}_$$__"
+stty_state="$(stty -g < "$TTY_DEVICE")"
+
+cleanup() {
+  stty "$stty_state" < "$TTY_DEVICE" 2>/dev/null || true
+}
+
+trap cleanup EXIT INT TERM
+stty -echo -icanon min 0 time 0 < "$TTY_DEVICE"
+
+osascript >/dev/null <<EOF
+tell application "Ghostty"
+    set targetTerm to focused terminal of selected tab of front window
+    input text "${start_marker}" to targetTerm
+    perform action "${action}" on targetTerm
+    input text "${end_marker}" to targetTerm
+end tell
+EOF
+
+buffer=""
+deadline=$((SECONDS + 5))
+while ((SECONDS < deadline)); do
+  if IFS= read -rsn1 -t 0.1 ch < "$TTY_DEVICE"; then
+    buffer+="$ch"
+    if [[ "$buffer" == *"$end_marker"* ]]; then
+      break
+    fi
+  fi
+done
+
+if [[ "$buffer" != *"$start_marker"* || "$buffer" != *"$end_marker"* ]]; then
+  echo "Failed to capture Ghostty buffer path from terminal input." >&2
+  exit 1
+fi
+
+payload="${buffer#*${start_marker}}"
+payload="${payload%%${end_marker}*}"
+payload="${payload//$'\e'[200~/}"
+payload="${payload//$'\e'[201~/}"
+payload="${payload//$'\r'/}"
+payload="${payload//$'\n'/}"
+
+if [[ -z "$payload" || ! -f "$payload" ]]; then
+  echo "Ghostty reported an invalid capture path: ${payload:-<empty>}" >&2
+  exit 1
+fi
+
+cat -- "$payload"

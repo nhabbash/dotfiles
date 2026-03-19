@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="${DOTFILES_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+CONFIG="$ROOT/configs/ghostty/config"
+
+sed -i '' 's|^# *custom-shader = .*crt-clean\.glsl|custom-shader = ~/.config/ghostty/shaders/crt-clean.glsl|' "$CONFIG"
+echo "CRT shader enabled. Press Cmd+R in Ghostty."

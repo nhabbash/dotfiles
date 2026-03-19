@@ -32,3 +32,4 @@ configs/agents/slack.md
 *.code-workspace
 __pycache__/
 *.pyc
+scripts/experiments/crt-lab.state.json

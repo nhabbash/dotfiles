@@ -115,6 +115,43 @@ dotfiles regen
 
 Use this when you edit a manifest such as `configs/keymaps.toml`.
 
+### Tuning the CRT shader
+
+Ghostty now reads a stable active shader file:
+
+- active shader: `configs/ghostty/shaders/crt-clean.glsl`
+- safe pristine backup: `configs/ghostty/shaders/crt-clean.pristine.glsl`
+- lab template source: `configs/ghostty/shaders/crt-lab.glsl`
+
+Use the lab like this:
+
+```bash
+crt-lab
+```
+
+Then:
+
+- adjust presets/parameters in the TUI
+- the parameter list scrolls if your terminal is shorter than the full control set
+- `o` enables the shader
+- `x` disables the shader
+- `z` restores the pristine `crt-clean.glsl` baseline
+- press `cmd+r` in Ghostty to reload and inspect the current `crt-clean.glsl`
+
+`crt-lab` rewrites `crt-clean.glsl` directly so it uses the same known-good shader path as `crt-on` / `crt-off`.
+It also keeps a local machine-only JSON state file next to the TUI script so
+your last preset and knob positions survive closing and reopening the lab.
+The current lab also includes expanded presets such as `Studio Clean`,
+`Broadcast`, `IBM VGA`, `Amber Mono`, and `Terminal Sicko`.
+For readability-first tuning, start from `Daily Driver`; the TUI also shows
+inline `safe<=` hints for the most blur-prone parameters.
+
+If you want to toggle shaders entirely:
+
+- `crt-on` enables the `crt-clean.glsl` shader line in Ghostty config
+- `crt-off` disables the active shader line
+- after either command, press `cmd+r` in Ghostty
+
 ### Checking repo integrity
 
 Before a risky rebuild or refactor, run:

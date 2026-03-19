@@ -42,8 +42,8 @@ alias nfu="nix flake update $DOTFILES_DIR"
 alias ngc="nix-collect-garbage -d && nix store optimise"
 
 # Ghostty CRT shader toggle
-alias crt-on='sed -i "" "s|^# *custom-shader = .*crt-clean.glsl|custom-shader = ~/.config/ghostty/shaders/crt-clean.glsl|" "$DOTFILES_DIR/configs/ghostty/config"'
-alias crt-off='sed -i "" "s|^custom-shader = .*crt-clean.glsl|# custom-shader = ~/.config/ghostty/shaders/crt-clean.glsl|" "$DOTFILES_DIR/configs/ghostty/config"'
+alias crt-on='$DOTFILES_DIR/scripts/crt-on'
+alias crt-off='$DOTFILES_DIR/scripts/crt-off'
 
 # zellij
 alias zj='zellij'

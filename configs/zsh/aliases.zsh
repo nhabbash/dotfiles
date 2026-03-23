@@ -25,7 +25,6 @@ alias gcl="git clone"
 
 # Package managers
 alias bi="HOMEBREW_NO_AUTO_UPDATE=1 brew install"
-alias pi="pnpm i"
 alias prd="pnpm run dev"
 alias prb="pnpm run build"
 

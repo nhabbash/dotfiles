@@ -66,4 +66,4 @@ keybind = cmd+v=paste_from_clipboard
 custom-shader = ~/.config/ghostty/shaders/crt-clean.glsl
 # custom-shader = ~/.config/ghostty/shaders/crt-live.glsl
 # custom-shader = ~/.config/ghostty/shaders/cursor_warp.glsl
-custom-shader-animation = always
+# custom-shader-animation = always

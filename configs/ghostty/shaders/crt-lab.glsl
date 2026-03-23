@@ -1,7 +1,6 @@
 // crt-lab.glsl — expanded CRT shader template for Ghostty.
 // The Python TUI prepends defines for parameters, optional mask mode, and tint.
 
-#define PI 3.14159265359
 
 vec3 applyMask(vec2 fragCoord, vec3 color, float amount) {
     if (amount <= 0.0) return color;

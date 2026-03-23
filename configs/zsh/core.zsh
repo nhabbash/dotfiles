@@ -37,6 +37,10 @@ export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
+# FVM
+# # 1. Add fnm to your shell config
+eval "$(fnm env)"
+
 # Expand aliases on space
 globalias() {
   if [[ $LBUFFER =~ '[a-zA-Z0-9]+$' ]]; then

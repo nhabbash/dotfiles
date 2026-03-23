@@ -10,9 +10,8 @@ export PATH="$HOME/.monday-mirror/bin:$PATH"
 export NODE_EXTRA_CA_CERTS="$HOME/.certs/all-ca-bundle.pem"
 export SSL_CERT_FILE="$HOME/.certs/all-ca-bundle.pem"
 
-# NVM (for monday-mirror)
+# Keep nvm available for ad-hoc use, but fnm is the active Node manager.
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 # Pyenv (lazy init — skip rehash on startup)
 export PYENV_ROOT="$HOME/.pyenv"

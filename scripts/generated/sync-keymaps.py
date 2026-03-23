@@ -92,6 +92,26 @@ def ghostty_block(cfg: dict) -> str:
     )
 
 
+def hammerspoon_key_label(chord: str) -> str:
+    symbol_map = {
+        "left": "←",
+        "right": "→",
+        "up": "↑",
+        "down": "↓",
+    }
+    return "  ".join(symbol_map.get(part, part) for part in chord.split("+"))
+
+
+def hammerspoon_ghostty_block(cfg: dict) -> str:
+    nav = cfg["ghostty"]["text_navigation"]
+    return "\n".join(
+        [
+            f'\t\t\t\t\t{{ "{hammerspoon_key_label(nav["word_back"])} / {hammerspoon_key_label(nav["word_forward"])}", "word back / forward" }},',
+            f'\t\t\t\t\t{{ "{hammerspoon_key_label(nav["line_start"])} / {hammerspoon_key_label(nav["line_end"])}", "line start / end" }},',
+        ]
+    )
+
+
 def zellij_locked_block(cfg: dict) -> str:
     pane = cfg["zellij"]["direct_pane_navigation"]
     tab = cfg["zellij"]["direct_tab_navigation"]
@@ -121,6 +141,19 @@ def zellij_locked_block(cfg: dict) -> str:
             f'        bind "{zellij_key(pane["right"])}" {{ MoveFocus "right"; }}',
             f'        bind "{zellij_key(tab["next"])}" {{ GoToNextTab; }}',
             f'        bind "{zellij_key(tab["previous"])}" {{ GoToPreviousTab; }}',
+        ]
+    )
+
+
+def hammerspoon_zellij_block(cfg: dict) -> str:
+    pane = cfg["zellij"]["direct_pane_navigation"]
+    tab = cfg["zellij"]["direct_tab_navigation"]
+    modes = cfg["zellij"]["modes"]
+    return "\n".join(
+        [
+            f'\t\t\t\t\t{{ "{hammerspoon_key_label(pane["left"])} / {hammerspoon_key_label(pane["down"])} / {hammerspoon_key_label(pane["up"])} / {hammerspoon_key_label(pane["right"])}", "focus pane ←↓↑→" }},',
+            f'\t\t\t\t\t{{ "{hammerspoon_key_label(tab["previous"])} / {hammerspoon_key_label(tab["next"])}", "prev / next tab" }},',
+            f'\t\t\t\t\t{{ "{hammerspoon_key_label(modes["lock"])}", "→ normal mode" }},',
         ]
     )
 
@@ -172,6 +205,23 @@ def main() -> int:
                 '        "increase size" "+"\n        // BEGIN GENERATED: zellij-hints-navigation\n',
                 "        // END GENERATED: zellij-hints-navigation",
                 zellij_hints_block(cfg),
+            ),
+        ],
+        args.check,
+    )
+
+    changed |= update_file(
+        ROOT / "configs" / "hammerspoon" / "navigation-guide.lua",
+        [
+            (
+                "\t\t\t\t\t-- BEGIN GENERATED: hammerspoon-ghostty-navigation\n",
+                "\t\t\t\t\t-- END GENERATED: hammerspoon-ghostty-navigation",
+                hammerspoon_ghostty_block(cfg),
+            ),
+            (
+                "\t\t\t\t\t-- BEGIN GENERATED: hammerspoon-zellij-direct-navigation\n",
+                "\t\t\t\t\t-- END GENERATED: hammerspoon-zellij-direct-navigation",
+                hammerspoon_zellij_block(cfg),
             ),
         ],
         args.check,

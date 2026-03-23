@@ -1,7 +1,7 @@
 # =============================================================================
 # Appearance
 # =============================================================================
-theme = Catppuccin Macchiato
+theme = current
 font-family = Inconsolata Nerd Font Mono
 font-size = 14
 background-opacity = 0.98
@@ -41,12 +41,12 @@ macos-titlebar-style = tabs
 # BEGIN GENERATED: keymaps
 # Source of truth: ~/.dotfiles/configs/keymaps.toml
 # Line navigation
-keybind = cmd+shift+left=text:\x01
-keybind = cmd+shift+right=text:\x05
+keybind = cmd+left=text:\x01
+keybind = cmd+right=text:\x05
 
 # Word navigation
-keybind = cmd+left=esc:b
-keybind = cmd+right=esc:f
+keybind = alt+left=esc:b
+keybind = alt+right=esc:f
 
 # Shift+Enter sends escaped return
 keybind = shift+enter=text:\x1b\r

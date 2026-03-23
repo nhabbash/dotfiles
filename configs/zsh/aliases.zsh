@@ -43,6 +43,7 @@ alias ngc="nix-collect-garbage -d && nix store optimise"
 # Ghostty CRT shader toggle
 alias crt-on='$DOTFILES_DIR/scripts/crt-on'
 alias crt-off='$DOTFILES_DIR/scripts/crt-off'
+alias gtheme="$DOTFILES_DIR/scripts/dotfiles.sh theme"
 
 # zellij
 alias zj='zellij'

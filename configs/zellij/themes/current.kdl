@@ -1,0 +1,95 @@
+// Managed by `dotfiles theme` and `dotfiles regen`.
+// Source palette: configs/ghostty/themes/current
+
+themes {
+    current {
+        bg "#090E13"
+        fg "#c5c9c7"
+
+        black "#090E13"
+        red "#e46876"
+        green "#87a987"
+        yellow "#e6c384"
+        blue "#7fb4ca"
+        magenta "#938aa9"
+        cyan "#7aa89f"
+        white "#c5c9c7"
+        orange "#c4746e"
+
+        text "#c5c9c7"
+        subtext1 "#c5c9c7"
+        subtext0 "#7aa89f"
+        overlay2 "#5C6066"
+        overlay1 "#5C6066"
+        overlay0 "#22262D"
+        surface2 "#5C6066"
+        surface1 "#22262D"
+        surface0 "#22262D"
+        base "#090E13"
+        mantle "#090E13"
+        crust "#090E13"
+
+        ribbon_unselected {
+            base "#c5c9c7"
+            background "#22262D"
+            emphasis_0 "#7fb4ca"
+            emphasis_1 "#e6c384"
+            emphasis_2 "#7aa89f"
+            emphasis_3 "#938aa9"
+        }
+
+        text_unselected {
+            base "#c5c9c7"
+            background "#090E13"
+            emphasis_0 "#7fb4ca"
+            emphasis_1 "#e6c384"
+            emphasis_2 "#7aa89f"
+            emphasis_3 "#938aa9"
+        }
+
+        text_selected {
+            base "#090E13"
+            background "#c5c9c7"
+            emphasis_0 "#7fb4ca"
+            emphasis_1 "#e6c384"
+            emphasis_2 "#7aa89f"
+            emphasis_3 "#938aa9"
+        }
+
+        ribbon_selected {
+            base "#090E13"
+            background "#7fb4ca"
+            emphasis_0 "#090E13"
+            emphasis_1 "#090E13"
+            emphasis_2 "#090E13"
+            emphasis_3 "#090E13"
+        }
+
+        frame_unselected {
+            base "#5C6066"
+            background "#090E13"
+            emphasis_0 "#5C6066"
+            emphasis_1 "#5C6066"
+            emphasis_2 "#5C6066"
+            emphasis_3 "#5C6066"
+        }
+
+        frame_selected {
+            base "#7fb4ca"
+            background "#090E13"
+            emphasis_0 "#7fb4ca"
+            emphasis_1 "#7fb4ca"
+            emphasis_2 "#7fb4ca"
+            emphasis_3 "#7fb4ca"
+        }
+
+        frame_highlight {
+            base "#e6c384"
+            background "#090E13"
+            emphasis_0 "#e6c384"
+            emphasis_1 "#e6c384"
+            emphasis_2 "#e6c384"
+            emphasis_3 "#e6c384"
+        }
+    }
+}

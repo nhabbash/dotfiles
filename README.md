@@ -14,6 +14,9 @@ configs/ghostty/    → ~/.config/ghostty/ (+ Library/Application Support on mac
 configs/git/        → ~/.gitconfig
 configs/agents/     → ~/.config/agents/
 configs/claude/     → ~/.claude/
+configs/codex/      → ~/.config/codex/
+configs/cursor-agent/ → ~/.config/cursor-agent/
+configs/pi/         → ~/.config/pi/
 ```
 
 `~/.zshrc` is a **local, untracked file** (created by bootstrap). Add machine-specific one-off shell config there or in `~/.zshrc.local`.
@@ -48,6 +51,7 @@ All commands are available as the `dotfiles` alias once your shell is set up.
 | `dotfiles push [message]` | Commit all changes and push |
 | `dotfiles status [hostname]` | Show repo state and local service status |
 | `dotfiles rebuild [hostname]` | Force a full nix rebuild |
+| `dotfiles theme [name|list]` | Switch the active Ghostty theme |
 | `dotfiles regen` | Regenerate derived config from source manifests |
 | `dotfiles check [hostname]` | Verify repo integrity and generated drift |
 | `dotfiles assets [hostname]` | Install explicit external assets such as pinned widgets |
@@ -94,6 +98,34 @@ vim configs/zellij/layouts/default.kdl
 # Then push when happy
 dotfiles push "zellij: adjust layout"
 ```
+
+### Switching Ghostty themes
+
+Ghostty now uses a tracked custom theme file at `configs/ghostty/themes/current`.
+The vendored Kanso variants live next to it:
+
+- `kanso-zen`
+- `kanso-ink`
+- `kanso-mist`
+- `kanso-pearl`
+
+Use:
+
+```bash
+dotfiles theme list
+dotfiles theme kanso-zen
+dotfiles theme kanso-mist
+```
+
+Shorthand:
+
+```bash
+gtheme kanso-zen
+```
+
+`dotfiles theme` updates `configs/ghostty/themes/current` and tries to run
+`ghostty +reload-config`. If the CLI reload is unavailable, press `cmd+r` in
+Ghostty.
 
 ### Changing nix config (packages, plugins, system settings)
 

@@ -16,10 +16,10 @@ alt_key = "terminal Meta/Alt sequence"
 notes = "Zellij direct navigation uses ctrl-based chords to stay separate from AeroSpace alt bindings and Ghostty cmd text navigation."
 
 [ghostty.text_navigation]
-line_start = "cmd+shift+left"
-line_end = "cmd+shift+right"
-word_back = "cmd+left"
-word_forward = "cmd+right"
+line_start = "cmd+left"
+line_end = "cmd+right"
+word_back = "alt+left"
+word_forward = "alt+right"
 
 [ghostty.misc]
 reload_config = "cmd+r"

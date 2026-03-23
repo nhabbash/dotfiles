@@ -20,37 +20,38 @@ layout {
         // Top status bar - main status (mode, session, tabs, datetime)
         pane size=1 borderless=true {
             plugin location="zjstatus" {
-
+                // BEGIN GENERATED: zellij-classic-top-theme
                 // Format configuration
-                format_left   " #[bg=#313244] {mode}#[bg=#313244] {tabs}"
-                format_center "{notifications}"
-                format_right  "#[bg=#313244,fg=#94e2d5]\u{e0b6}#[fg=#11111b,bg=#94e2d5]\u{f0219} #[bg=#45475a,fg=#94e2d5]\u{e0b4} {command_kube}#[bg=#313244,fg=#45475a]\u{e0b4}#[bg=#313244,fg=#eba0ac]\u{e0b6}#[bg=#eba0ac,fg=#11111b]\u{f00ed} #[bg=#45475a,fg=#eba0ac]\u{e0b4} {datetime}#[bg=#313244,fg=#45475a]\u{e0b4}"
-                format_space  "#[bg=#313244]"
-                format_hide_on_overlength "true"
-                format_precedence "lrc"
+                                format_left   " #[bg=#22262D] {mode}#[bg=#22262D] {tabs}"
+                                format_center "{notifications}"
+                                format_right  "#[bg=#22262D,fg=#7aa89f]\u{e0b6}#[fg=#090E13,bg=#7aa89f]\u{f0219} #[bg=#5C6066,fg=#7aa89f]\u{e0b4} {command_kube}#[bg=#22262D,fg=#5C6066]\u{e0b4}#[bg=#22262D,fg=#e46876]\u{e0b6}#[bg=#e46876,fg=#090E13]\u{f00ed} #[bg=#5C6066,fg=#e46876]\u{e0b4} {datetime}#[bg=#22262D,fg=#5C6066]\u{e0b4}"
+                                format_space  "#[bg=#22262D]"
+                                format_hide_on_overlength "true"
+                                format_precedence "lrc"
 
-                // Notifications
-                notification_format_unread           "#[bg=#f9e2af,fg=#11111b,blink] \u{f0f3} #[bg=#45475a,fg=#f9e2af]\u{e0b4} {message}#[bg=#313244,fg=#45475a]\u{e0b4}"
-                notification_format_no_notifications ""
-                notification_show_interval           "10"
+                                // Notifications
+                                notification_format_unread           "#[bg=#e6c384,fg=#090E13,blink] \u{f0f3} #[bg=#5C6066,fg=#e6c384]\u{e0b4} {message}#[bg=#22262D,fg=#5C6066]\u{e0b4}"
+                                notification_format_no_notifications ""
+                                notification_show_interval           "10"
 
 
-                // Tab formatting
-                tab_normal              "#[bg=#313244,fg=#89b4fa]\u{e0b6}#[bg=#89b4fa,fg=#11111b]{index}#[bg=#45475a,fg=#89b4fa]\u{e0b4} {name}{floating_indicator}#[bg=#313244,fg=#45475a]\u{e0b4}"
-                tab_normal_fullscreen   "#[bg=#313244,fg=#89b4fa]\u{e0b6}#[bg=#89b4fa,fg=#11111b]{index}#[bg=#45475a,fg=#89b4fa]\u{e0b4} {name}{fullscreen_indicator}#[bg=#313244,fg=#45475a]\u{e0b4}"
-                tab_normal_sync         "#[bg=#313244,fg=#89b4fa]\u{e0b6}#[bg=#89b4fa,fg=#11111b]{index}#[bg=#45475a,fg=#89b4fa]\u{e0b4} {name}{sync_indicator}#[bg=#313244,fg=#45475a]\u{e0b4}"
-                tab_active              "#[bg=#313244,fg=#fab387]\u{e0b6}#[bg=#fab387,fg=#11111b]{index}#[bg=#45475a,fg=#fab387]\u{e0b4} {name}{floating_indicator}#[bg=#313244,fg=#45475a]\u{e0b4}"
-                tab_active_fullscreen   "#[bg=#313244,fg=#fab387]\u{e0b6}#[bg=#fab387,fg=#11111b]{index}#[bg=#45475a,fg=#fab387]\u{e0b4} {name}{fullscreen_indicator}#[bg=#313244,fg=#45475a]\u{e0b4}"
-                tab_active_sync         "#[bg=#313244,fg=#fab387]\u{e0b6}#[bg=#fab387,fg=#11111b]{index}#[bg=#45475a,fg=#fab387]\u{e0b4} {name}{sync_indicator}#[bg=#313244,fg=#45475a]\u{e0b4}"
-                tab_separator           "#[bg=#313244] "
+                                // Tab formatting
+                                tab_normal              "#[bg=#22262D,fg=#7fb4ca]\u{e0b6}#[bg=#7fb4ca,fg=#090E13]{index}#[bg=#5C6066,fg=#7fb4ca]\u{e0b4} {name}{floating_indicator}#[bg=#22262D,fg=#5C6066]\u{e0b4}"
+                                tab_normal_fullscreen   "#[bg=#22262D,fg=#7fb4ca]\u{e0b6}#[bg=#7fb4ca,fg=#090E13]{index}#[bg=#5C6066,fg=#7fb4ca]\u{e0b4} {name}{fullscreen_indicator}#[bg=#22262D,fg=#5C6066]\u{e0b4}"
+                                tab_normal_sync         "#[bg=#22262D,fg=#7fb4ca]\u{e0b6}#[bg=#7fb4ca,fg=#090E13]{index}#[bg=#5C6066,fg=#7fb4ca]\u{e0b4} {name}{sync_indicator}#[bg=#22262D,fg=#5C6066]\u{e0b4}"
+                                tab_active              "#[bg=#22262D,fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#090E13]{index}#[bg=#5C6066,fg=#e6c384]\u{e0b4} {name}{floating_indicator}#[bg=#22262D,fg=#5C6066]\u{e0b4}"
+                                tab_active_fullscreen   "#[bg=#22262D,fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#090E13]{index}#[bg=#5C6066,fg=#e6c384]\u{e0b4} {name}{fullscreen_indicator}#[bg=#22262D,fg=#5C6066]\u{e0b4}"
+                                tab_active_sync         "#[bg=#22262D,fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#090E13]{index}#[bg=#5C6066,fg=#e6c384]\u{e0b4} {name}{sync_indicator}#[bg=#22262D,fg=#5C6066]\u{e0b4}"
+                                tab_separator           "#[bg=#22262D] "
 
-                tab_sync_indicator       " \u{f021}"
-                tab_fullscreen_indicator " \u{f0293}"
-                tab_floating_indicator   " \u{f0e59}"
+                                tab_sync_indicator       " \u{f021}"
+                                tab_fullscreen_indicator " \u{f0293}"
+                                tab_floating_indicator   " \u{f0e59}"
 
-                tab_display_count        "20"
-                tab_truncate_start_format "#[fg=#9399b2] \u{e0b6}+{count}\u{e0b4}"
-                tab_truncate_end_format  "#[fg=#9399b2] +{count}\u{e0b6}"
+                                tab_display_count        "20"
+                                tab_truncate_start_format "#[fg=#5C6066] \u{e0b6}+{count}\u{e0b4}"
+                                tab_truncate_end_format  "#[fg=#5C6066] +{count}\u{e0b6}"
+                // END GENERATED: zellij-classic-top-theme
 
                 // Datetime
                 datetime          "{format}"
@@ -69,29 +70,31 @@ layout {
         // Bottom status bar - keybinding hints only
         pane size=1 borderless=true {
             plugin location="zjstatus" {
+                // BEGIN GENERATED: zellij-classic-bottom-theme
                 // Mode indicators
-                mode_normal        "#[bg=#89b4fa,fg=#11111b] \u{2764} NORMAL#[bg=#313244,fg=#89b4fa]\u{e0b4}"
-                mode_tmux          "#[bg=#cba6f7,fg=#11111b] \u{2764} TMUX#[bg=#313244,fg=#cba6f7]\u{e0b4}"
-                mode_locked        "#[bg=#f38ba8,fg=#11111b] \u{2764} LOCKED#[bg=#313244,fg=#f38ba8]\u{e0b4}#[fg=#9399b2]"
-                mode_pane          "#[bg=#94e2d5,fg=#11111b] \u{2764} PANE#[bg=#313244,fg=#94e2d5]\u{e0b4}"
-                mode_tab           "#[bg=#94e2d5,fg=#11111b] \u{2764} TAB#[bg=#313244,fg=#94e2d5]\u{e0b4}"
-                mode_scroll        "#[bg=#94e2d5,fg=#11111b] \u{2764} SCROLL#[bg=#313244,fg=#94e2d5]\u{e0b4}"
-                mode_enter_search  "#[bg=#94e2d5,fg=#11111b] \u{2764} ENT-SEARCH#[bg=#313244,fg=#94e2d5]\u{e0b4}"
-                mode_search        "#[bg=#94e2d5,fg=#11111b] \u{2764} SEARCH#[bg=#313244,fg=#94e2d5]\u{e0b4}"
-                mode_resize        "#[bg=#f9e2af,fg=#11111b] \u{2764} RESIZE#[bg=#313244,fg=#f9e2af]\u{e0b4}"
-                mode_rename_tab    "#[bg=#f9e2af,fg=#11111b] \u{2764} RENAME-TAB#[bg=#313244,fg=#f9e2af]\u{e0b4}"
-                mode_rename_pane   "#[bg=#f9e2af,fg=#11111b] \u{2764} RENAME-PANE#[bg=#313244,fg=#f9e2af]\u{e0b4}"
-                mode_move          "#[bg=#f9e2af,fg=#11111b] \u{2764} MOVE#[bg=#313244,fg=#f9e2af]\u{e0b4}"
-                mode_session       "#[bg=#f5c2e7,fg=#11111b] \u{2764} SESSION#[bg=#313244,fg=#f5c2e7]\u{e0b4}"
-                mode_prompt        "#[bg=#f5c2e7,fg=#11111b] \u{2764} PROMPT#[bg=#313244,fg=#f5c2e7]\u{e0b4}"
+                                mode_normal        "#[bg=#7fb4ca,fg=#090E13] \u{2764} NORMAL#[bg=#22262D,fg=#7fb4ca]\u{e0b4}"
+                                mode_tmux          "#[bg=#938aa9,fg=#090E13] \u{2764} TMUX#[bg=#22262D,fg=#938aa9]\u{e0b4}"
+                                mode_locked        "#[bg=#e46876,fg=#090E13] \u{2764} LOCKED#[bg=#22262D,fg=#e46876]\u{e0b4}#[fg=#5C6066]"
+                                mode_pane          "#[bg=#7aa89f,fg=#090E13] \u{2764} PANE#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                                mode_tab           "#[bg=#7aa89f,fg=#090E13] \u{2764} TAB#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                                mode_scroll        "#[bg=#7aa89f,fg=#090E13] \u{2764} SCROLL#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                                mode_enter_search  "#[bg=#7aa89f,fg=#090E13] \u{2764} ENT-SEARCH#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                                mode_search        "#[bg=#7aa89f,fg=#090E13] \u{2764} SEARCH#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                                mode_resize        "#[bg=#e6c384,fg=#090E13] \u{2764} RESIZE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                                mode_rename_tab    "#[bg=#e6c384,fg=#090E13] \u{2764} RENAME-TAB#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                                mode_rename_pane   "#[bg=#e6c384,fg=#090E13] \u{2764} RENAME-PANE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                                mode_move          "#[bg=#e6c384,fg=#090E13] \u{2764} MOVE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                                mode_session       "#[bg=#938aa9,fg=#090E13] \u{2764} SESSION#[bg=#22262D,fg=#938aa9]\u{e0b4}"
+                                mode_prompt        "#[bg=#938aa9,fg=#090E13] \u{2764} PROMPT#[bg=#22262D,fg=#938aa9]\u{e0b4}"
 
-                format_left   "#[bg=#313244,fg=#74c7ec]\u{e0b6}#[bg=#74c7ec,fg=#11111b] {session} #[bg=#313244,fg=#74c7ec]\u{e0b4} {mode}"
-                format_center ""
-                format_right  "{pipe_zjstatus_hints}"
-                format_hide_on_overlength "true"
-                format_precedence "lrc"
+                                format_left   "#[bg=#22262D,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#090E13] {session} #[bg=#22262D,fg=#7aa89f]\u{e0b4} {mode}"
+                                format_center ""
+                                format_right  "{pipe_zjstatus_hints}"
+                                format_hide_on_overlength "true"
+                                format_precedence "lrc"
 
-                format_space  "#[bg=#313244]"
+                                format_space  "#[bg=#22262D]"
+                // END GENERATED: zellij-classic-bottom-theme
 
                 // Pipe configuration for zjstatus-hints
                 pipe_zjstatus_hints_format "{output}"

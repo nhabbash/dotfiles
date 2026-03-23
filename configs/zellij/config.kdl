@@ -239,8 +239,10 @@ plugins {
     strider location="zellij:strider"
     tab-bar location="zellij:tab-bar"
     vertical-tabs location="https://github.com/cfal/zellij-vertical-tabs/releases/download/v0.1.0/zellij-vertical-tabs.wasm" {
-        format "#[fg=#89b4fa]{index} {name}"
-        format_active "#[fg=#fab387]{index} {name}"
+        // BEGIN GENERATED: zellij-vertical-tabs-plugin-theme
+        format "#[fg=#7fb4ca]{index} {name}"
+                format_active "#[fg=#e6c384]{index} {name}"
+        // END GENERATED: zellij-vertical-tabs-plugin-theme
         max_name_length "20"
     }
     welcome-screen location="zellij:session-manager" {
@@ -368,7 +370,7 @@ web_client {
 // Choose the theme that is specified in the themes section.
 // Default: default
 // 
-theme "catppuccin-mocha"
+theme "current"
  
 // Choose the base input mode of zellij.
 // Default: normal

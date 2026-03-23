@@ -1,11 +1,10 @@
+@~/.config/agents/base.md
 @~/.config/agents/research.md
 @~/.config/agents/visual-testing.md
 @~/.config/agents/delegation.md
 @~/.config/agents/orchestration.md
-
-## Version control
-
-Use **git by default** for all version control. Use jj only for stacked PRs or complex rebasing. Read `~/.config/agents/vcs.md` for the full workflow guide.
+@~/.config/agents/vcs.md
+@~/.config/agents/tools/claude.md
 
 ## Context files (load on demand)
 

@@ -24,14 +24,18 @@
   ".claude/CLAUDE.md" = "configs/claude/CLAUDE.md";
   ".claude/statusline.sh" = "configs/claude/statusline.sh";
 
-  # Agents
+  # Shared + per-tool agent instructions
   ".config/agents" = "configs/agents";
+  ".config/codex/AGENTS.md" = "configs/codex/AGENTS.md";
+  ".config/cursor-agent/AGENTS.md" = "configs/cursor-agent/AGENTS.md";
+  ".config/pi/AGENTS.md" = "configs/pi/AGENTS.md";
 
   # Zellij
   ".config/zellij" = "configs/zellij";
 }
 // lib.optionalAttrs features.gui {
   ".config/kitty" = "configs/kitty";
+  ".config/ghostty/themes" = "configs/ghostty/themes";
   ".config/ghostty/shaders" = "configs/ghostty/shaders";
 }
 // lib.optionalAttrs features.aerospace {

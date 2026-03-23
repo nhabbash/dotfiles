@@ -4,6 +4,7 @@
 # Commands:
 #   bootstrap [hostname]   First-time setup on a new machine
 #   rebuild [hostname]     Rebuild nix configuration
+#   theme [name|list]      Switch the active Ghostty theme
 #   regen                  Regenerate derived config from source manifests
 #   check [hostname]       Verify repo integrity and config drift
 #   assets [hostname]      Install explicit external assets
@@ -56,6 +57,80 @@ run_sync_keymaps() {
     else
         run_quiet python3 "$generator"
     fi
+}
+
+run_sync_terminal_theme() {
+    local check_mode="${1:-0}"
+    local generator="$DOTFILES_DIR/scripts/generated/sync-terminal-theme.py"
+    if [ "$check_mode" = "1" ]; then
+        run_quiet python3 "$generator" --check
+    else
+        run_quiet python3 "$generator"
+    fi
+}
+
+ghostty_theme_dir() {
+    printf '%s\n' "$DOTFILES_DIR/configs/ghostty/themes"
+}
+
+ghostty_theme_current_file() {
+    printf '%s/current\n' "$(ghostty_theme_dir)"
+}
+
+ghostty_theme_source_file() {
+    local name="$1"
+    printf '%s/%s\n' "$(ghostty_theme_dir)" "$name"
+}
+
+ghostty_theme_names() {
+    find "$(ghostty_theme_dir)" -maxdepth 1 -type f ! -name "current" -exec basename {} \; | sort
+}
+
+ghostty_theme_current_name() {
+    local current_file
+    current_file="$(ghostty_theme_current_file)"
+    if [ -f "$current_file" ]; then
+        sed -n 's/^# theme-name: //p' "$current_file" | head -n 1
+    fi
+}
+
+ghostty_reload_config() {
+    if ! command -v ghostty >/dev/null 2>&1; then
+        warn "Ghostty CLI not found; press cmd+r in Ghostty to reload the new theme."
+        return 0
+    fi
+
+    if ghostty +reload-config >/dev/null 2>&1; then
+        info "Ghostty reloaded."
+    else
+        warn "Ghostty reload failed; press cmd+r in Ghostty to apply the new theme."
+    fi
+}
+
+set_ghostty_theme() {
+    local name="$1"
+    local source_file current_file tmp_file
+
+    source_file="$(ghostty_theme_source_file "$name")"
+    current_file="$(ghostty_theme_current_file)"
+
+    if [ ! -f "$source_file" ]; then
+        error "Unknown Ghostty theme: $name"
+        echo ""
+        echo "Available themes:"
+        ghostty_theme_names | sed 's/^/  - /'
+        return 1
+    fi
+
+    tmp_file="$(mktemp)"
+    {
+        echo "# Managed by \`dotfiles theme\`."
+        echo "# theme-name: $name"
+        echo "# source: configs/ghostty/themes/$name"
+        echo ""
+        cat "$source_file"
+    } > "$tmp_file"
+    mv "$tmp_file" "$current_file"
 }
 
 check_shell_scripts() {
@@ -453,6 +528,58 @@ cmd_rebuild() {
     show_summary
 }
 
+cmd_theme() {
+    local action="${1:-status}"
+    local theme_name=""
+    local current_name=""
+
+    case "$action" in
+        list|ls)
+            header "Ghostty themes"
+            ghostty_theme_names | sed 's/^/  - /'
+            return
+            ;;
+        status)
+            header "Ghostty theme"
+            current_name="$(ghostty_theme_current_name)"
+            if [ -n "$current_name" ]; then
+                info "Current theme: $current_name"
+            else
+                warn "Current theme metadata missing."
+            fi
+            echo ""
+            echo "Available themes:"
+            ghostty_theme_names | sed 's/^/  - /'
+            return
+            ;;
+        set)
+            theme_name="${2:-}"
+            ;;
+        *)
+            theme_name="$action"
+            ;;
+    esac
+
+    if [ -z "$theme_name" ]; then
+        error "Usage: dotfiles theme [list|status|set] [theme-name]"
+        return 1
+    fi
+
+    header "Switching Ghostty theme"
+    init_progress 3
+
+    step "Updating tracked theme file"
+    set_ghostty_theme "$theme_name"
+
+    step "Syncing Zellij theme"
+    run_sync_terminal_theme 0
+
+    step "Reloading Ghostty"
+    ghostty_reload_config
+
+    success "Ghostty theme set to $theme_name."
+}
+
 cmd_services() {
     local hostname="${1:-$(detect_hostname)}"
     local OS="$(uname -s)"
@@ -480,10 +607,13 @@ cmd_assets() {
 
 cmd_regen() {
     header "Regenerating derived config"
-    init_progress 1
+    init_progress 2
 
     step "Syncing generated keymaps"
     run_sync_keymaps 0
+
+    step "Syncing terminal themes"
+    run_sync_terminal_theme 0
 
     success "Regeneration complete."
 }
@@ -526,7 +656,7 @@ cmd_check() {
     local hostname="${1:-$(detect_hostname)}"
 
     header "Checking repo for: $hostname"
-    init_progress 4
+    init_progress 5
 
     step "Checking shell scripts"
     check_shell_scripts
@@ -536,6 +666,9 @@ cmd_check() {
 
     step "Checking generated config drift"
     run_sync_keymaps 1
+
+    step "Checking terminal theme drift"
+    run_sync_terminal_theme 1
 
     step "Checking nix evaluation"
     check_nix_eval "$hostname"
@@ -716,6 +849,7 @@ cmd_bootstrap() {
         CONFLICT_FILES=(
             "$HOME/.zprofile"
             "$HOME/.zshenv"
+            "$HOME/.config/ghostty/themes"
             "$HOME/.config/kitty/kitty.conf"
             "$HOME/.config/kitty/current-theme.conf"
             "$HOME/.config/zellij/config.kdl"
@@ -726,6 +860,7 @@ cmd_bootstrap() {
         CONFLICT_FILES=(
             "$HOME/.zprofile"
             "$HOME/.zshenv"
+            "$HOME/.config/ghostty/themes"
         )
         if [[ "$hostname" == "linux-desktop" ]]; then
             CONFLICT_FILES+=(
@@ -852,6 +987,7 @@ COMMAND_ARGS=("${ARGS[@]:1}")
 case "$COMMAND" in
     bootstrap)  cmd_bootstrap "${COMMAND_ARGS[@]}" ;;
     rebuild)    cmd_rebuild "${COMMAND_ARGS[@]}" ;;
+    theme)      cmd_theme "${COMMAND_ARGS[@]}" ;;
     regen)      cmd_regen ;;
     check)      cmd_check "${COMMAND_ARGS[@]}" ;;
     assets)     cmd_assets "${COMMAND_ARGS[@]}" ;;

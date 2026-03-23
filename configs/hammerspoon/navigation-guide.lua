@@ -86,17 +86,21 @@ local GROUPS = {
 			{
 				title = "GHOSTTY",
 				items = {
-					{ "cmd  ← / →", "word back / forward" },
-					{ "cmd  shift  ← / →", "line start / end" },
+					-- BEGIN GENERATED: hammerspoon-ghostty-navigation
+					{ "alt  ← / alt  →", "word back / forward" },
+					{ "cmd  ← / cmd  →", "line start / end" },
+					-- END GENERATED: hammerspoon-ghostty-navigation
 					{ "cmd  r",     "reload config" },
 				},
 			},
 			{
 				title = "ZELLIJ  —  direct nav  (locked mode)",
 				items = {
-					{ "ctrl  h / j / k / l", "focus pane ←↓↑→" },
-					{ "ctrl  p / n",         "prev / next tab" },
-					{ "ctrl  space",            "→ normal mode" },
+					-- BEGIN GENERATED: hammerspoon-zellij-direct-navigation
+					{ "ctrl  h / ctrl  j / ctrl  k / ctrl  l", "focus pane ←↓↑→" },
+					{ "ctrl  p / ctrl  n", "prev / next tab" },
+					{ "ctrl  space", "→ normal mode" },
+					-- END GENERATED: hammerspoon-zellij-direct-navigation
 				},
 			},
 			{

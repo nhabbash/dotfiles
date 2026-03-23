@@ -32,14 +32,14 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
   ssh-add ~/.ssh/id_github_sign_and_auth 2>/dev/null
 fi
 
-# Volta
-export VOLTA_HOME="$HOME/.volta"
-export PATH="$VOLTA_HOME/bin:$PATH"
+# Local binaries
 export PATH="$HOME/.local/bin:$PATH"
 
-# FVM
-# # 1. Add fnm to your shell config
-eval "$(fnm env)"
+# fnm
+if [[ -x /opt/homebrew/bin/fnm ]]; then
+  export FNM_DIR="$HOME/.local/share/fnm"
+  eval "$(/opt/homebrew/bin/fnm env --use-on-cd --shell zsh)"
+fi
 
 # Expand aliases on space
 globalias() {

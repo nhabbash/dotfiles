@@ -48,6 +48,14 @@ in
     unset ZDOTDIR
   '';
 
+  home.file.".zprofile".text = ''
+    export PATH="/opt/homebrew/bin:$PATH"
+    if [[ -x /opt/homebrew/bin/fnm ]]; then
+      export FNM_DIR="$HOME/.local/share/fnm"
+      eval "$(/opt/homebrew/bin/fnm env --shell zsh)"
+    fi
+  '';
+
   # ~/.zshrc.base sources the nix-managed config
   home.file.".zshrc.base".text = ''
     source ${config.xdg.configHome}/zsh/.zshrc

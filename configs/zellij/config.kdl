@@ -40,6 +40,10 @@ keybinds clear-defaults=true {
         bind "x" { CloseFocus; SwitchToMode "locked"; }
         bind "z" { TogglePaneFrames; SwitchToMode "locked"; }
         bind "tab" { SwitchFocus; }
+        // BEGIN GENERATED: zellij-pane-layout
+        bind "s" { NextSwapLayout; SwitchToMode "locked"; }
+        bind "S" { PreviousSwapLayout; SwitchToMode "locked"; }
+        // END GENERATED: zellij-pane-layout
     }
     tab {
         bind "left" { GoToPreviousTab; }
@@ -319,6 +323,10 @@ plugins {
         "shrink right" "r + L"
         "shrink up" "r + K"
         "switch focus" "v + tab"
+        // BEGIN GENERATED: zellij-hints-pane-layout
+        "swap layout next" "v + s"
+        "swap layout previous" "v + S"
+        // END GENERATED: zellij-hints-pane-layout
         "sync tab" "t + s"
         "tab mode" "t"
         "toggle embed/float" "v + e"

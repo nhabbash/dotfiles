@@ -109,6 +109,9 @@ local GROUPS = {
 					{ "n  /  d  /  R", "new pane  /  ↓  /  →" },
 					{ "f  /  w",       "fullscreen / float" },
 					{ "x  /  r",       "close / rename" },
+					-- BEGIN GENERATED: hammerspoon-zellij-pane-layout
+					{ "s  /  S",       "swap layout next / prev" },
+					-- END GENERATED: hammerspoon-zellij-pane-layout
 				},
 			},
 			{

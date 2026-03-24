@@ -74,7 +74,7 @@ Key symlink targets:
 - `configs/claude/` → `~/.claude/` (Claude loader + statusline)
 - `configs/codex/` → `~/.config/codex/` (Codex adapter instructions)
 - `configs/cursor-agent/` → `~/.config/cursor-agent/` (Cursor Agent adapter instructions)
-- `configs/pi/` → `~/.config/pi/` (Pi adapter instructions)
+- `configs/pi/` → `~/.pi/agent/` (Pi adapter instructions)
 
 ### Requires rebuild
 Editing `.nix` files requires running `rebuild` or `dotfiles rebuild`:

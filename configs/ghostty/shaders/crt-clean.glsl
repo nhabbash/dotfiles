@@ -1,7 +1,7 @@
 // crt-lab — generated
 // Preset: Studio Clean
 #define ROWS           63
-#define COLS           123
+#define COLS           248
 #define CURVATURE       0.5292
 #define SCAN_INTENSITY  0.0800
 #define SCAN_DENSITY    0.5000
@@ -9,7 +9,7 @@
 #define SCAN_THICKNESS  0.3800
 #define PHOSPHOR_DECAY  0.0000
 #define FLICKER_AMP     0.0000
-#define CHROMA_SHIFT    0.0000
+#define CHROMA_SHIFT    0.2000
 #define CONVERGENCE     0.1732
 #define BLOOM           0.0800
 #define BLOOM_RADIUS    0.1000
@@ -19,7 +19,7 @@
 #define DOT_MATRIX      0.0000
 #define EDGE_SOFTNESS   0.2236
 #define VIGNETTE        0.0800
-#define BRIGHTNESS      0.9400
+#define BRIGHTNESS      0.4600
 #define GRAIN_AMP       0.0000
 #define JITTER          0.0000
 #define PI             3.14159265359

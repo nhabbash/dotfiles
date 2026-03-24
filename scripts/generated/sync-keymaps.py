@@ -158,6 +158,32 @@ def hammerspoon_zellij_block(cfg: dict) -> str:
     )
 
 
+def zellij_pane_layout_block(cfg: dict) -> str:
+    layout = cfg["zellij"]["pane_layout"]
+    return "\n".join(
+        [
+            f'        bind "{layout["swap_next"]}" {{ NextSwapLayout; SwitchToMode "locked"; }}',
+            f'        bind "{layout["swap_previous"]}" {{ PreviousSwapLayout; SwitchToMode "locked"; }}',
+        ]
+    )
+
+
+def zellij_hints_pane_layout_block(cfg: dict) -> str:
+    layout = cfg["zellij"]["pane_layout"]
+    modes = cfg["zellij"]["modes"]
+    return "\n".join(
+        [
+            f'        "swap layout next" "{modes["pane"]} + {layout["swap_next"]}"',
+            f'        "swap layout previous" "{modes["pane"]} + {layout["swap_previous"]}"',
+        ]
+    )
+
+
+def hammerspoon_zellij_pane_layout_block(cfg: dict) -> str:
+    layout = cfg["zellij"]["pane_layout"]
+    return f'\t\t\t\t\t{{ "{hammerspoon_key_label(layout["swap_next"])}  /  {hammerspoon_key_label(layout["swap_previous"])}",       "swap layout next / prev" }},'
+
+
 def zellij_hints_block(cfg: dict) -> str:
     pane = cfg["zellij"]["direct_pane_navigation"]
     tab = cfg["zellij"]["direct_tab_navigation"]
@@ -202,9 +228,19 @@ def main() -> int:
                 zellij_locked_block(cfg),
             ),
             (
+                '        bind "tab" { SwitchFocus; }\n        // BEGIN GENERATED: zellij-pane-layout\n',
+                "        // END GENERATED: zellij-pane-layout",
+                zellij_pane_layout_block(cfg),
+            ),
+            (
                 '        "increase size" "+"\n        // BEGIN GENERATED: zellij-hints-navigation\n',
                 "        // END GENERATED: zellij-hints-navigation",
                 zellij_hints_block(cfg),
+            ),
+            (
+                '        "switch focus" "v + tab"\n        // BEGIN GENERATED: zellij-hints-pane-layout\n',
+                "        // END GENERATED: zellij-hints-pane-layout",
+                zellij_hints_pane_layout_block(cfg),
             ),
         ],
         args.check,
@@ -222,6 +258,11 @@ def main() -> int:
                 "\t\t\t\t\t-- BEGIN GENERATED: hammerspoon-zellij-direct-navigation\n",
                 "\t\t\t\t\t-- END GENERATED: hammerspoon-zellij-direct-navigation",
                 hammerspoon_zellij_block(cfg),
+            ),
+            (
+                "\t\t\t\t\t-- BEGIN GENERATED: hammerspoon-zellij-pane-layout\n",
+                "\t\t\t\t\t-- END GENERATED: hammerspoon-zellij-pane-layout",
+                hammerspoon_zellij_pane_layout_block(cfg),
             ),
         ],
         args.check,

@@ -99,7 +99,8 @@ gw_json=$(curl -sf --max-time 1 http://127.0.0.1:39517/v1/internal/stats 2>/dev/
 if [ -n "$gw_json" ]; then
   gw_up=true
   month_cost=$(echo "$gw_json" | jq -r '.month_cost // 0')
-  budget=3000
+  budget=$(grep "IAM refreshed" ~/.axcli/gateway.log 2>/dev/null | tail -1 | sed -n 's/.*budget=\([0-9]*\).*/\1/p')
+  budget=${budget:-4000}
   budget_left=$(printf "%.0f" "$(echo "$budget - $month_cost" | bc -l 2>/dev/null || echo 0)")
   budget_pct=$((budget_left * 100 / budget))
   ttfb_avg=$(echo "$gw_json" | jq -r '.latency.ttfb_ms.avg // 0')
@@ -137,7 +138,6 @@ printf "${dot_color}%s${rst} ${c_model}%s${rst}" "$dot" "$model"
 printf "  ${dim}│${rst}  ${bar_color}%s${rst} %s%%" "$bar" "$pct"
 printf "  ${dim}│${rst}  ${c_tok}%s${rst}" "$tokens_display"
 printf "  ${dim}│${rst}  ${dim}⏱${rst} %s" "$time_display"
-[ -n "$session_cost" ] && [ "$session_cost" != '$0.00' ] && printf "  ${dim}│${rst}  ${c_orange}%s${rst}" "$session_cost"
 printf "  ${dim}│${rst}  ${c_dir}%s${rst}" "$dir_display"
 [ -n "$branch" ] && printf "  ${dim}│${rst}  ${c_branch}⎇ %s${rst}" "$branch"
 
@@ -239,10 +239,13 @@ if [ -n "$transcript" ] && [ -f "$transcript" ]; then
       printf "  ${dim}·${rst}  ${c_tok}%s${rst}" "$model_mix"
     fi
     if [ "$gw_up" = true ]; then
+      if [ -n "$session_cost" ] && [ "$session_cost" != '$0.00' ]; then
+        printf "  ${dim}·${rst}  ${c_orange}%s${rst} ${dim}↑${rst}" "$session_cost"
+      fi
       if [ "$budget_pct" -lt 10 ]; then
-        printf "  ${dim}·${rst}  ${c_red}\$%s▾ !${rst}" "$budget_left"
+        printf "  ${dim}·${rst}  ${c_red}\$%s${rst} ${dim}▾${rst}" "$budget_left"
       else
-        printf "  ${dim}·${rst}  ${c_warm}\$%s▾${rst}" "$budget_left"
+        printf "  ${dim}·${rst}  ${c_warm}\$%s${rst} ${dim}▾${rst}" "$budget_left"
       fi
       printf "  ${dim}·${rst}  ${c_tok}↕%ss${rst}" "$ttfb_display"
     elif [ "$gw_up" = false ]; then

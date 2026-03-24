@@ -55,6 +55,10 @@ tab = "t"
 resize = "r"
 move = "m"
 
+[zellij.pane_layout]
+swap_next = "s"
+swap_previous = "S"
+
 [zellij.rename]
 pane = "v+r"
 tab = "t+r"

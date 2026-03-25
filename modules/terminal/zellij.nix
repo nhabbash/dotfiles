@@ -1,12 +1,9 @@
 # Zellij terminal multiplexer configuration
 # Config file symlinks managed by home.activation.linkConfigs in default.nix
-{ pkgs, zellij-tmux-shim, dotfilesDir, ... }:
+{ pkgs, zellij-tmux-shim, ... }:
 
 let
-  patchFile = builtins.path {
-    path = "${dotfilesDir}/configs/zellij-tmux-shim/tab-pinning.patch";
-    name = "tab-pinning.patch";
-  };
+  patchFile = ../../configs/zellij-tmux-shim/tab-pinning.patch;
 
   # Apply our tab-pinning patch to the upstream tmux shim
   patchedShim = pkgs.stdenvNoCC.mkDerivation {

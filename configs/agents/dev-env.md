@@ -2,10 +2,6 @@
 
 Personal conventions that apply across machines and projects.
 
-## Project layout
-
-All projects live under `~/Development/`. No exceptions — keeps tooling, worktrees, and path assumptions consistent.
-
 ## Git worktrees
 
 Always use `.worktrees/<branch-name>` inside the repo for feature work.

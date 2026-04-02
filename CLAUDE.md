@@ -75,6 +75,7 @@ Key symlink targets:
 - `configs/codex/` → `~/.config/codex/` (Codex adapter instructions)
 - `configs/cursor-agent/` → `~/.config/cursor-agent/` (Cursor Agent adapter instructions)
 - `configs/pi/` → `~/.pi/agent/` (Pi adapter instructions)
+- `configs/omp/` → `~/.omp/agent/` (OMP adapter instructions)
 
 ### Requires rebuild
 Editing `.nix` files requires running `rebuild` or `dotfiles rebuild`:

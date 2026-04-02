@@ -12,11 +12,12 @@ configs/zellij/     → ~/.config/zellij/
 configs/kitty/      → ~/.config/kitty/
 configs/ghostty/    → ~/.config/ghostty/ (+ Library/Application Support on macOS)
 configs/git/        → ~/.gitconfig
-configs/agents/     → ~/.config/agents/
-configs/claude/     → ~/.claude/
-configs/codex/      → ~/.config/codex/
+configs/agents/       → ~/.config/agents/
+configs/claude/       → ~/.claude/
+configs/codex/        → ~/.config/codex/
 configs/cursor-agent/ → ~/.config/cursor-agent/
-configs/pi/         → ~/.config/pi/
+configs/pi/           → ~/.pi/agent/
+configs/omp/          → ~/.omp/agent/
 ```
 
 `~/.zshrc` is a **local, untracked file** (created by bootstrap). Add machine-specific one-off shell config there or in `~/.zshrc.local`.

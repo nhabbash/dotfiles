@@ -1,7 +1,7 @@
 # Base Agent Policy
 
 This directory is the canonical source of Nassim's cross-agent instructions.
-Claude, Codex, Cursor Agent, and Pi should all share this policy unless a
+Claude, Codex, Cursor Agent, Pi, and OMP should all share this policy unless a
 per-tool appendix explicitly says otherwise.
 
 ## Core stance

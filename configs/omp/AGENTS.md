@@ -1,7 +1,7 @@
-# Pi Global Instructions
+# OMP Global Instructions
 
-This file is the Pi-facing adapter over the shared agent policy.
-It is linked into `~/.pi/agent/AGENTS.md`.
+This file is the OMP-facing adapter over the shared agent policy.
+It is linked into `~/.omp/agent/AGENTS.md`.
 
 Read and apply the shared instructions in:
 - `~/.config/agents/base.md`
@@ -10,7 +10,7 @@ Read and apply the shared instructions in:
 - `~/.config/agents/delegation.md`
 - `~/.config/agents/orchestration.md`
 - `~/.config/agents/vcs.md`
-- `~/.config/agents/tools/pi.md`
+- `~/.config/agents/tools/omp.md`
 
 Load on demand when relevant:
 - `~/.config/agents/design-principles.md`

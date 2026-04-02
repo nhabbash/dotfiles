@@ -29,6 +29,7 @@
   ".config/codex/AGENTS.md" = "configs/codex/AGENTS.md";
   ".config/cursor-agent/AGENTS.md" = "configs/cursor-agent/AGENTS.md";
   ".pi/agent/AGENTS.md" = "configs/pi/AGENTS.md";
+  ".omp/agent/AGENTS.md" = "configs/omp/AGENTS.md";
 
   # Zellij
   ".config/zellij" = "configs/zellij";

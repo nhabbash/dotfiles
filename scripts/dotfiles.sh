@@ -15,6 +15,7 @@
 #   pull                   Smart pull: only rebuilds if nix files changed
 #   push [message]         Commit and push all changes
 #   status [hostname]      Show repo state and local service status
+#   agents                 Manage shared agent instruction modules
 #
 # Flags:
 #   -v, --verbose          Show detailed output
@@ -66,6 +67,16 @@ run_sync_terminal_theme() {
         run_quiet python3 "$generator" --check
     else
         run_quiet python3 "$generator"
+    fi
+}
+
+run_sync_agent_instructions() {
+    local check_mode="${1:-0}"
+    local generator="$DOTFILES_DIR/scripts/generated/sync-agent-instructions.sh"
+    if [ "$check_mode" = "1" ]; then
+        run_quiet bash "$generator" --check
+    else
+        run_quiet bash "$generator"
     fi
 }
 
@@ -596,6 +607,271 @@ cmd_services() {
     show_summary
 }
 
+# --- Agent instruction management ---
+
+GENERATOR="$DOTFILES_DIR/scripts/generated/sync-agent-instructions.sh"
+CLAUDE_MD="$DOTFILES_DIR/configs/claude/CLAUDE.md"
+AGENTS_MOD_DIR="$DOTFILES_DIR/configs/agents"
+ALL_AGENTS="omp pi codex cursor-agent claude"
+
+# Parse the AGENT_MODULES associative array from the generator script.
+# Returns lines like: omp=policy.md rigour.md ...
+_parse_agent_modules() {
+    sed -n '/^declare -A AGENT_MODULES=/,/^)/p' "$GENERATOR" \
+        | grep '\[' \
+        | sed 's/^[[:space:]]*\[//; s/\]="/=/; s/"$//'
+}
+
+# List all module files in configs/agents/ (excluding tools/).
+_list_all_modules() {
+    find "$AGENTS_MOD_DIR" -maxdepth 1 -name '*.md' -exec basename {} \; | sort
+}
+
+# Check if Claude's CLAUDE.md includes a module via @path.
+_claude_has_module() {
+    local mod="$1"
+    grep -q "^@~/.config/agents/${mod}$" "$CLAUDE_MD" 2>/dev/null
+}
+
+# Get modules for a generated agent from the generator script.
+_agent_modules_for() {
+    local agent="$1"
+    _parse_agent_modules | grep "^${agent}=" | cut -d= -f2-
+}
+
+# Add a module to a generated agent's line in the generator script.
+_generator_add_module() {
+    local agent="$1" mod="$2"
+    local current
+    current="$(_agent_modules_for "$agent")"
+    if echo "$current" | tr ' ' '\n' | grep -qx "$mod"; then
+        return 0  # already present
+    fi
+    local new="${current} ${mod}"
+    # Escape for sed
+    local escaped_current escaped_new
+    escaped_current=$(printf '%s' "$current" | sed 's/[&/\]/\\&/g')
+    escaped_new=$(printf '%s' "$new" | sed 's/[&/\]/\\&/g')
+    sed -i '' "s|\[${agent}\]=\"${escaped_current}\"|\[${agent}\]=\"${escaped_new}\"|" "$GENERATOR"
+}
+
+# Remove a module from a generated agent's line in the generator script.
+_generator_remove_module() {
+    local agent="$1" mod="$2"
+    local current new
+    current="$(_agent_modules_for "$agent")"
+    new=$(echo "$current" | tr ' ' '\n' | grep -vx "$mod" | tr '\n' ' ' | sed 's/ $//')
+    local escaped_current escaped_new
+    escaped_current=$(printf '%s' "$current" | sed 's/[&/\]/\\&/g')
+    escaped_new=$(printf '%s' "$new" | sed 's/[&/\]/\\&/g')
+    sed -i '' "s|\[${agent}\]=\"${escaped_current}\"|\[${agent}\]=\"${escaped_new}\"|" "$GENERATOR"
+}
+
+# Add @path import to Claude's CLAUDE.md (before the first blank line after @imports).
+_claude_add_module() {
+    local mod="$1"
+    if _claude_has_module "$mod"; then
+        return 0
+    fi
+    # Insert after the last @~/.config/agents line
+    local last_line
+    last_line=$(grep -n "^@~/.config/agents/" "$CLAUDE_MD" | tail -1 | cut -d: -f1)
+    if [ -n "$last_line" ]; then
+        sed -i '' "${last_line}a\\
+@~/.config/agents/${mod}" "$CLAUDE_MD"
+    else
+        # No existing @imports — prepend
+        sed -i '' "1i\\
+@~/.config/agents/${mod}" "$CLAUDE_MD"
+    fi
+}
+
+# Remove @path import from Claude's CLAUDE.md.
+_claude_remove_module() {
+    local mod="$1"
+    sed -i '' "\|^@~/.config/agents/${mod}$|d" "$CLAUDE_MD"
+}
+
+# Resolve --to targets into a list of agents.
+_resolve_targets() {
+    local targets="$1"
+    if [ "$targets" = "all" ]; then
+        echo "$ALL_AGENTS"
+    else
+        echo "$targets" | tr ',' ' '
+    fi
+}
+
+cmd_agents() {
+    local action="${1:-}"
+    shift 2>/dev/null || true
+
+    case "$action" in
+        list)
+            _cmd_agents_list
+            ;;
+        add)
+            _cmd_agents_add "$@"
+            ;;
+        remove)
+            _cmd_agents_remove "$@"
+            ;;
+        edit)
+            _cmd_agents_edit "$@"
+            ;;
+        *)
+            echo "Manage shared agent instruction modules"
+            echo ""
+            echo "Usage: dotfiles agents <action> [options]"
+            echo ""
+            echo "Actions:"
+            echo "  list                         Show modules and per-agent assignment matrix"
+            echo "  add <module> --to <agents>   Add module to agents (creates file if needed)"
+            echo "  remove <module> --from <agents>  Remove module from agents"
+            echo "  edit <module>                Open module in \$EDITOR"
+            echo ""
+            echo "Agents: omp, pi, codex, cursor-agent, claude, all"
+            echo ""
+            echo "Examples:"
+            echo "  dotfiles agents add rigour.md --to codex"
+            echo "  dotfiles agents add new-rule.md --to all"
+            echo "  dotfiles agents remove visual-testing.md --from codex"
+            echo "  dotfiles agents edit policy.md"
+            ;;
+    esac
+}
+
+_cmd_agents_list() {
+    local modules agents
+    modules=$(_list_all_modules)
+
+    # Header
+    printf "%-30s" "Module"
+    for agent in $ALL_AGENTS; do
+        printf "%-15s" "$agent"
+    done
+    echo ""
+    printf '%.0s-' {1..105}
+    echo ""
+
+    # Rows
+    for mod in $modules; do
+        printf "%-30s" "$mod"
+        for agent in $ALL_AGENTS; do
+            if [ "$agent" = "claude" ]; then
+                if _claude_has_module "$mod"; then
+                    printf "%-15s" "yes"
+                else
+                    printf "%-15s" "-"
+                fi
+            else
+                local agent_mods
+                agent_mods="$(_agent_modules_for "$agent")"
+                if echo "$agent_mods" | tr ' ' '\n' | grep -qx "$mod"; then
+                    printf "%-15s" "yes"
+                else
+                    printf "%-15s" "-"
+                fi
+            fi
+        done
+        echo ""
+    done
+}
+
+_cmd_agents_add() {
+    local mod="" targets=""
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            --to) targets="$2"; shift 2 ;;
+            *)    mod="$1"; shift ;;
+        esac
+    done
+
+    if [ -z "$mod" ] || [ -z "$targets" ]; then
+        echo "Usage: dotfiles agents add <module.md> --to <agents|all>" >&2
+        return 1
+    fi
+
+    # Ensure .md extension
+    [[ "$mod" == *.md ]] || mod="${mod}.md"
+
+    # Create module file if it doesn't exist
+    local mod_path="$AGENTS_MOD_DIR/$mod"
+    if [ ! -f "$mod_path" ]; then
+        local title
+        title=$(echo "${mod%.md}" | tr '-' ' ' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1))tolower(substr($i,2))}1')
+        cat > "$mod_path" <<EOF
+# ${title}
+
+TODO: Add instructions here.
+EOF
+        echo "Created $mod_path"
+    fi
+
+    # Wire into each target agent
+    for agent in $(_resolve_targets "$targets"); do
+        if [ "$agent" = "claude" ]; then
+            _claude_add_module "$mod"
+        else
+            _generator_add_module "$agent" "$mod"
+        fi
+        echo "Added $mod to $agent"
+    done
+
+    # Regenerate
+    run_sync_agent_instructions 0
+    echo "Regenerated agent instructions."
+}
+
+_cmd_agents_remove() {
+    local mod="" targets=""
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            --from) targets="$2"; shift 2 ;;
+            *)      mod="$1"; shift ;;
+        esac
+    done
+
+    if [ -z "$mod" ] || [ -z "$targets" ]; then
+        echo "Usage: dotfiles agents remove <module.md> --from <agents|all>" >&2
+        return 1
+    fi
+
+    [[ "$mod" == *.md ]] || mod="${mod}.md"
+
+    for agent in $(_resolve_targets "$targets"); do
+        if [ "$agent" = "claude" ]; then
+            _claude_remove_module "$mod"
+        else
+            _generator_remove_module "$agent" "$mod"
+        fi
+        echo "Removed $mod from $agent"
+    done
+
+    run_sync_agent_instructions 0
+    echo "Regenerated agent instructions."
+}
+
+_cmd_agents_edit() {
+    local mod="${1:-}"
+    if [ -z "$mod" ]; then
+        echo "Usage: dotfiles agents edit <module.md>" >&2
+        return 1
+    fi
+    [[ "$mod" == *.md ]] || mod="${mod}.md"
+
+    local mod_path="$AGENTS_MOD_DIR/$mod"
+    if [ ! -f "$mod_path" ]; then
+        echo "Module not found: $mod_path" >&2
+        return 1
+    fi
+    "${EDITOR:-vim}" "$mod_path"
+
+    # Regenerate after editing
+    run_sync_agent_instructions 0
+    echo "Regenerated agent instructions."
+}
+
 cmd_assets() {
     local hostname="${1:-$(detect_hostname)}"
 
@@ -607,13 +883,16 @@ cmd_assets() {
 
 cmd_regen() {
     header "Regenerating derived config"
-    init_progress 2
+    init_progress 3
 
     step "Syncing generated keymaps"
     run_sync_keymaps 0
 
     step "Syncing terminal themes"
     run_sync_terminal_theme 0
+
+    step "Syncing agent instructions"
+    run_sync_agent_instructions 0
 
     success "Regeneration complete."
 }
@@ -656,7 +935,7 @@ cmd_check() {
     local hostname="${1:-$(detect_hostname)}"
 
     header "Checking repo for: $hostname"
-    init_progress 5
+    init_progress 6
 
     step "Checking shell scripts"
     check_shell_scripts
@@ -669,6 +948,9 @@ cmd_check() {
 
     step "Checking terminal theme drift"
     run_sync_terminal_theme 1
+
+    step "Checking agent instruction drift"
+    run_sync_agent_instructions 1
 
     step "Checking nix evaluation"
     check_nix_eval "$hostname"
@@ -998,6 +1280,7 @@ case "$COMMAND" in
     pull)       cmd_pull ;;
     push)       cmd_push "${COMMAND_ARGS[*]}" ;;
     status)     cmd_status ;;
+    agents)     cmd_agents "${COMMAND_ARGS[@]}" ;;
     *)
         echo "Dotfiles manager"
         echo ""
@@ -1016,6 +1299,7 @@ case "$COMMAND" in
         echo "  pull                   Pull changes (rebuilds only if nix files changed)"
         echo "  push [message]         Commit and push all changes"
         echo "  status [hostname]      Show repo state and local service status"
+        echo "  agents                 Manage shared agent instruction modules"
         echo ""
         echo "Flags:"
         echo "  -v, --verbose          Show detailed output"

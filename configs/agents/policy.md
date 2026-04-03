@@ -1,4 +1,4 @@
-# Base Agent Policy
+# Agent Policy
 
 This directory is the canonical source of Nassim's cross-agent instructions.
 Claude, Codex, Cursor Agent, Pi, and OMP should all share this policy unless a
@@ -12,6 +12,19 @@ per-tool appendix explicitly says otherwise.
 - Keep implementation and architecture decisions explicit.
 - Separate mechanism from policy whenever the boundary is real.
 - Treat repo-local instructions such as `AGENTS.md` or `CLAUDE.md` as authoritative for that project.
+
+## Isolation
+
+Never make changes directly on the main/master branch. Before writing any code, create a git worktree and work there:
+
+```bash
+git worktree add ../<repo>-<feature> -b nassim/<feature-name>
+cd ../<repo>-<feature>
+```
+
+This prevents conflicts when multiple agents or sessions work on the same repo concurrently. When done, the user will review and merge from the worktree branch.
+
+If the agent runtime provides built-in worktree isolation (e.g. task isolation mode), use that instead of manual worktree creation for subagents.
 
 ## Code and change posture
 
@@ -35,15 +48,25 @@ per-tool appendix explicitly says otherwise.
 
 ## Version control
 
-Use git by default. Use jj only for stacked PRs or complex rebasing. See `~/.config/agents/vcs.md`.
+Use git by default. Use jj only for stacked PRs or complex rebasing. See `~/.config/agents/version-control.md`.
+
+## Managing agent instructions
+
+To add, remove, or list shared instruction modules across agents, use:
+
+```bash
+dotfiles agents list                            # show module × agent matrix
+dotfiles agents add <module> --to <agents|all>  # add module (creates file if needed)
+dotfiles agents remove <module> --from <agents> # remove module from agents
+dotfiles agents edit <module>                   # edit module, then auto-regen
+```
 
 ## Shared guides (load as needed)
 
-- `~/.config/agents/design-principles.md` — architecture and boundary decisions
-- `~/.config/agents/research.md` — research and web-tool selection
+- `~/.config/agents/engineering-principles.md` — how to think about software at different levels of abstraction; mechanism vs policy, stable vs fast elements, composability, system decomposition
+- `~/.config/agents/research.md` — search and fetch tool selection
 - `~/.config/agents/visual-testing.md` — visual verification workflows
-- `~/.config/agents/delegation.md` — parallelism and subagent delegation
-- `~/.config/agents/orchestration.md` — planning and token discipline
-- `~/.config/agents/local-dev-tips.md` — local dev workflows
-- `~/.config/agents/slack.md` — Slack usage
-- `~/.config/agents/monday-sprint-board.md` — monday.com sprint operations
+- `~/.config/agents/agent-orchestration.md` — when and how to delegate; subagents, teams, token discipline
+- `~/.config/agents/rigour.md` — evidence-before-action rule for debugging and implementation; read the code before making claims
+- `~/.config/agents/dev-env.md` — personal dev environment conventions (worktrees, project layout)
+- `~/.config/agents/work.md` — work profile extensions (only present on work machine)

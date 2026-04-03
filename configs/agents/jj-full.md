@@ -329,7 +329,7 @@ rm -rf "../${REPO}-agent-a"
 
 Use parallel workspaces when work is truly independent: different packages, frontend vs backend, separate features, different adapters.
 
-For using workspaces with agent teams, see `~/.config/agents/delegation.md`.
+For using workspaces with agent teams, see `~/.config/agents/agent-orchestration.md`.
 
 ## Agent Instructions
 

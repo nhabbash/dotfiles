@@ -6,7 +6,9 @@ let
     inherit pkgs isWork enableGui;
   };
   features = policy.features;
-  dotfilesDir = builtins.getEnv "DOTFILES_DIR";
+  dotfilesDir = let d = builtins.getEnv "DOTFILES_DIR"; in
+    assert lib.assertMsg (d != "") "DOTFILES_DIR must be set when building. Use 'dotfiles rebuild' instead of calling nix/darwin-rebuild directly.";
+    d;
   homeDir = config.home.homeDirectory;
   isDarwin = policy.isDarwin;
 

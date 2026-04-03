@@ -1,5 +1,7 @@
 # Visual Testing & Interaction
 
+**Scope: QA only.** Playwright MCP is exclusively for visually verifying UI you build or modify. Never use it for general web browsing, research, fetching GitHub content, or reading documentation. For those, use `gh`, `git clone`, `WebFetch`, or `searxncrawl`.
+
 Use Playwright MCP to visually verify any UI you build or modify — web apps, terminal apps, anything with a visual output.
 
 ## Docker networking (critical)

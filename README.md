@@ -16,7 +16,7 @@ configs/agents/       → ~/.config/agents/
 configs/claude/       → ~/.claude/
 configs/codex/        → ~/.config/codex/
 configs/cursor-agent/ → ~/.config/cursor-agent/
-configs/pi/           → ~/.pi/agent/
+configs/pi/           → ~/.config/pi/
 configs/omp/          → ~/.omp/agent/
 ```
 

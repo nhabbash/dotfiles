@@ -1,10 +1,10 @@
 # Managed by `dotfiles theme`.
-# theme-name: kanso-zen
-# source: configs/ghostty/themes/kanso-zen
+# theme-name: kanso-ink
+# source: configs/ghostty/themes/kanso-ink
 
 # Upstream: https://github.com/webhooked/kanso.nvim/tree/main/extras/ghostty
 
-palette = 0=#090E13
+palette = 0=#14171d
 palette = 1=#c4746e
 palette = 2=#8a9a7b
 palette = 3=#c4b28a
@@ -21,8 +21,8 @@ palette = 13=#938aa9
 palette = 14=#7aa89f
 palette = 15=#c5c9c7
 
-background = #090E13
+background = #14171d
 foreground = #c5c9c7
 cursor-color = #c5c9c7
-selection-background = #22262D
+selection-background = #3E424A
 selection-foreground = #c5c9c7

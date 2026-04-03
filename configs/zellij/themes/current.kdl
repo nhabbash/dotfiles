@@ -3,10 +3,10 @@
 
 themes {
     current {
-        bg "#090E13"
+        bg "#14171d"
         fg "#c5c9c7"
 
-        black "#090E13"
+        black "#14171d"
         red "#e46876"
         green "#87a987"
         yellow "#e6c384"
@@ -21,17 +21,17 @@ themes {
         subtext0 "#7aa89f"
         overlay2 "#5C6066"
         overlay1 "#5C6066"
-        overlay0 "#22262D"
+        overlay0 "#3E424A"
         surface2 "#5C6066"
-        surface1 "#22262D"
-        surface0 "#22262D"
-        base "#090E13"
-        mantle "#090E13"
-        crust "#090E13"
+        surface1 "#3E424A"
+        surface0 "#3E424A"
+        base "#14171d"
+        mantle "#14171d"
+        crust "#14171d"
 
         ribbon_unselected {
             base "#c5c9c7"
-            background "#22262D"
+            background "#3E424A"
             emphasis_0 "#7fb4ca"
             emphasis_1 "#e6c384"
             emphasis_2 "#7aa89f"
@@ -40,7 +40,7 @@ themes {
 
         text_unselected {
             base "#c5c9c7"
-            background "#090E13"
+            background "#14171d"
             emphasis_0 "#7fb4ca"
             emphasis_1 "#e6c384"
             emphasis_2 "#7aa89f"
@@ -48,7 +48,7 @@ themes {
         }
 
         text_selected {
-            base "#090E13"
+            base "#14171d"
             background "#c5c9c7"
             emphasis_0 "#7fb4ca"
             emphasis_1 "#e6c384"
@@ -57,17 +57,17 @@ themes {
         }
 
         ribbon_selected {
-            base "#090E13"
+            base "#14171d"
             background "#7fb4ca"
-            emphasis_0 "#090E13"
-            emphasis_1 "#090E13"
-            emphasis_2 "#090E13"
-            emphasis_3 "#090E13"
+            emphasis_0 "#14171d"
+            emphasis_1 "#14171d"
+            emphasis_2 "#14171d"
+            emphasis_3 "#14171d"
         }
 
         frame_unselected {
             base "#5C6066"
-            background "#090E13"
+            background "#14171d"
             emphasis_0 "#5C6066"
             emphasis_1 "#5C6066"
             emphasis_2 "#5C6066"
@@ -76,7 +76,7 @@ themes {
 
         frame_selected {
             base "#7fb4ca"
-            background "#090E13"
+            background "#14171d"
             emphasis_0 "#7fb4ca"
             emphasis_1 "#7fb4ca"
             emphasis_2 "#7fb4ca"
@@ -85,7 +85,7 @@ themes {
 
         frame_highlight {
             base "#e6c384"
-            background "#090E13"
+            background "#14171d"
             emphasis_0 "#e6c384"
             emphasis_1 "#e6c384"
             emphasis_2 "#e6c384"

@@ -31,3 +31,15 @@ above, rather than re-encoding host logic in many places. Examples:
 - `features.ubersicht`
 - `features.simpleBar`
 - `features.workProfile`
+
+## Shared macOS Shortcut Policy
+
+All macOS hosts disable these system symbolic hotkeys in the shared module:
+
+- Spotlight search: `cmd+space`
+- Spotlight Finder search: `cmd+alt+space`
+- Previous input source: `ctrl+space`
+- Next input source: `ctrl+alt+space`
+
+This keeps Raycast and terminal-local chords such as Zellij's mode toggle from
+being intercepted by macOS.

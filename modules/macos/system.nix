@@ -59,10 +59,14 @@
       ShowDayOfWeek = true;
     };
 
-    # Disable Spotlight shortcuts (cmd+space, cmd+alt+space) — conflicts with Raycast
+    # Disable Spotlight shortcuts (cmd+space, cmd+alt+space) and input source
+    # switching (ctrl+space, ctrl+alt+space) so terminal apps can reliably use
+    # those chords.
     CustomUserPreferences."com.apple.symbolichotkeys".AppleSymbolicHotKeys = {
       "64" = { enabled = false; value = { parameters = [ 65535 49 1048576 ]; type = "standard"; }; };
       "65" = { enabled = false; value = { parameters = [ 65535 49 1572864 ]; type = "standard"; }; };
+      "60" = { enabled = false; value = { parameters = [ 32 49 262144 ]; type = "standard"; }; };
+      "61" = { enabled = false; value = { parameters = [ 32 49 786432 ]; type = "standard"; }; };
     };
   };
 

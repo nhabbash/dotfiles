@@ -100,6 +100,9 @@ vim configs/zellij/layouts/default.kdl
 dotfiles push "zellij: adjust layout"
 ```
 
+The default Zellij layout now includes a swap variant, so in pane mode you can
+cycle layouts with `s` / `S` (`v` → `s` or `v` → `shift+s`).
+
 ### Switching Ghostty themes
 
 Ghostty now uses a tracked custom theme file at `configs/ghostty/themes/current`.

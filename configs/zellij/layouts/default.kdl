@@ -11,30 +11,30 @@ layout {
     pane size=1 borderless=true {
         plugin location="zjstatus" {
             // BEGIN GENERATED: zellij-default-top-theme
-            format_left   "#[bg=#3E424A,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#14171d] {session} #[bg=#3E424A,fg=#7aa89f]\u{e0b4}"
+            format_left   "#[bg=#22262D,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#090E13] {session} #[bg=#22262D,fg=#7aa89f]\u{e0b4}"
                         format_center "{notifications}"
-                        format_right  "#[bg=#3E424A,fg=#e46876]\u{e0b6}#[bg=#e46876,fg=#14171d]\u{f00ed}#[bg=#5C6066,fg=#e46876]\u{e0b4} {datetime}#[bg=#3E424A,fg=#5C6066]\u{e0b4}"
-                        format_space  "#[bg=#3E424A]"
+                        format_right  "#[bg=#22262D,fg=#e46876]\u{e0b6}#[bg=#e46876,fg=#090E13]\u{f00ed}#[bg=#5C6066,fg=#e46876]\u{e0b4} {datetime}#[bg=#22262D,fg=#5C6066]\u{e0b4}"
+                        format_space  "#[bg=#22262D]"
                         format_hide_on_overlength "true"
                         format_precedence "lrc"
 
-                        notification_format_unread           "#[bg=#e6c384,fg=#14171d,blink] \u{f0f3} #[bg=#5C6066,fg=#e6c384]\u{e0b4} {message}#[bg=#3E424A,fg=#5C6066]\u{e0b4}"
+                        notification_format_unread           "#[bg=#e6c384,fg=#090E13,blink] \u{f0f3} #[bg=#5C6066,fg=#e6c384]\u{e0b4} {message}#[bg=#22262D,fg=#5C6066]\u{e0b4}"
                         notification_format_no_notifications ""
                         notification_show_interval           "10"
 
-                        mode_normal        "#[bg=#7fb4ca,fg=#14171d] NORMAL#[bg=#3E424A,fg=#7fb4ca]\u{e0b4}"
-                        mode_locked        "#[bg=#e46876,fg=#14171d] LOCKED#[bg=#3E424A,fg=#e46876]\u{e0b4}"
-                        mode_pane          "#[bg=#7aa89f,fg=#14171d] PANE#[bg=#3E424A,fg=#7aa89f]\u{e0b4}"
-                        mode_tab           "#[bg=#7aa89f,fg=#14171d] TAB#[bg=#3E424A,fg=#7aa89f]\u{e0b4}"
-                        mode_scroll        "#[bg=#7aa89f,fg=#14171d] SCROLL#[bg=#3E424A,fg=#7aa89f]\u{e0b4}"
-                        mode_search        "#[bg=#7aa89f,fg=#14171d] SEARCH#[bg=#3E424A,fg=#7aa89f]\u{e0b4}"
-                        mode_enter_search  "#[bg=#7aa89f,fg=#14171d] ENT-SEARCH#[bg=#3E424A,fg=#7aa89f]\u{e0b4}"
-                        mode_resize        "#[bg=#e6c384,fg=#14171d] RESIZE#[bg=#3E424A,fg=#e6c384]\u{e0b4}"
-                        mode_rename_tab    "#[bg=#e6c384,fg=#14171d] RENAME-TAB#[bg=#3E424A,fg=#e6c384]\u{e0b4}"
-                        mode_rename_pane   "#[bg=#e6c384,fg=#14171d] RENAME-PANE#[bg=#3E424A,fg=#e6c384]\u{e0b4}"
-                        mode_move          "#[bg=#e6c384,fg=#14171d] MOVE#[bg=#3E424A,fg=#e6c384]\u{e0b4}"
-                        mode_session       "#[bg=#938aa9,fg=#14171d] SESSION#[bg=#3E424A,fg=#938aa9]\u{e0b4}"
-                        mode_prompt        "#[bg=#938aa9,fg=#14171d] PROMPT#[bg=#3E424A,fg=#938aa9]\u{e0b4}"
+                        mode_normal        "#[bg=#7fb4ca,fg=#090E13] NORMAL#[bg=#22262D,fg=#7fb4ca]\u{e0b4}"
+                        mode_locked        "#[bg=#e46876,fg=#090E13] LOCKED#[bg=#22262D,fg=#e46876]\u{e0b4}"
+                        mode_pane          "#[bg=#7aa89f,fg=#090E13] PANE#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                        mode_tab           "#[bg=#7aa89f,fg=#090E13] TAB#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                        mode_scroll        "#[bg=#7aa89f,fg=#090E13] SCROLL#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                        mode_search        "#[bg=#7aa89f,fg=#090E13] SEARCH#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                        mode_enter_search  "#[bg=#7aa89f,fg=#090E13] ENT-SEARCH#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                        mode_resize        "#[bg=#e6c384,fg=#090E13] RESIZE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                        mode_rename_tab    "#[bg=#e6c384,fg=#090E13] RENAME-TAB#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                        mode_rename_pane   "#[bg=#e6c384,fg=#090E13] RENAME-PANE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                        mode_move          "#[bg=#e6c384,fg=#090E13] MOVE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                        mode_session       "#[bg=#938aa9,fg=#090E13] SESSION#[bg=#22262D,fg=#938aa9]\u{e0b4}"
+                        mode_prompt        "#[bg=#938aa9,fg=#090E13] PROMPT#[bg=#22262D,fg=#938aa9]\u{e0b4}"
             // END GENERATED: zellij-default-top-theme
 
             datetime        "{format}"
@@ -49,8 +49,8 @@ layout {
         pane size=20 borderless=true {
             plugin location="https://github.com/cfal/zellij-vertical-tabs/releases/download/v0.1.0/zellij-vertical-tabs.wasm" {
                 // BEGIN GENERATED: zellij-default-vertical-tabs-theme
-                format        " #[fg=#7fb4ca]\u{e0b6}#[bg=#7fb4ca,fg=#14171d]{index}#[bg=none,fg=#7fb4ca]\u{e0b4} {=12:name}"
-                                format_active " #[fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#14171d]{index}#[bg=none,fg=#e6c384]\u{e0b4} {=12:name}"
+                format        " #[fg=#7fb4ca]\u{e0b6}#[bg=#7fb4ca,fg=#090E13]{index}#[bg=none,fg=#7fb4ca]\u{e0b4} {=12:name}"
+                                format_active " #[fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#090E13]{index}#[bg=none,fg=#e6c384]\u{e0b4} {=12:name}"
                 // END GENERATED: zellij-default-vertical-tabs-theme
                 max_name_length 12
                 overflow_above "  ^ +{count}"
@@ -71,24 +71,170 @@ layout {
             format_hide_on_overlength "true"
             format_precedence "lrc"
             // BEGIN GENERATED: zellij-default-bottom-theme
-            format_space  "#[bg=#3E424A]"
+            format_space  "#[bg=#22262D]"
 
-                        mode_normal        "[bg=#3E424A,fg=#7fb4ca]\u{e0b6}#[bg=#7fb4ca,fg=#14171d]NORMAL#[bg=#3E424A,fg=#7fb4ca]\u{e0b4}"
-                        mode_locked        "[bg=#3E424A,fg=#e46876]\u{e0b6}#[bg=#e46876,fg=#14171d]LOCKED#[bg=#3E424A,fg=#e46876]\u{e0b4}"
-                        mode_pane          "[bg=#3E424A,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#14171d]PANE#[bg=#3E424A,fg=#7aa89f]\u{e0b4}"
-                        mode_tab           "[bg=#3E424A,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#14171d]TAB#[bg=#3E424A,fg=#7aa89f]\u{e0b4}"
-                        mode_scroll        "[bg=#3E424A,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#14171d]SCROLL#[bg=#3E424A,fg=#7aa89f]\u{e0b4}"
-                        mode_search        "[bg=#3E424A,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#14171d]SEARCH#[bg=#3E424A,fg=#7aa89f]\u{e0b4}"
-                        mode_enter_search  "[bg=#3E424A,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#14171d]ENT-SEARCH#[bg=#3E424A,fg=#7aa89f]\u{e0b4}"
-                        mode_resize        "[bg=#3E424A,fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#14171d]RESIZE#[bg=#3E424A,fg=#e6c384]\u{e0b4}"
-                        mode_rename_tab    "[bg=#3E424A,fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#14171d]RENAME-TAB#[bg=#3E424A,fg=#e6c384]\u{e0b4}"
-                        mode_rename_pane   "[bg=#3E424A,fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#14171d]RENAME-PANE#[bg=#3E424A,fg=#e6c384]\u{e0b4}"
-                        mode_move          "[bg=#3E424A,fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#14171d]MOVE#[bg=#3E424A,fg=#e6c384]\u{e0b4}"
-                        mode_session       "[bg=#3E424A,fg=#938aa9]\u{e0b6}#[bg=#938aa9,fg=#14171d]SESSION#[bg=#3E424A,fg=#938aa9]\u{e0b4}"
-                        mode_prompt        "[bg=#3E424A,fg=#938aa9]\u{e0b6}#[bg=#938aa9,fg=#14171d]PROMPT#[bg=#3E424A,fg=#938aa9]\u{e0b4}"
+                        mode_normal        "[bg=#22262D,fg=#7fb4ca]\u{e0b6}#[bg=#7fb4ca,fg=#090E13]NORMAL#[bg=#22262D,fg=#7fb4ca]\u{e0b4}"
+                        mode_locked        "[bg=#22262D,fg=#e46876]\u{e0b6}#[bg=#e46876,fg=#090E13]LOCKED#[bg=#22262D,fg=#e46876]\u{e0b4}"
+                        mode_pane          "[bg=#22262D,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#090E13]PANE#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                        mode_tab           "[bg=#22262D,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#090E13]TAB#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                        mode_scroll        "[bg=#22262D,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#090E13]SCROLL#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                        mode_search        "[bg=#22262D,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#090E13]SEARCH#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                        mode_enter_search  "[bg=#22262D,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#090E13]ENT-SEARCH#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                        mode_resize        "[bg=#22262D,fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#090E13]RESIZE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                        mode_rename_tab    "[bg=#22262D,fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#090E13]RENAME-TAB#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                        mode_rename_pane   "[bg=#22262D,fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#090E13]RENAME-PANE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                        mode_move          "[bg=#22262D,fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#090E13]MOVE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                        mode_session       "[bg=#22262D,fg=#938aa9]\u{e0b6}#[bg=#938aa9,fg=#090E13]SESSION#[bg=#22262D,fg=#938aa9]\u{e0b4}"
+                        mode_prompt        "[bg=#22262D,fg=#938aa9]\u{e0b6}#[bg=#938aa9,fg=#090E13]PROMPT#[bg=#22262D,fg=#938aa9]\u{e0b4}"
             // END GENERATED: zellij-default-bottom-theme
 
             pipe_zjstatus_hints_format "{output}"
+        }
+    }
+
+    // Swap layout variant: put the tab sidebar on the right.
+    // This template is used by swap layouts and must contain exactly one `children` block.
+    tab_template name="ui" {
+        pane size=1 borderless=true {
+            plugin location="zjstatus" {
+                format_left   "#[bg=#22262D,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#090E13] {session} #[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                            format_center "{notifications}"
+                            format_right  "#[bg=#22262D,fg=#e46876]\u{e0b6}#[bg=#e46876,fg=#090E13]\u{f00ed}#[bg=#5C6066,fg=#e46876]\u{e0b4} {datetime}#[bg=#22262D,fg=#5C6066]\u{e0b4}"
+                            format_space  "#[bg=#22262D]"
+                            format_hide_on_overlength "true"
+                            format_precedence "lrc"
+                            notification_format_unread           "#[bg=#e6c384,fg=#090E13,blink] \u{f0f3} #[bg=#5C6066,fg=#e6c384]\u{e0b4} {message}#[bg=#22262D,fg=#5C6066]\u{e0b4}"
+                            notification_format_no_notifications ""
+                            notification_show_interval           "10"
+                            mode_normal        "#[bg=#7fb4ca,fg=#090E13] NORMAL#[bg=#22262D,fg=#7fb4ca]\u{e0b4}"
+                            mode_locked        "#[bg=#e46876,fg=#090E13] LOCKED#[bg=#22262D,fg=#e46876]\u{e0b4}"
+                            mode_pane          "#[bg=#7aa89f,fg=#090E13] PANE#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                            mode_tab           "#[bg=#7aa89f,fg=#090E13] TAB#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                            mode_scroll        "#[bg=#7aa89f,fg=#090E13] SCROLL#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                            mode_search        "#[bg=#7aa89f,fg=#090E13] SEARCH#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                            mode_enter_search  "#[bg=#7aa89f,fg=#090E13] ENT-SEARCH#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                            mode_resize        "#[bg=#e6c384,fg=#090E13] RESIZE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                            mode_rename_tab    "#[bg=#e6c384,fg=#090E13] RENAME-TAB#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                            mode_rename_pane   "#[bg=#e6c384,fg=#090E13] RENAME-PANE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                            mode_move          "#[bg=#e6c384,fg=#090E13] MOVE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                            mode_session       "#[bg=#938aa9,fg=#090E13] SESSION#[bg=#22262D,fg=#938aa9]\u{e0b4}"
+                            mode_prompt        "#[bg=#938aa9,fg=#090E13] PROMPT#[bg=#22262D,fg=#938aa9]\u{e0b4}"
+                datetime        "{format}"
+                datetime_format "%d %b %H:%M:%S"
+            }
+        }
+
+        pane split_direction="vertical" {
+            pane size=20 borderless=true {
+                plugin location="https://github.com/cfal/zellij-vertical-tabs/releases/download/v0.1.0/zellij-vertical-tabs.wasm" {
+                    format        " #[fg=#7fb4ca]\u{e0b6}#[bg=#7fb4ca,fg=#090E13]{index}#[bg=none,fg=#7fb4ca]\u{e0b4} {=12:name}"
+                                    format_active " #[fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#090E13]{index}#[bg=none,fg=#e6c384]\u{e0b4} {=12:name}"
+                    max_name_length 12
+                    overflow_above "  ^ +{count}"
+                    overflow_below "  v +{count}"
+                    padding_top 1
+                }
+            }
+            children
+        }
+
+        pane size=1 borderless=true {
+            plugin location="zjstatus" {
+                format_left   "  {mode}"
+                format_center ""
+                format_right  "{pipe_zjstatus_hints}"
+                format_hide_on_overlength "true"
+                format_precedence "lrc"
+                format_space  "#[bg=#22262D]"
+                mode_normal        "[bg=#22262D,fg=#7fb4ca]\u{e0b6}#[bg=#7fb4ca,fg=#090E13]NORMAL#[bg=#22262D,fg=#7fb4ca]\u{e0b4}"
+                mode_locked        "[bg=#22262D,fg=#e46876]\u{e0b6}#[bg=#e46876,fg=#090E13]LOCKED#[bg=#22262D,fg=#e46876]\u{e0b4}"
+                mode_pane          "[bg=#22262D,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#090E13]PANE#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                mode_tab           "[bg=#22262D,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#090E13]TAB#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                mode_scroll        "[bg=#22262D,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#090E13]SCROLL#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                mode_search        "[bg=#22262D,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#090E13]SEARCH#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                mode_enter_search  "[bg=#22262D,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#090E13]ENT-SEARCH#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                mode_resize        "[bg=#22262D,fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#090E13]RESIZE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                mode_rename_tab    "[bg=#22262D,fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#090E13]RENAME-TAB#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                mode_rename_pane   "[bg=#22262D,fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#090E13]RENAME-PANE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                mode_move          "[bg=#22262D,fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#090E13]MOVE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                mode_session       "[bg=#22262D,fg=#938aa9]\u{e0b6}#[bg=#938aa9,fg=#090E13]SESSION#[bg=#22262D,fg=#938aa9]\u{e0b4}"
+                mode_prompt        "[bg=#22262D,fg=#938aa9]\u{e0b6}#[bg=#938aa9,fg=#090E13]PROMPT#[bg=#22262D,fg=#938aa9]\u{e0b4}"
+                pipe_zjstatus_hints_format "{output}"
+            }
+        }
+    }
+
+    // Actual swap layout name for cycling.
+    // This flips the sidebar to the right while keeping the same bars and hints.
+    swap_tiled_layout name="sidebar-right" {
+        ui {
+            pane size=1 borderless=true {
+                plugin location="zjstatus" {
+                    format_left   "#[bg=#22262D,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#090E13] {session} #[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                                format_center "{notifications}"
+                                format_right  "#[bg=#22262D,fg=#e46876]\u{e0b6}#[bg=#e46876,fg=#090E13]\u{f00ed}#[bg=#5C6066,fg=#e46876]\u{e0b4} {datetime}#[bg=#22262D,fg=#5C6066]\u{e0b4}"
+                                format_space  "#[bg=#22262D]"
+                                format_hide_on_overlength "true"
+                                format_precedence "lrc"
+                                notification_format_unread           "#[bg=#e6c384,fg=#090E13,blink] \u{f0f3} #[bg=#5C6066,fg=#e6c384]\u{e0b4} {message}#[bg=#22262D,fg=#5C6066]\u{e0b4}"
+                                notification_format_no_notifications ""
+                                notification_show_interval           "10"
+                                mode_normal        "#[bg=#7fb4ca,fg=#090E13] NORMAL#[bg=#22262D,fg=#7fb4ca]\u{e0b4}"
+                                mode_locked        "#[bg=#e46876,fg=#090E13] LOCKED#[bg=#22262D,fg=#e46876]\u{e0b4}"
+                                mode_pane          "#[bg=#7aa89f,fg=#090E13] PANE#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                                mode_tab           "#[bg=#7aa89f,fg=#090E13] TAB#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                                mode_scroll        "#[bg=#7aa89f,fg=#090E13] SCROLL#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                                mode_search        "#[bg=#7aa89f,fg=#090E13] SEARCH#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                                mode_enter_search  "#[bg=#7aa89f,fg=#090E13] ENT-SEARCH#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                                mode_resize        "#[bg=#e6c384,fg=#090E13] RESIZE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                                mode_rename_tab    "#[bg=#e6c384,fg=#090E13] RENAME-TAB#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                                mode_rename_pane   "#[bg=#e6c384,fg=#090E13] RENAME-PANE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                                mode_move          "#[bg=#e6c384,fg=#090E13] MOVE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                                mode_session       "#[bg=#938aa9,fg=#090E13] SESSION#[bg=#22262D,fg=#938aa9]\u{e0b4}"
+                                mode_prompt        "#[bg=#938aa9,fg=#090E13] PROMPT#[bg=#22262D,fg=#938aa9]\u{e0b4}"
+                    datetime        "{format}"
+                    datetime_format "%d %b %H:%M:%S"
+                }
+            }
+
+            pane split_direction="vertical" {
+                children
+                pane size=20 borderless=true {
+                    plugin location="https://github.com/cfal/zellij-vertical-tabs/releases/download/v0.1.0/zellij-vertical-tabs.wasm" {
+                        format        " #[fg=#7fb4ca]\u{e0b6}#[bg=#7fb4ca,fg=#090E13]{index}#[bg=none,fg=#7fb4ca]\u{e0b4} {=12:name}"
+                                        format_active " #[fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#090E13]{index}#[bg=none,fg=#e6c384]\u{e0b4} {=12:name}"
+                        max_name_length 12
+                        overflow_above "  ^ +{count}"
+                        overflow_below "  v +{count}"
+                        padding_top 1
+                    }
+                }
+            }
+
+            pane size=1 borderless=true {
+                plugin location="zjstatus" {
+                    format_left   "  {mode}"
+                    format_center ""
+                    format_right  "{pipe_zjstatus_hints}"
+                    format_hide_on_overlength "true"
+                    format_precedence "lrc"
+                    format_space  "#[bg=#22262D]"
+                    mode_normal        "[bg=#22262D,fg=#7fb4ca]\u{e0b6}#[bg=#7fb4ca,fg=#090E13]NORMAL#[bg=#22262D,fg=#7fb4ca]\u{e0b4}"
+                    mode_locked        "[bg=#22262D,fg=#e46876]\u{e0b6}#[bg=#e46876,fg=#090E13]LOCKED#[bg=#22262D,fg=#e46876]\u{e0b4}"
+                    mode_pane          "[bg=#22262D,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#090E13]PANE#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                    mode_tab           "[bg=#22262D,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#090E13]TAB#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                    mode_scroll        "[bg=#22262D,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#090E13]SCROLL#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                    mode_search        "[bg=#22262D,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#090E13]SEARCH#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                    mode_enter_search  "[bg=#22262D,fg=#7aa89f]\u{e0b6}#[bg=#7aa89f,fg=#090E13]ENT-SEARCH#[bg=#22262D,fg=#7aa89f]\u{e0b4}"
+                    mode_resize        "[bg=#22262D,fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#090E13]RESIZE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                    mode_rename_tab    "[bg=#22262D,fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#090E13]RENAME-TAB#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                    mode_rename_pane   "[bg=#22262D,fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#090E13]RENAME-PANE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                    mode_move          "[bg=#22262D,fg=#e6c384]\u{e0b6}#[bg=#e6c384,fg=#090E13]MOVE#[bg=#22262D,fg=#e6c384]\u{e0b4}"
+                    mode_session       "[bg=#22262D,fg=#938aa9]\u{e0b6}#[bg=#938aa9,fg=#090E13]SESSION#[bg=#22262D,fg=#938aa9]\u{e0b4}"
+                    mode_prompt        "[bg=#22262D,fg=#938aa9]\u{e0b6}#[bg=#938aa9,fg=#090E13]PROMPT#[bg=#22262D,fg=#938aa9]\u{e0b4}"
+                    pipe_zjstatus_hints_format "{output}"
+                }
+            }
         }
     }
 }

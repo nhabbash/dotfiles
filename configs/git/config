@@ -14,6 +14,7 @@
 
 [core]
 	editor = nvim
+	excludesFile = /Users/nassim/.config/git/ignore
 
 [alias]
 	st = status
